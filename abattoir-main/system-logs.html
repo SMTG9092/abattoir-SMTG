@@ -1,0 +1,3510 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Logs système - SMTG Abattoir
+    </title>
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         SUPABASE
+         ===================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="api/supabase.js"></script>
+
+
+    <style>
+
+        /* =====================================================
+           RESET
+           ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+
+        body {
+            font-family:
+                Inter,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #172033;
+
+            overflow-x: hidden;
+        }
+
+
+        /* =====================================================
+           PAGE
+           ===================================================== */
+
+        .page {
+
+            width: 100%;
+
+            max-width: none;
+
+            min-height: 100vh;
+
+            padding: 24px;
+
+        }
+
+
+        /* =====================================================
+           HEADER
+           ===================================================== */
+
+        .page-header {
+
+            width: 100%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 22px;
+
+        }
+
+
+        .header-left {
+            min-width: 0;
+        }
+
+
+        .breadcrumb {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #7b8799;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .breadcrumb i {
+            font-size: 10px;
+        }
+
+
+        .page-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+        .page-title-icon {
+
+            width: 46px;
+
+            height: 46px;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0d6efd,
+                    #084298
+                );
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 19px;
+
+            flex-shrink: 0;
+
+            box-shadow:
+                0 6px 18px
+                rgba(
+                    13,
+                    110,
+                    253,
+                    .20
+                );
+
+        }
+
+
+        .page-title h1 {
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+            color: #172033;
+
+        }
+
+
+        .page-title p {
+
+            margin-top: 3px;
+
+            color: #7b8799;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =====================================================
+           HEADER ACTIONS
+           ===================================================== */
+
+        .header-actions {
+
+            display: flex;
+
+            gap: 9px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .btn {
+
+            border: none;
+
+            border-radius: 9px;
+
+            min-height: 41px;
+
+            padding: 0 15px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+
+        }
+
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+
+        .btn-primary {
+
+            background: #0d6efd;
+
+            color: white;
+
+        }
+
+
+        .btn-primary:hover {
+            background: #0b5ed7;
+        }
+
+
+        .btn-secondary {
+
+            background: white;
+
+            color: #344054;
+
+            border:
+                1px solid #d9e0ea;
+
+        }
+
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+        }
+
+
+        /* =====================================================
+           STATS
+           ===================================================== */
+
+        .stats-grid {
+
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    minmax(
+                        0,
+                        1fr
+                    )
+                );
+
+            gap: 15px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            border:
+                1px solid #e5eaf1;
+
+            border-radius: 14px;
+
+            padding: 16px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            box-shadow:
+                0 2px 7px
+                rgba(
+                    16,
+                    24,
+                    40,
+                    .03
+                );
+
+        }
+
+
+        .stat-icon {
+
+            width: 43px;
+
+            height: 43px;
+
+            border-radius: 11px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            font-size: 17px;
+
+        }
+
+
+        .stat-icon.blue {
+            background: #e9f2ff;
+            color: #0d6efd;
+        }
+
+
+        .stat-icon.red {
+            background: #fdebed;
+            color: #dc3545;
+        }
+
+
+        .stat-icon.orange {
+            background: #fff4df;
+            color: #d97706;
+        }
+
+
+        .stat-icon.green {
+            background: #e8f7ef;
+            color: #198754;
+        }
+
+
+        .stat-label {
+
+            font-size: 11px;
+
+            color: #7b8799;
+
+            margin-bottom: 3px;
+
+        }
+
+
+        .stat-value {
+
+            font-size: 21px;
+
+            font-weight: 700;
+
+            color: #172033;
+
+        }
+
+
+        /* =====================================================
+           MAIN CARD
+           ===================================================== */
+
+        .main-card {
+
+            width: 100%;
+
+            background: white;
+
+            border:
+                1px solid #e5eaf1;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 2px 8px
+                rgba(
+                    16,
+                    24,
+                    40,
+                    .035
+                );
+
+        }
+
+
+        /* =====================================================
+           TOOLBAR
+           ===================================================== */
+
+        .toolbar {
+
+            width: 100%;
+
+            padding: 16px;
+
+            background: #fbfcfe;
+
+            border-bottom:
+                1px solid #e9edf3;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(220px, 1.5fr)
+                minmax(150px, 1fr)
+                minmax(150px, 1fr)
+                minmax(150px, 1fr)
+                auto;
+
+            gap: 10px;
+
+            align-items: end;
+
+        }
+
+
+        .field {
+            min-width: 0;
+        }
+
+
+        .field label {
+
+            display: block;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            color: #667085;
+
+            margin-bottom: 6px;
+
+        }
+
+
+        .form-control,
+        .form-select {
+
+            width: 100%;
+
+            height: 40px;
+
+            border:
+                1px solid #d8dee8;
+
+            border-radius: 8px;
+
+            background: white;
+
+            color: #344054;
+
+            padding: 0 11px;
+
+            font-size: 13px;
+
+            outline: none;
+
+        }
+
+
+        .form-control:focus,
+        .form-select:focus {
+
+            border-color: #86b7fe;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(
+                    13,
+                    110,
+                    253,
+                    .10
+                );
+
+        }
+
+
+        .input-wrap {
+            position: relative;
+        }
+
+
+        .input-wrap i {
+
+            position: absolute;
+
+            left: 12px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #98a2b3;
+
+            font-size: 13px;
+
+            pointer-events: none;
+
+        }
+
+
+        .input-wrap .form-control {
+            padding-left: 35px;
+        }
+
+
+        /* =====================================================
+           TABLE
+           ===================================================== */
+
+        .table-container {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            overflow-y: hidden;
+
+        }
+
+
+        table {
+
+            width: 100%;
+
+            min-width: 1250px;
+
+            border-collapse: collapse;
+
+        }
+
+
+        thead th {
+
+            background: #f8fafc;
+
+            color: #667085;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            text-align: left;
+
+            padding: 12px 13px;
+
+            border-bottom:
+                1px solid #e5eaf1;
+
+            white-space: nowrap;
+
+        }
+
+
+        tbody td {
+
+            padding: 11px 13px;
+
+            border-bottom:
+                1px solid #edf0f4;
+
+            font-size: 12px;
+
+            color: #344054;
+
+            vertical-align: middle;
+
+            white-space: nowrap;
+
+        }
+
+
+        tbody tr:hover {
+            background: #fafcff;
+        }
+
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        /* =====================================================
+           LEVEL BADGES
+           ===================================================== */
+
+        .level {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            padding: 5px 9px;
+
+            border-radius: 999px;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+        }
+
+
+        .level::before {
+
+            content: "";
+
+            width: 6px;
+
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: currentColor;
+
+        }
+
+
+        .level-INFO {
+
+            background: #e9f2ff;
+
+            color: #0d6efd;
+
+        }
+
+
+        .level-WARNING {
+
+            background: #fff4df;
+
+            color: #b26a00;
+
+        }
+
+
+        .level-ERROR {
+
+            background: #fdebed;
+
+            color: #dc3545;
+
+        }
+
+
+        .level-DEBUG {
+
+            background: #f2f4f7;
+
+            color: #667085;
+
+        }
+
+
+        .level-CRITICAL {
+
+            background: #f8d7da;
+
+            color: #842029;
+
+        }
+
+
+        /* =====================================================
+           EVENT
+           ===================================================== */
+
+        .event-cell {
+
+            max-width: 240px;
+
+        }
+
+
+        .event-name {
+
+            font-weight: 700;
+
+            color: #1d2939;
+
+            font-size: 12px;
+
+        }
+
+
+        .event-message {
+
+            color: #7b8799;
+
+            font-size: 10px;
+
+            margin-top: 3px;
+
+            max-width: 300px;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+        }
+
+
+        /* =====================================================
+           SOURCE
+           ===================================================== */
+
+        .source-badge {
+
+            display: inline-flex;
+
+            padding: 5px 8px;
+
+            border-radius: 6px;
+
+            background: #f2f4f7;
+
+            color: #667085;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =====================================================
+           USER
+           ===================================================== */
+
+        .user-cell {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+
+        .user-avatar {
+
+            width: 30px;
+
+            height: 30px;
+
+            border-radius: 8px;
+
+            background: #edf4ff;
+
+            color: #0d6efd;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .user-name {
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            color: #344054;
+
+        }
+
+
+        .user-login {
+
+            font-size: 9px;
+
+            color: #98a2b3;
+
+            margin-top: 2px;
+
+        }
+
+
+        /* =====================================================
+           ACTIONS
+           ===================================================== */
+
+        .icon-btn {
+
+            width: 32px;
+
+            height: 32px;
+
+            border-radius: 7px;
+
+            border:
+                1px solid #dce2ea;
+
+            background: white;
+
+            color: #667085;
+
+            cursor: pointer;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        .icon-btn:hover {
+
+            background: #f5f8fc;
+
+            color: #0d6efd;
+
+        }
+
+
+        /* =====================================================
+           EMPTY / LOADING
+           ===================================================== */
+
+        .empty-state {
+
+            text-align: center;
+
+            padding: 60px 20px;
+
+            color: #98a2b3;
+
+        }
+
+
+        .empty-state i {
+
+            font-size: 38px;
+
+            margin-bottom: 12px;
+
+            color: #c8d0dc;
+
+        }
+
+
+        .empty-state h3 {
+
+            color: #667085;
+
+            font-size: 15px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .empty-state p {
+            font-size: 12px;
+        }
+
+
+        .loading {
+
+            padding: 55px 20px;
+
+            text-align: center;
+
+            color: #667085;
+
+        }
+
+
+        .loading i {
+
+            font-size: 25px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        /* =====================================================
+           MODAL
+           ===================================================== */
+
+        .modal-overlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(
+                    15,
+                    23,
+                    42,
+                    .48
+                );
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 9999;
+
+        }
+
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+
+        .modal {
+
+            width: min(
+                760px,
+                100%
+            );
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            background: white;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 25px 60px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    .20
+                );
+
+        }
+
+
+        .modal-header {
+
+            padding: 17px 20px;
+
+            border-bottom:
+                1px solid #e9edf3;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+        }
+
+
+        .modal-header h2 {
+
+            font-size: 16px;
+
+            color: #172033;
+
+        }
+
+
+        .modal-close {
+
+            width: 34px;
+
+            height: 34px;
+
+            border: none;
+
+            background: #f2f4f7;
+
+            color: #667085;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+        }
+
+
+        .modal-body {
+
+            padding: 20px;
+
+        }
+
+
+        .details-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(
+                        0,
+                        1fr
+                    )
+                );
+
+            gap: 14px;
+
+        }
+
+
+        .detail-item {
+
+            min-width: 0;
+
+        }
+
+
+        .detail-item.full {
+
+            grid-column: 1 / -1;
+
+        }
+
+
+        .detail-label {
+
+            color: #98a2b3;
+
+            font-size: 10px;
+
+            font-weight: 600;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .detail-value {
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e9edf3;
+
+            border-radius: 8px;
+
+            padding: 9px 10px;
+
+            font-size: 11px;
+
+            color: #344054;
+
+            word-break: break-word;
+
+            white-space: pre-wrap;
+
+        }
+
+
+        .modal-footer {
+
+            padding: 14px 20px;
+
+            border-top:
+                1px solid #e9edf3;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+        }
+
+
+        /* =====================================================
+           TOAST
+           ===================================================== */
+
+        .toast-container {
+
+            position: fixed;
+
+            top: 20px;
+
+            right: 20px;
+
+            z-index: 20000;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+
+            max-width: 360px;
+
+        }
+
+
+        .toast {
+
+            background: white;
+
+            border:
+                1px solid #e4e8ee;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(
+                    16,
+                    24,
+                    40,
+                    .12
+                );
+
+            padding: 11px 13px;
+
+            display: flex;
+
+            gap: 10px;
+
+        }
+
+
+        .toast-icon {
+
+            width: 30px;
+
+            height: 30px;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .toast.success
+        .toast-icon {
+
+            background: #e9f8ef;
+
+            color: #198754;
+
+        }
+
+
+        .toast.error
+        .toast-icon {
+
+            background: #fdebed;
+
+            color: #dc3545;
+
+        }
+
+
+        .toast.warning
+        .toast-icon {
+
+            background: #fff4df;
+
+            color: #d97706;
+
+        }
+
+
+        .toast-title {
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            color: #172033;
+
+            margin-bottom: 2px;
+
+        }
+
+
+        .toast-message {
+
+            font-size: 11px;
+
+            color: #667085;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (max-width: 1200px) {
+
+            .toolbar {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(
+                            0,
+                            1fr
+                        )
+                    );
+
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .page {
+                padding: 15px;
+            }
+
+
+            .page-header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+            }
+
+
+            .header-actions {
+                width: 100%;
+            }
+
+
+            .header-actions .btn {
+                flex: 1;
+            }
+
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(
+                            0,
+                            1fr
+                        )
+                    );
+
+            }
+
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .detail-item.full {
+                grid-column: auto;
+            }
+
+        }
+
+
+        @media (max-width: 520px) {
+
+            .page {
+                padding: 10px;
+            }
+
+
+            .page-title h1 {
+                font-size: 20px;
+            }
+
+
+            .page-title-icon {
+
+                width: 40px;
+
+                height: 40px;
+
+            }
+
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .toolbar {
+                grid-template-columns: 1fr;
+            }
+
+
+            .toast-container {
+
+                left: 10px;
+
+                right: 10px;
+
+                top: 10px;
+
+                max-width: none;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="page-header">
+
+
+        <div class="header-left">
+
+
+            <div class="breadcrumb">
+
+                <span>
+                    Administration
+                </span>
+
+                <i
+                    class="fa-solid fa-chevron-right"
+                ></i>
+
+                <span>
+                    Logs système
+                </span>
+
+            </div>
+
+
+            <div class="page-title">
+
+
+                <div class="page-title-icon">
+
+                    <i
+                        class="fa-solid fa-terminal"
+                    ></i>
+
+                </div>
+
+
+                <div>
+
+                    <h1>
+                        Logs système
+                    </h1>
+
+                    <p>
+                        Surveillance des événements techniques du système
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+
+            <button
+                class="btn btn-secondary"
+                onclick="loadLogs()"
+            >
+
+                <i
+                    class="fa-solid fa-rotate"
+                ></i>
+
+                Actualiser
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STATS
+         ===================================================== -->
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+
+                <i
+                    class="fa-solid fa-terminal"
+                ></i>
+
+            </div>
+
+            <div>
+
+                <div class="stat-label">
+                    Total logs
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="statTotal"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon red">
+
+                <i
+                    class="fa-solid fa-circle-xmark"
+                ></i>
+
+            </div>
+
+            <div>
+
+                <div class="stat-label">
+                    Erreurs
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="statErrors"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+
+                <i
+                    class="fa-solid fa-triangle-exclamation"
+                ></i>
+
+            </div>
+
+            <div>
+
+                <div class="stat-label">
+                    Avertissements
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="statWarnings"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+
+                <i
+                    class="fa-solid fa-circle-info"
+                ></i>
+
+            </div>
+
+            <div>
+
+                <div class="stat-label">
+                    Informations
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="statInfo"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <div class="main-card">
+
+
+        <!-- =================================================
+             TOOLBAR
+             ================================================= -->
+
+        <div class="toolbar">
+
+
+            <div class="field">
+
+                <label>
+                    Recherche
+                </label>
+
+                <div class="input-wrap">
+
+                    <i
+                        class="fa-solid fa-magnifying-glass"
+                    ></i>
+
+                    <input
+                        id="searchInput"
+                        type="text"
+                        class="form-control"
+                        placeholder="Event, message, module..."
+                        oninput="applyFilters()"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Niveau
+                </label>
+
+                <select
+                    id="levelFilter"
+                    class="form-select"
+                    onchange="applyFilters()"
+                >
+
+                    <option value="">
+                        Tous les niveaux
+                    </option>
+
+                    <option value="INFO">
+                        INFO
+                    </option>
+
+                    <option value="WARNING">
+                        WARNING
+                    </option>
+
+                    <option value="ERROR">
+                        ERROR
+                    </option>
+
+                    <option value="DEBUG">
+                        DEBUG
+                    </option>
+
+                    <option value="CRITICAL">
+                        CRITICAL
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Source
+                </label>
+
+                <select
+                    id="sourceFilter"
+                    class="form-select"
+                    onchange="applyFilters()"
+                >
+
+                    <option value="">
+                        Toutes les sources
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Module
+                </label>
+
+                <select
+                    id="moduleFilter"
+                    class="form-select"
+                    onchange="applyFilters()"
+                >
+
+                    <option value="">
+                        Tous les modules
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="btn btn-secondary"
+                onclick="resetFilters()"
+            >
+
+                <i
+                    class="fa-solid fa-filter-circle-xmark"
+                ></i>
+
+                Réinitialiser
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             TABLE
+             ================================================= -->
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Niveau
+                        </th>
+
+                        <th>
+                            Source
+                        </th>
+
+                        <th>
+                            Événement
+                        </th>
+
+                        <th>
+                            Module
+                        </th>
+
+                        <th>
+                            Utilisateur
+                        </th>
+
+                        <th>
+                            Page
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="logsBody"
+                >
+
+                    <tr>
+
+                        <td colspan="8">
+
+                            <div class="loading">
+
+                                <i
+                                    class="fa-solid fa-spinner fa-spin"
+                                ></i>
+
+                                <div>
+                                    Chargement des logs...
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     DETAILS MODAL
+     ========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="detailsModal"
+>
+
+
+    <div class="modal">
+
+
+        <div class="modal-header">
+
+
+            <h2>
+
+                <i
+                    class="fa-solid fa-circle-info"
+                ></i>
+
+                Détails du log
+
+            </h2>
+
+
+            <button
+                class="modal-close"
+                onclick="closeDetailsModal()"
+            >
+
+                <i
+                    class="fa-solid fa-xmark"
+                ></i>
+
+            </button>
+
+        </div>
+
+
+        <div
+            class="modal-body"
+            id="detailsBody"
+        ></div>
+
+
+        <div class="modal-footer">
+
+
+            <button
+                class="btn btn-secondary"
+                onclick="closeDetailsModal()"
+            >
+
+                Fermer
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+
+<script>
+
+
+    /* =========================================================
+       VARIABLES
+       ========================================================= */
+
+    let allLogs = [];
+
+    let filteredLogs = [];
+
+
+    /* =========================================================
+       CURRENT USER
+       ========================================================= */
+
+    function getCurrentUser() {
+
+        let user = null;
+
+
+        try {
+
+            const value =
+                sessionStorage.getItem(
+                    "smtg_current_user"
+                );
+
+
+            if (value) {
+
+                user =
+                    JSON.parse(value);
+
+            }
+
+        } catch (error) {
+
+            console.warn(error);
+
+        }
+
+
+        if (!user) {
+
+            try {
+
+                const value =
+                    localStorage.getItem(
+                        "smtg_current_user"
+                    );
+
+
+                if (value) {
+
+                    user =
+                        JSON.parse(value);
+
+                }
+
+            } catch (error) {
+
+                console.warn(error);
+
+            }
+
+        }
+
+
+        if (!user) {
+
+            try {
+
+                const value =
+                    sessionStorage.getItem(
+                        "smtgUser"
+                    );
+
+
+                if (value) {
+
+                    user =
+                        JSON.parse(value);
+
+                }
+
+            } catch (error) {
+
+                console.warn(error);
+
+            }
+
+        }
+
+
+        return user;
+
+    }
+
+
+    const currentUser =
+        getCurrentUser();
+
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function () {
+
+            if (!currentUser) {
+
+                showToast(
+                    "warning",
+                    "Session",
+                    "Utilisateur non connecté."
+                );
+
+                return;
+
+            }
+
+
+            await loadLogs();
+
+        }
+    );
+
+
+    /* =========================================================
+       LOAD LOGS
+       ========================================================= */
+
+    async function loadLogs() {
+
+        const supabase =
+            getSupabase();
+
+
+        showLoading();
+
+
+        try {
+
+            const {
+                data,
+                error
+            } = await supabase
+
+                .from(
+                    "system_logs"
+                )
+
+                .select(`
+                    id,
+                    level,
+                    source,
+                    module,
+                    page,
+                    event,
+                    message,
+                    details,
+                    user_id,
+                    username,
+                    full_name,
+                    ip_address,
+                    user_agent,
+                    request_id,
+                    metadata,
+                    created_at
+                `)
+
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                )
+
+                .limit(1000);
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            allLogs =
+                data || [];
+
+
+            populateFilters();
+
+            updateStats();
+
+            applyFilters();
+
+
+        } catch (error) {
+
+            console.error(
+                "Erreur logs:",
+                error
+            );
+
+
+            showError(
+                error.message ||
+                "Impossible de charger les logs."
+            );
+
+
+            showToast(
+                "error",
+                "Erreur",
+                error.message ||
+                "Impossible de charger les logs."
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       FILTER OPTIONS
+       ========================================================= */
+
+    function populateFilters() {
+
+        const sources =
+            [
+                ...new Set(
+                    allLogs
+                        .map(
+                            log =>
+                                log.source
+                        )
+                        .filter(Boolean)
+                )
+            ]
+            .sort(
+                (a, b) =>
+                    a.localeCompare(
+                        b,
+                        "fr"
+                    )
+            );
+
+
+        const modules =
+            [
+                ...new Set(
+                    allLogs
+                        .map(
+                            log =>
+                                log.module
+                        )
+                        .filter(Boolean)
+                )
+            ]
+            .sort(
+                (a, b) =>
+                    a.localeCompare(
+                        b,
+                        "fr"
+                    )
+            );
+
+
+        const sourceSelect =
+            document.getElementById(
+                "sourceFilter"
+            );
+
+
+        const moduleSelect =
+            document.getElementById(
+                "moduleFilter"
+            );
+
+
+        sourceSelect.innerHTML = `
+
+            <option value="">
+                Toutes les sources
+            </option>
+
+        `;
+
+
+        moduleSelect.innerHTML = `
+
+            <option value="">
+                Tous les modules
+            </option>
+
+        `;
+
+
+        sources.forEach(
+            source => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    source;
+
+
+                option.textContent =
+                    source;
+
+
+                sourceSelect.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        modules.forEach(
+            module => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    module;
+
+
+                option.textContent =
+                    module;
+
+
+                moduleSelect.appendChild(
+                    option
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       STATS
+       ========================================================= */
+
+    function updateStats() {
+
+        const total =
+            allLogs.length;
+
+
+        const errors =
+            allLogs.filter(
+                log =>
+                    String(
+                        log.level ||
+                        ""
+                    ).toUpperCase()
+                    ===
+                    "ERROR"
+            ).length;
+
+
+        const warnings =
+            allLogs.filter(
+                log =>
+                    String(
+                        log.level ||
+                        ""
+                    ).toUpperCase()
+                    ===
+                    "WARNING"
+            ).length;
+
+
+        const info =
+            allLogs.filter(
+                log =>
+                    String(
+                        log.level ||
+                        ""
+                    ).toUpperCase()
+                    ===
+                    "INFO"
+            ).length;
+
+
+        document.getElementById(
+            "statTotal"
+        ).textContent =
+            total;
+
+
+        document.getElementById(
+            "statErrors"
+        ).textContent =
+            errors;
+
+
+        document.getElementById(
+            "statWarnings"
+        ).textContent =
+            warnings;
+
+
+        document.getElementById(
+            "statInfo"
+        ).textContent =
+            info;
+
+    }
+
+
+    /* =========================================================
+       FILTERS
+       ========================================================= */
+
+    function applyFilters() {
+
+        const search =
+            document.getElementById(
+                "searchInput"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+
+        const level =
+            document.getElementById(
+                "levelFilter"
+            ).value;
+
+
+        const source =
+            document.getElementById(
+                "sourceFilter"
+            ).value;
+
+
+        const module =
+            document.getElementById(
+                "moduleFilter"
+            ).value;
+
+
+        filteredLogs =
+            allLogs.filter(
+                log => {
+
+                    if (search) {
+
+                        const text = [
+
+                            log.event,
+
+                            log.message,
+
+                            log.details,
+
+                            log.module,
+
+                            log.page,
+
+                            log.source,
+
+                            log.username,
+
+                            log.full_name
+
+                        ]
+                        .filter(Boolean)
+                        .join(" ")
+                        .toLowerCase();
+
+
+                        if (
+                            !text.includes(
+                                search
+                            )
+                        ) {
+
+                            return false;
+
+                        }
+
+                    }
+
+
+                    if (
+                        level &&
+                        String(
+                            log.level ||
+                            ""
+                        ).toUpperCase()
+                        !==
+                        level
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    if (
+                        source &&
+                        log.source !== source
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    if (
+                        module &&
+                        log.module !== module
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return true;
+
+                }
+            );
+
+
+        renderTable();
+
+    }
+
+
+    /* =========================================================
+       RESET FILTERS
+       ========================================================= */
+
+    function resetFilters() {
+
+        document.getElementById(
+            "searchInput"
+        ).value = "";
+
+
+        document.getElementById(
+            "levelFilter"
+        ).value = "";
+
+
+        document.getElementById(
+            "sourceFilter"
+        ).value = "";
+
+
+        document.getElementById(
+            "moduleFilter"
+        ).value = "";
+
+
+        applyFilters();
+
+    }
+
+
+    /* =========================================================
+       RENDER TABLE
+       ========================================================= */
+
+    function renderTable() {
+
+        const tbody =
+            document.getElementById(
+                "logsBody"
+            );
+
+
+        if (!filteredLogs.length) {
+
+            tbody.innerHTML = `
+
+                <tr>
+
+                    <td colspan="8">
+
+                        <div class="empty-state">
+
+                            <i
+                                class="fa-solid fa-terminal"
+                            ></i>
+
+                            <h3>
+                                Aucun log trouvé
+                            </h3>
+
+                            <p>
+                                Aucun événement ne correspond
+                                aux critères sélectionnés.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        tbody.innerHTML =
+            filteredLogs
+                .map(
+                    log =>
+                        renderRow(
+                            log
+                        )
+                )
+                .join("");
+
+    }
+
+
+    /* =========================================================
+       RENDER ROW
+       ========================================================= */
+
+    function renderRow(
+        log
+    ) {
+
+        const level =
+            String(
+                log.level ||
+                "INFO"
+            ).toUpperCase();
+
+
+        return `
+
+            <tr>
+
+                <td>
+
+                    ${formatDateTime(
+                        log.created_at
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="level level-${escapeHtml(
+                            level
+                        )}"
+                    >
+
+                        ${escapeHtml(
+                            level
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="source-badge"
+                    >
+
+                        ${escapeHtml(
+                            log.source ||
+                            "SYSTEM"
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div class="event-cell">
+
+                        <div class="event-name">
+
+                            ${escapeHtml(
+                                log.event ||
+                                "-"
+                            )}
+
+                        </div>
+
+
+                        <div class="event-message">
+
+                            ${escapeHtml(
+                                log.message ||
+                                ""
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHtml(
+                        log.module ||
+                        "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${renderUser(
+                        log
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHtml(
+                        log.page ||
+                        "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="icon-btn"
+                        title="Voir les détails"
+                        onclick="openDetails(${Number(
+                            log.id
+                        )})"
+                    >
+
+                        <i
+                            class="fa-solid fa-eye"
+                        ></i>
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    /* =========================================================
+       USER
+       ========================================================= */
+
+    function renderUser(
+        log
+    ) {
+
+        if (
+            !log.username &&
+            !log.full_name
+        ) {
+
+            return `
+                <span
+                    style="
+                        color:#98a2b3;
+                        font-size:11px;
+                    "
+                >
+                    SYSTEM
+                </span>
+            `;
+
+        }
+
+
+        const name =
+            log.full_name ||
+            log.username ||
+            "SYSTEM";
+
+
+        return `
+
+            <div class="user-cell">
+
+                <div class="user-avatar">
+
+                    ${escapeHtml(
+                        getInitials(
+                            name
+                        )
+                    )}
+
+                </div>
+
+
+                <div>
+
+                    <div class="user-name">
+
+                        ${escapeHtml(
+                            name
+                        )}
+
+                    </div>
+
+
+                    <div class="user-login">
+
+                        ${
+                            log.username
+                                ? "@" +
+                                  escapeHtml(
+                                      log.username
+                                  )
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =========================================================
+       DETAILS
+       ========================================================= */
+
+    function openDetails(
+        id
+    ) {
+
+        const log =
+            allLogs.find(
+                item =>
+                    Number(
+                        item.id
+                    )
+                    ===
+                    Number(
+                        id
+                    )
+            );
+
+
+        if (!log) {
+
+            return;
+
+        }
+
+
+        document.getElementById(
+            "detailsBody"
+        ).innerHTML = `
+
+            <div class="details-grid">
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        ID
+                    </div>
+
+                    <div class="detail-value">
+                        ${escapeHtml(
+                            log.id
+                        )}
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        Date
+                    </div>
+
+                    <div class="detail-value">
+                        ${escapeHtml(
+                            formatDateTime(
+                                log.created_at
+                            )
+                        )}
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        Niveau
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.level ||
+                            "INFO"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        Source
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.source ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        Module
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.module ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        Page
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.page ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item full">
+
+                    <div class="detail-label">
+                        Événement
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.event ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item full">
+
+                    <div class="detail-label">
+                        Message
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.message ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item full">
+
+                    <div class="detail-label">
+                        Détails
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.details ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        Utilisateur
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.full_name ||
+                            log.username ||
+                            "SYSTEM"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        Username
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.username ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        IP
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.ip_address ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <div class="detail-label">
+                        Request ID
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.request_id ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item full">
+
+                    <div class="detail-label">
+                        User Agent
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            log.user_agent ||
+                            "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-item full">
+
+                    <div class="detail-label">
+                        Metadata
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            formatMetadata(
+                                log.metadata
+                            )
+                        )}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        `;
+
+
+        document
+            .getElementById(
+                "detailsModal"
+            )
+            .classList.add(
+                "show"
+            );
+
+    }
+
+
+    /* =========================================================
+       CLOSE DETAILS
+       ========================================================= */
+
+    function closeDetailsModal() {
+
+        document
+            .getElementById(
+                "detailsModal"
+            )
+            .classList.remove(
+                "show"
+            );
+
+    }
+
+
+    /* =========================================================
+       FORMAT METADATA
+       ========================================================= */
+
+    function formatMetadata(
+        metadata
+    ) {
+
+        if (!metadata) {
+
+            return "-";
+
+        }
+
+
+        try {
+
+            return JSON.stringify(
+                metadata,
+                null,
+                2
+            );
+
+        } catch (error) {
+
+            return String(
+                metadata
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       DATE
+       ========================================================= */
+
+    function formatDateTime(
+        value
+    ) {
+
+        if (!value) {
+
+            return "-";
+
+        }
+
+
+        const date =
+            new Date(
+                value
+            );
+
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return "-";
+
+        }
+
+
+        return new Intl.DateTimeFormat(
+            "fr-FR",
+            {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            }
+        ).format(
+            date
+        );
+
+    }
+
+
+    /* =========================================================
+       INITIALS
+       ========================================================= */
+
+    function getInitials(
+        name
+    ) {
+
+        const parts =
+            String(
+                name ||
+                "S"
+            )
+            .trim()
+            .split(
+                /\s+/
+            )
+            .filter(Boolean);
+
+
+        if (!parts.length) {
+            return "S";
+        }
+
+
+        if (
+            parts.length === 1
+        ) {
+
+            return parts[0]
+                .substring(
+                    0,
+                    2
+                )
+                .toUpperCase();
+
+        }
+
+
+        return (
+            parts[0][0] +
+            parts[
+                parts.length - 1
+            ][0]
+        ).toUpperCase();
+
+    }
+
+
+    /* =========================================================
+       ESCAPE HTML
+       ========================================================= */
+
+    function escapeHtml(
+        value
+    ) {
+
+        return String(
+            value ??
+            ""
+        )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+    }
+
+
+    /* =========================================================
+       LOADING
+       ========================================================= */
+
+    function showLoading() {
+
+        document.getElementById(
+            "logsBody"
+        ).innerHTML = `
+
+            <tr>
+
+                <td colspan="8">
+
+                    <div class="loading">
+
+                        <i
+                            class="fa-solid fa-spinner fa-spin"
+                        ></i>
+
+                        <div>
+                            Chargement des logs...
+                        </div>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    /* =========================================================
+       ERROR
+       ========================================================= */
+
+    function showError(
+        message
+    ) {
+
+        document.getElementById(
+            "logsBody"
+        ).innerHTML = `
+
+            <tr>
+
+                <td colspan="8">
+
+                    <div class="empty-state">
+
+                        <i
+                            class="fa-solid fa-triangle-exclamation"
+                            style="color:#dc3545;"
+                        ></i>
+
+                        <h3>
+                            Erreur de chargement
+                        </h3>
+
+                        <p>
+                            ${escapeHtml(
+                                message
+                            )}
+                        </p>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    /* =========================================================
+       MODAL CLICK OUTSIDE
+       ========================================================= */
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            const modal =
+                document.getElementById(
+                    "detailsModal"
+                );
+
+
+            if (
+                event.target ===
+                modal
+            ) {
+
+                closeDetailsModal();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       ESCAPE
+       ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                closeDetailsModal();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       TOAST
+       ========================================================= */
+
+    function showToast(
+        type,
+        title,
+        message
+    ) {
+
+        const container =
+            document.getElementById(
+                "toastContainer"
+            );
+
+
+        const icons = {
+
+            success:
+                "fa-solid fa-circle-check",
+
+            error:
+                "fa-solid fa-circle-xmark",
+
+            warning:
+                "fa-solid fa-triangle-exclamation"
+
+        };
+
+
+        const toast =
+            document.createElement(
+                "div"
+            );
+
+
+        toast.className =
+            `toast ${type}`;
+
+
+        toast.innerHTML = `
+
+            <div class="toast-icon">
+
+                <i
+                    class="${
+                        icons[type] ||
+                        icons.warning
+                    }"
+                ></i>
+
+            </div>
+
+
+            <div>
+
+                <div class="toast-title">
+
+                    ${escapeHtml(
+                        title
+                    )}
+
+                </div>
+
+
+                <div class="toast-message">
+
+                    ${escapeHtml(
+                        message
+                    )}
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(
+            toast
+        );
+
+
+        setTimeout(
+            function () {
+
+                toast.style.opacity =
+                    "0";
+
+
+                toast.style.transform =
+                    "translateY(-8px)";
+
+
+                setTimeout(
+                    function () {
+
+                        toast.remove();
+
+                    },
+                    250
+                );
+
+            },
+            3500
+        );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,5432 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SMTG Abattoir - Gestion des Pages</title>
+
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+
+        body {
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                #f4f7fa;
+
+            color:
+                #243b53;
+        }
+
+
+        button,
+        input,
+        select,
+        textarea {
+
+            font-family:
+                inherit;
+        }
+
+
+        button {
+
+            cursor:
+                pointer;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .page-header {
+
+            background:
+                white;
+
+            border-bottom:
+                1px solid #e2e9ef;
+
+            min-height:
+                72px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            padding:
+                0 28px;
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,.03);
+        }
+
+
+        .header-left {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                15px;
+        }
+
+
+        .logo {
+
+            width:
+                115px;
+
+            max-height:
+                45px;
+
+            object-fit:
+                contain;
+        }
+
+
+        .header-title {
+
+            color:
+                #173b5c;
+
+            font-size:
+                19px;
+
+            font-weight:
+                700;
+        }
+
+
+        .header-subtitle {
+
+            color:
+                #8a9aa8;
+
+            font-size:
+                10px;
+
+            margin-top:
+                3px;
+        }
+
+
+        .header-user {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+        }
+
+
+        .avatar {
+
+            width:
+                34px;
+
+            height:
+                34px;
+
+            border-radius:
+                50%;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0878d1,
+                    #064d8d
+                );
+
+            color:
+                white;
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+        }
+
+
+        .header-user-name {
+
+            color:
+                #244765;
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+        }
+
+
+        .header-user-role {
+
+            color:
+                #8b9aa7;
+
+            font-size:
+                9px;
+
+            margin-top:
+                2px;
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .container {
+
+            padding:
+                25px 28px 35px;
+        }
+
+
+        /* =====================================================
+           TOP
+        ===================================================== */
+
+        .content-top {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                20px;
+
+            margin-bottom:
+                20px;
+        }
+
+
+        .title-block h1 {
+
+            color:
+                #244765;
+
+            font-size:
+                22px;
+
+            font-weight:
+                700;
+        }
+
+
+        .title-block p {
+
+            color:
+                #8293a2;
+
+            font-size:
+                11px;
+
+            margin-top:
+                4px;
+        }
+
+
+        .btn-primary {
+
+            height:
+                42px;
+
+            padding:
+                0 18px;
+
+            border:
+                none;
+
+            border-radius:
+                8px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #087bd2,
+                    #075596
+                );
+
+            color:
+                white;
+
+            font-size:
+                12px;
+
+            font-weight:
+                600;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                8px;
+
+            box-shadow:
+                0 5px 15px
+                rgba(8,123,210,.18);
+
+            transition:
+                .2s;
+        }
+
+
+        .btn-primary:hover {
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 7px 18px
+                rgba(8,123,210,.25);
+        }
+
+
+        .btn-primary svg {
+
+            width:
+                17px;
+
+            height:
+                17px;
+
+            stroke:
+                currentColor;
+
+            fill:
+                none;
+
+            stroke-width:
+                2;
+        }
+
+
+        /* =====================================================
+           STATS
+        ===================================================== */
+
+        .stats {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap:
+                14px;
+
+            margin-bottom:
+                18px;
+        }
+
+
+        .stat {
+
+            background:
+                white;
+
+            border:
+                1px solid #e2e9ef;
+
+            border-radius:
+                11px;
+
+            padding:
+                17px;
+
+            min-height:
+                105px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(25,60,90,.04);
+        }
+
+
+        .stat-label {
+
+            color:
+                #8293a2;
+
+            font-size:
+                10px;
+
+            font-weight:
+                600;
+        }
+
+
+        .stat-value {
+
+            color:
+                #244765;
+
+            font-size:
+                25px;
+
+            font-weight:
+                700;
+
+            margin-top:
+                9px;
+        }
+
+
+        .stat-description {
+
+            color:
+                #98a7b3;
+
+            font-size:
+                9px;
+
+            margin-top:
+                4px;
+        }
+
+
+        /* =====================================================
+           TOOLBAR
+        ===================================================== */
+
+        .toolbar {
+
+            background:
+                white;
+
+            border:
+                1px solid #e2e9ef;
+
+            border-radius:
+                11px;
+
+            padding:
+                15px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+
+            margin-bottom:
+                15px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(25,60,90,.04);
+        }
+
+
+        .search-box {
+
+            flex:
+                1;
+
+            position:
+                relative;
+        }
+
+
+        .search-box svg {
+
+            position:
+                absolute;
+
+            left:
+                12px;
+
+            top:
+                50%;
+
+            transform:
+                translateY(-50%);
+
+            width:
+                17px;
+
+            height:
+                17px;
+
+            stroke:
+                #8a9aa8;
+
+            fill:
+                none;
+
+            stroke-width:
+                1.8;
+        }
+
+
+        .search-input {
+
+            width:
+                100%;
+
+            height:
+                40px;
+
+            border:
+                1px solid #dce5eb;
+
+            border-radius:
+                8px;
+
+            padding:
+                0 12px 0 38px;
+
+            outline:
+                none;
+
+            color:
+                #304f68;
+
+            font-size:
+                11px;
+
+            background:
+                #fbfcfd;
+        }
+
+
+        .search-input:focus {
+
+            border-color:
+                #087bd2;
+
+            background:
+                white;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(8,123,210,.08);
+        }
+
+
+        .filter-select {
+
+            width:
+                190px;
+
+            height:
+                40px;
+
+            border:
+                1px solid #dce5eb;
+
+            border-radius:
+                8px;
+
+            padding:
+                0 12px;
+
+            outline:
+                none;
+
+            background:
+                #fbfcfd;
+
+            color:
+                #49657a;
+
+            font-size:
+                11px;
+        }
+
+
+        .filter-select:focus {
+
+            border-color:
+                #087bd2;
+        }
+
+
+        .btn-refresh {
+
+            width:
+                40px;
+
+            height:
+                40px;
+
+            border:
+                1px solid #dce5eb;
+
+            border-radius:
+                8px;
+
+            background:
+                white;
+
+            color:
+                #4f6d82;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+        }
+
+
+        .btn-refresh:hover {
+
+            background:
+                #f1f7fc;
+
+            color:
+                #0875c8;
+        }
+
+
+        .btn-refresh svg {
+
+            width:
+                17px;
+
+            height:
+                17px;
+
+            stroke:
+                currentColor;
+
+            fill:
+                none;
+
+            stroke-width:
+                1.8;
+        }
+
+
+        /* =====================================================
+           TABLE CARD
+        ===================================================== */
+
+        .table-card {
+
+            background:
+                white;
+
+            border:
+                1px solid #e2e9ef;
+
+            border-radius:
+                11px;
+
+            overflow:
+                hidden;
+
+            box-shadow:
+                0 3px 12px
+                rgba(25,60,90,.04);
+        }
+
+
+        .table-header {
+
+            min-height:
+                55px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            padding:
+                0 18px;
+
+            border-bottom:
+                1px solid #edf1f4;
+        }
+
+
+        .table-title {
+
+            color:
+                #244765;
+
+            font-size:
+                13px;
+
+            font-weight:
+                700;
+        }
+
+
+        .table-count {
+
+            color:
+                #8b9aa7;
+
+            font-size:
+                10px;
+        }
+
+
+        .table-wrapper {
+
+            width:
+                100%;
+
+            overflow-x:
+                auto;
+        }
+
+
+        table {
+
+            width:
+                100%;
+
+            min-width:
+                1100px;
+
+            border-collapse:
+                collapse;
+        }
+
+
+        thead {
+
+            background:
+                #f7f9fb;
+        }
+
+
+        th {
+
+            height:
+                43px;
+
+            padding:
+                0 13px;
+
+            color:
+                #718596;
+
+            font-size:
+                9px;
+
+            font-weight:
+                700;
+
+            text-align:
+                left;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .3px;
+
+            border-bottom:
+                1px solid #e5ebf0;
+
+            white-space:
+                nowrap;
+        }
+
+
+        td {
+
+            padding:
+                12px 13px;
+
+            color:
+                #526d82;
+
+            font-size:
+                10px;
+
+            border-bottom:
+                1px solid #edf1f4;
+
+            vertical-align:
+                middle;
+        }
+
+
+        tbody tr {
+
+            transition:
+                .15s;
+        }
+
+
+        tbody tr:hover {
+
+            background:
+                #fbfcfd;
+        }
+
+
+        tbody tr:last-child td {
+
+            border-bottom:
+                none;
+        }
+
+
+        .page-name {
+
+            color:
+                #244765;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+        }
+
+
+        .page-description {
+
+            color:
+                #93a2ae;
+
+            font-size:
+                9px;
+
+            margin-top:
+                3px;
+
+            max-width:
+                250px;
+
+            overflow:
+                hidden;
+
+            text-overflow:
+                ellipsis;
+
+            white-space:
+                nowrap;
+        }
+
+
+        .code-badge {
+
+            display:
+                inline-block;
+
+            padding:
+                5px 7px;
+
+            border-radius:
+                5px;
+
+            background:
+                #eef5fa;
+
+            color:
+                #24618b;
+
+            font-family:
+                Consolas,
+                monospace;
+
+            font-size:
+                9px;
+        }
+
+
+        .module-badge {
+
+            display:
+                inline-block;
+
+            padding:
+                5px 8px;
+
+            border-radius:
+                5px;
+
+            background:
+                #f2f5f7;
+
+            color:
+                #637888;
+
+            font-size:
+                9px;
+        }
+
+
+        .path-text {
+
+            max-width:
+                180px;
+
+            display:
+                block;
+
+            overflow:
+                hidden;
+
+            text-overflow:
+                ellipsis;
+
+            white-space:
+                nowrap;
+
+            color:
+                #708594;
+
+            font-family:
+                Consolas,
+                monospace;
+
+            font-size:
+                9px;
+        }
+
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        .status {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                5px;
+
+            font-size:
+                9px;
+
+            font-weight:
+                600;
+        }
+
+
+        .status-dot {
+
+            width:
+                7px;
+
+            height:
+                7px;
+
+            border-radius:
+                50%;
+        }
+
+
+        .status.active {
+
+            color:
+                #25804b;
+        }
+
+
+        .status.active .status-dot {
+
+            background:
+                #32b66a;
+        }
+
+
+        .status.inactive {
+
+            color:
+                #a06a25;
+        }
+
+
+        .status.inactive .status-dot {
+
+            background:
+                #d99b43;
+        }
+
+
+        /* =====================================================
+           YES / NO
+        ===================================================== */
+
+        .yes {
+
+            color:
+                #27804d;
+
+            font-weight:
+                700;
+        }
+
+
+        .no {
+
+            color:
+                #9aa7b0;
+        }
+
+
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
+
+        .actions {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                5px;
+        }
+
+
+        .action-btn {
+
+            width:
+                31px;
+
+            height:
+                31px;
+
+            border:
+                1px solid #e1e8ed;
+
+            border-radius:
+                7px;
+
+            background:
+                white;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            color:
+                #708697;
+
+            transition:
+                .15s;
+        }
+
+
+        .action-btn:hover {
+
+            background:
+                #f3f8fc;
+
+            color:
+                #0875c8;
+
+            border-color:
+                #cfe1ed;
+        }
+
+
+        .action-btn.danger:hover {
+
+            background:
+                #fff3f3;
+
+            color:
+                #d14d4d;
+
+            border-color:
+                #efcaca;
+        }
+
+
+        .action-btn svg {
+
+            width:
+                15px;
+
+            height:
+                15px;
+
+            stroke:
+                currentColor;
+
+            fill:
+                none;
+
+            stroke-width:
+                1.8;
+
+            stroke-linecap:
+                round;
+
+            stroke-linejoin:
+                round;
+        }
+
+
+        /* =====================================================
+           EMPTY
+        ===================================================== */
+
+        .empty {
+
+            text-align:
+                center;
+
+            padding:
+                55px 20px;
+
+            color:
+                #92a1ad;
+
+            font-size:
+                11px;
+        }
+
+
+        .empty svg {
+
+            width:
+                40px;
+
+            height:
+                40px;
+
+            stroke:
+                #a6b2bb;
+
+            fill:
+                none;
+
+            stroke-width:
+                1.5;
+
+            margin-bottom:
+                10px;
+        }
+
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        .loading {
+
+            text-align:
+                center;
+
+            padding:
+                45px;
+
+            color:
+                #8293a2;
+
+            font-size:
+                11px;
+        }
+
+
+        .spinner {
+
+            width:
+                24px;
+
+            height:
+                24px;
+
+            border:
+                3px solid #e3ebf1;
+
+            border-top-color:
+                #0875c8;
+
+            border-radius:
+                50%;
+
+            animation:
+                spin .8s linear infinite;
+
+            margin:
+                0 auto 12px;
+        }
+
+
+        @keyframes spin {
+
+            to {
+                transform:
+                    rotate(360deg);
+            }
+
+        }
+
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .modal-overlay {
+
+            position:
+                fixed;
+
+            inset:
+                0;
+
+            background:
+                rgba(18, 42, 61, .45);
+
+            display:
+                none;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                20px;
+
+            z-index:
+                1000;
+        }
+
+
+        .modal-overlay.show {
+
+            display:
+                flex;
+        }
+
+
+        .modal {
+
+            width:
+                100%;
+
+            max-width:
+                700px;
+
+            max-height:
+                92vh;
+
+            overflow-y:
+                auto;
+
+            background:
+                white;
+
+            border-radius:
+                13px;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,.22);
+
+            animation:
+                modalIn .18s ease;
+        }
+
+
+        @keyframes modalIn {
+
+            from {
+
+                opacity:
+                    0;
+
+                transform:
+                    translateY(8px)
+                    scale(.99);
+
+            }
+
+            to {
+
+                opacity:
+                    1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+
+            }
+
+        }
+
+
+        .modal-header {
+
+            min-height:
+                60px;
+
+            padding:
+                0 20px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            border-bottom:
+                1px solid #edf1f4;
+        }
+
+
+        .modal-title {
+
+            color:
+                #244765;
+
+            font-size:
+                15px;
+
+            font-weight:
+                700;
+        }
+
+
+        .modal-close {
+
+            width:
+                32px;
+
+            height:
+                32px;
+
+            border:
+                none;
+
+            border-radius:
+                7px;
+
+            background:
+                #f4f7f9;
+
+            color:
+                #718596;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            font-size:
+                19px;
+        }
+
+
+        .modal-close:hover {
+
+            background:
+                #edf1f4;
+
+            color:
+                #344e63;
+        }
+
+
+        .modal-body {
+
+            padding:
+                20px;
+        }
+
+
+        .form-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap:
+                15px;
+        }
+
+
+        .form-group {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                6px;
+        }
+
+
+        .form-group.full {
+
+            grid-column:
+                1 / -1;
+        }
+
+
+        .form-label {
+
+            color:
+                #536f83;
+
+            font-size:
+                10px;
+
+            font-weight:
+                700;
+        }
+
+
+        .required {
+
+            color:
+                #d14d4d;
+        }
+
+
+        .form-control {
+
+            width:
+                100%;
+
+            min-height:
+                39px;
+
+            border:
+                1px solid #dce5eb;
+
+            border-radius:
+                7px;
+
+            padding:
+                8px 11px;
+
+            outline:
+                none;
+
+            color:
+                #304f68;
+
+            background:
+                #fbfcfd;
+
+            font-size:
+                11px;
+        }
+
+
+        textarea.form-control {
+
+            min-height:
+                85px;
+
+            resize:
+                vertical;
+        }
+
+
+        .form-control:focus {
+
+            border-color:
+                #087bd2;
+
+            background:
+                white;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(8,123,210,.07);
+        }
+
+
+        .form-help {
+
+            color:
+                #96a4ae;
+
+            font-size:
+                8px;
+
+            line-height:
+                1.4;
+        }
+
+
+        .switch-row {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            padding:
+                11px 12px;
+
+            border:
+                1px solid #e5ebf0;
+
+            border-radius:
+                8px;
+
+            background:
+                #fafcfd;
+        }
+
+
+        .switch-info {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                3px;
+        }
+
+
+        .switch-title {
+
+            color:
+                #536f83;
+
+            font-size:
+                10px;
+
+            font-weight:
+                700;
+        }
+
+
+        .switch-description {
+
+            color:
+                #98a7b3;
+
+            font-size:
+                8px;
+        }
+
+
+        .switch {
+
+            position:
+                relative;
+
+            width:
+                40px;
+
+            height:
+                22px;
+        }
+
+
+        .switch input {
+
+            opacity:
+                0;
+
+            width:
+                0;
+
+            height:
+                0;
+        }
+
+
+        .slider {
+
+            position:
+                absolute;
+
+            inset:
+                0;
+
+            cursor:
+                pointer;
+
+            background:
+                #cbd5dc;
+
+            border-radius:
+                30px;
+
+            transition:
+                .2s;
+        }
+
+
+        .slider:before {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            width:
+                16px;
+
+            height:
+                16px;
+
+            left:
+                3px;
+
+            top:
+                3px;
+
+            background:
+                white;
+
+            border-radius:
+                50%;
+
+            transition:
+                .2s;
+
+            box-shadow:
+                0 1px 3px
+                rgba(0,0,0,.2);
+        }
+
+
+        .switch input:checked + .slider {
+
+            background:
+                #087bd2;
+        }
+
+
+        .switch input:checked + .slider:before {
+
+            transform:
+                translateX(18px);
+        }
+
+
+        .modal-footer {
+
+            min-height:
+                65px;
+
+            padding:
+                0 20px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                flex-end;
+
+            gap:
+                9px;
+
+            border-top:
+                1px solid #edf1f4;
+        }
+
+
+        .btn-secondary {
+
+            height:
+                38px;
+
+            padding:
+                0 16px;
+
+            border:
+                1px solid #dce5eb;
+
+            border-radius:
+                7px;
+
+            background:
+                white;
+
+            color:
+                #607789;
+
+            font-size:
+                11px;
+
+            font-weight:
+                600;
+        }
+
+
+        .btn-secondary:hover {
+
+            background:
+                #f7f9fb;
+        }
+
+
+        .btn-save {
+
+            height:
+                38px;
+
+            padding:
+                0 17px;
+
+            border:
+                none;
+
+            border-radius:
+                7px;
+
+            background:
+                #0875c8;
+
+            color:
+                white;
+
+            font-size:
+                11px;
+
+            font-weight:
+                600;
+        }
+
+
+        .btn-save:hover {
+
+            background:
+                #0667b1;
+        }
+
+
+        .btn-save:disabled {
+
+            opacity:
+                .6;
+
+            cursor:
+                not-allowed;
+        }
+
+
+        /* =====================================================
+           TOAST
+        ===================================================== */
+
+        .toast-container {
+
+            position:
+                fixed;
+
+            right:
+                20px;
+
+            bottom:
+                20px;
+
+            z-index:
+                2000;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                8px;
+        }
+
+
+        .toast {
+
+            min-width:
+                270px;
+
+            max-width:
+                390px;
+
+            padding:
+                13px 15px;
+
+            border-radius:
+                9px;
+
+            background:
+                white;
+
+            border:
+                1px solid #dfe7ec;
+
+            box-shadow:
+                0 8px 30px
+                rgba(0,0,0,.12);
+
+            color:
+                #526d82;
+
+            font-size:
+                10px;
+
+            animation:
+                toastIn .2s ease;
+        }
+
+
+        .toast.success {
+
+            border-left:
+                4px solid #31ad67;
+        }
+
+
+        .toast.error {
+
+            border-left:
+                4px solid #d14d4d;
+        }
+
+
+        .toast.warning {
+
+            border-left:
+                4px solid #d89b42;
+        }
+
+
+        @keyframes toastIn {
+
+            from {
+
+                opacity:
+                    0;
+
+                transform:
+                    translateX(15px);
+
+            }
+
+            to {
+
+                opacity:
+                    1;
+
+                transform:
+                    translateX(0);
+
+            }
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .page-header {
+
+                padding:
+                    0 15px;
+            }
+
+
+            .container {
+
+                padding:
+                    18px 15px 30px;
+            }
+
+
+            .header-title {
+
+                font-size:
+                    16px;
+            }
+
+
+            .header-subtitle {
+
+                display:
+                    none;
+            }
+
+
+            .content-top {
+
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+            }
+
+
+            .toolbar {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    stretch;
+            }
+
+
+            .filter-select {
+
+                width:
+                    100%;
+            }
+
+
+            .form-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .form-group.full {
+
+                grid-column:
+                    auto;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .stats {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .header-user-role {
+
+                display:
+                    none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="page-header">
+
+
+    <div class="header-left">
+
+        <img
+            src="img/logo-smtg.png"
+            class="logo"
+            alt="SMTG"
+        >
+
+
+        <div>
+
+            <div class="header-title">
+                Gestion des Pages
+            </div>
+
+            <div class="header-subtitle">
+                Système de Gestion Intégré — SMTG Abattoir
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-user">
+
+        <div
+            class="avatar"
+            id="avatar"
+        >
+            --
+        </div>
+
+
+        <div>
+
+            <div
+                class="header-user-name"
+                id="headerUserName"
+            >
+                Utilisateur
+            </div>
+
+            <div
+                class="header-user-role"
+                id="headerUserRole"
+            >
+                Chargement...
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     CONTENT
+========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         TITLE
+    ====================================================== -->
+
+    <div class="content-top">
+
+
+        <div class="title-block">
+
+            <h1>
+                Pages du système
+            </h1>
+
+            <p>
+                Gérez les pages disponibles dans SMTG Abattoir.
+            </p>
+
+        </div>
+
+
+        <button
+            class="btn-primary"
+            id="addPageButton"
+        >
+
+            <svg viewBox="0 0 24 24">
+
+                <path d="M12 5v14"></path>
+
+                <path d="M5 12h14"></path>
+
+            </svg>
+
+            Nouvelle page
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         STATS
+    ====================================================== -->
+
+    <section class="stats">
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Total pages
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalPages"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Pages enregistrées
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Pages actives
+            </div>
+
+            <div
+                class="stat-value"
+                id="activePages"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Disponibles dans le système
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Pages menu
+            </div>
+
+            <div
+                class="stat-value"
+                id="menuPages"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Affichées dans la navigation
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Modules
+            </div>
+
+            <div
+                class="stat-value"
+                id="moduleCount"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Modules utilisés
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         TOOLBAR
+    ====================================================== -->
+
+    <section class="toolbar">
+
+
+        <div class="search-box">
+
+            <svg viewBox="0 0 24 24">
+
+                <circle
+                    cx="11"
+                    cy="11"
+                    r="7"
+                ></circle>
+
+                <path
+                    d="M20 20l-4-4"
+                ></path>
+
+            </svg>
+
+
+            <input
+                type="text"
+                class="search-input"
+                id="searchInput"
+                placeholder="Rechercher par nom, code, path..."
+            >
+
+        </div>
+
+
+        <select
+            class="filter-select"
+            id="moduleFilter"
+        >
+
+            <option value="">
+                Tous les modules
+            </option>
+
+        </select>
+
+
+        <select
+            class="filter-select"
+            id="statusFilter"
+        >
+
+            <option value="">
+                Tous les statuts
+            </option>
+
+            <option value="active">
+                Actives
+            </option>
+
+            <option value="inactive">
+                Inactives
+            </option>
+
+        </select>
+
+
+        <button
+            class="btn-refresh"
+            id="refreshButton"
+            title="Actualiser"
+        >
+
+            <svg viewBox="0 0 24 24">
+
+                <path
+                    d="M20 11a8.1 8.1 0 0 0-14.7-4L3 10"
+                ></path>
+
+                <path
+                    d="M3 5v5h5"
+                ></path>
+
+                <path
+                    d="M4 13a8.1 8.1 0 0 0 14.7 4L21 14"
+                ></path>
+
+                <path
+                    d="M21 19v-5h-5"
+                ></path>
+
+            </svg>
+
+        </button>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         TABLE
+    ====================================================== -->
+
+    <section class="table-card">
+
+
+        <div class="table-header">
+
+            <div class="table-title">
+                Liste des pages
+            </div>
+
+            <div
+                class="table-count"
+                id="tableCount"
+            >
+                0 page
+            </div>
+
+        </div>
+
+
+        <div
+            class="table-wrapper"
+            id="tableWrapper"
+        >
+
+            <div class="loading">
+
+                <div class="spinner"></div>
+
+                Chargement des pages...
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<!-- =========================================================
+     MODAL
+========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="modalOverlay"
+>
+
+
+    <div class="modal">
+
+
+        <div class="modal-header">
+
+            <div
+                class="modal-title"
+                id="modalTitle"
+            >
+                Nouvelle page
+            </div>
+
+
+            <button
+                class="modal-close"
+                id="modalClose"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="pageForm"
+        >
+
+
+            <div class="modal-body">
+
+
+                <div class="form-grid">
+
+
+                    <!-- =================================================
+                         NAME
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+
+                            Nom de la page
+                            <span class="required">*</span>
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="pageName"
+                            required
+                            maxlength="200"
+                            placeholder="Ex: Gestion des employés"
+                        >
+
+                    </div>
+
+
+                    <!-- =================================================
+                         CODE
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+
+                            Code
+                            <span class="required">*</span>
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="pageCode"
+                            required
+                            maxlength="100"
+                            placeholder="Ex: EMPLOYEES"
+                        >
+
+
+                        <div class="form-help">
+                            Code unique, recommandé en MAJUSCULES.
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         MODULE
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+
+                            Module
+
+                            <span class="required">*</span>
+
+                        </label>
+
+
+                        <select
+                            class="form-control"
+                            id="pageModule"
+                            required
+                        >
+
+                            <option value="">
+                                Sélectionner un module
+                            </option>
+
+                            <option value="GENERAL">
+                                GENERAL
+                            </option>
+
+                            <option value="ADMINISTRATION">
+                                ADMINISTRATION
+                            </option>
+
+                            <option value="RH">
+                                RH
+                            </option>
+
+                            <option value="RECEPTION_ANIMAUX">
+                                RECEPTION_ANIMAUX
+                            </option>
+
+                            <option value="ABATTAGE">
+                                ABATTAGE
+                            </option>
+
+                            <option value="DECOUPE">
+                                DECOUPE
+                            </option>
+
+                            <option value="FROID">
+                                FROID
+                            </option>
+
+                            <option value="STOCK">
+                                STOCK
+                            </option>
+
+                            <option value="EXPEDITION">
+                                EXPEDITION
+                            </option>
+
+                            <option value="RECEPTION">
+                                RECEPTION
+                            </option>
+
+                            <option value="ACHATS">
+                                ACHATS
+                            </option>
+
+                            <option value="FINANCE">
+                                FINANCE
+                            </option>
+
+                            <option value="COMMERCIAL">
+                                COMMERCIAL
+                            </option>
+
+                            <option value="QUALITE">
+                                QUALITE
+                            </option>
+
+                            <option value="HSE">
+                                HSE
+                            </option>
+
+                            <option value="MAINTENANCE">
+                                MAINTENANCE
+                            </option>
+
+                            <option value="IT">
+                                IT
+                            </option>
+
+                            <option value="REPORTING">
+                                REPORTING
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         PATH
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+
+                            Path
+
+                            <span class="required">*</span>
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="pagePath"
+                            required
+                            maxlength="500"
+                            placeholder="Ex: employees.html"
+                        >
+
+
+                        <div class="form-help">
+                            Chemin du fichier HTML de la page.
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         ICON
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Icône
+                        </label>
+
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="pageIcon"
+                            maxlength="100"
+                            placeholder="Ex: users"
+                        >
+
+
+                        <div class="form-help">
+                            Identifiant de l'icône utilisé par le menu.
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         SORT ORDER
+                    ================================================== -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Ordre d'affichage
+                        </label>
+
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="sortOrder"
+                            min="0"
+                            step="1"
+                            value="0"
+                        >
+
+                    </div>
+
+
+                    <!-- =================================================
+                         DESCRIPTION
+                    ================================================== -->
+
+                    <div class="form-group full">
+
+                        <label class="form-label">
+                            Description
+                        </label>
+
+
+                        <textarea
+                            class="form-control"
+                            id="pageDescription"
+                            maxlength="500"
+                            placeholder="Description de la page..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         IS MENU
+                    ================================================== -->
+
+                    <div class="form-group">
+
+
+                        <div class="switch-row">
+
+
+                            <div class="switch-info">
+
+                                <div class="switch-title">
+                                    Afficher dans le menu
+                                </div>
+
+                                <div class="switch-description">
+                                    La page apparaîtra dans la navigation.
+                                </div>
+
+                            </div>
+
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="isMenu"
+                                    checked
+                                >
+
+                                <span class="slider"></span>
+
+                            </label>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =================================================
+                         IS ACTIVE
+                    ================================================== -->
+
+                    <div class="form-group">
+
+
+                        <div class="switch-row">
+
+
+                            <div class="switch-info">
+
+                                <div class="switch-title">
+                                    Page active
+                                </div>
+
+                                <div class="switch-description">
+                                    La page peut être utilisée par le système.
+                                </div>
+
+                            </div>
+
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="isActive"
+                                    checked
+                                >
+
+                                <span class="slider"></span>
+
+                            </label>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+
+
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    id="cancelButton"
+                >
+                    Annuler
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn-save"
+                    id="saveButton"
+                >
+                    Enregistrer
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+
+<!-- =========================================================
+     SUPABASE
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+
+<script
+    src="api/supabase.js"
+></script>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+    /* =====================================================
+       CONFIG
+    ===================================================== */
+
+    const SESSION_KEY =
+        "smtg_current_user";
+
+
+    const LOGIN_PAGE =
+        "login.html";
+
+
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+
+    let currentUser =
+        null;
+
+
+    let allPages =
+        [];
+
+
+    let filteredPages =
+        [];
+
+
+    let editingPageId =
+        null;
+
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const tableWrapper =
+        document.getElementById(
+            "tableWrapper"
+        );
+
+
+    const tableCount =
+        document.getElementById(
+            "tableCount"
+        );
+
+
+    const searchInput =
+        document.getElementById(
+            "searchInput"
+        );
+
+
+    const moduleFilter =
+        document.getElementById(
+            "moduleFilter"
+        );
+
+
+    const statusFilter =
+        document.getElementById(
+            "statusFilter"
+        );
+
+
+    const refreshButton =
+        document.getElementById(
+            "refreshButton"
+        );
+
+
+    const addPageButton =
+        document.getElementById(
+            "addPageButton"
+        );
+
+
+    const modalOverlay =
+        document.getElementById(
+            "modalOverlay"
+        );
+
+
+    const modalClose =
+        document.getElementById(
+            "modalClose"
+        );
+
+
+    const cancelButton =
+        document.getElementById(
+            "cancelButton"
+        );
+
+
+    const pageForm =
+        document.getElementById(
+            "pageForm"
+        );
+
+
+    const modalTitle =
+        document.getElementById(
+            "modalTitle"
+        );
+
+
+    const saveButton =
+        document.getElementById(
+            "saveButton"
+        );
+
+
+    /* =====================================================
+       USER
+    ===================================================== */
+
+    function loadCurrentUser() {
+
+
+        const stored =
+            sessionStorage.getItem(
+                SESSION_KEY
+            )
+            ||
+            localStorage.getItem(
+                SESSION_KEY
+            );
+
+
+        if (!stored) {
+
+            window.location.href =
+                LOGIN_PAGE;
+
+            return false;
+        }
+
+
+        try {
+
+            currentUser =
+                JSON.parse(
+                    stored
+                );
+
+
+            if (
+                !currentUser ||
+                !currentUser.id
+            ) {
+
+                throw new Error(
+                    "Session invalide"
+                );
+
+            }
+
+
+            currentUser.id =
+                Number(
+                    currentUser.id
+                );
+
+
+            return true;
+
+
+        } catch (error) {
+
+
+            console.error(
+                error
+            );
+
+
+            sessionStorage.removeItem(
+                SESSION_KEY
+            );
+
+
+            localStorage.removeItem(
+                SESSION_KEY
+            );
+
+
+            window.location.href =
+                LOGIN_PAGE;
+
+
+            return false;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       USER DISPLAY
+    ===================================================== */
+
+    async function loadUserInfo() {
+
+
+        if (!currentUser) {
+
+            return;
+        }
+
+
+        const fullName =
+            currentUser.full_name
+            ||
+            currentUser.username
+            ||
+            "Utilisateur";
+
+
+        document.getElementById(
+            "headerUserName"
+        ).textContent =
+            fullName;
+
+
+        const initials =
+            fullName
+                .trim()
+                .split(/\s+/)
+                .slice(0, 2)
+                .map(
+                    word =>
+                        word
+                            .charAt(0)
+                            .toUpperCase()
+                )
+                .join("");
+
+
+        document.getElementById(
+            "avatar"
+        ).textContent =
+            initials
+            ||
+            "U";
+
+
+        try {
+
+
+            const client =
+                getSupabase();
+
+
+            if (
+                currentUser.role_id
+            ) {
+
+
+                const {
+                    data,
+                    error
+                } = await client
+
+                    .from("roles")
+
+                    .select(
+                        "name, code"
+                    )
+
+                    .eq(
+                        "id",
+                        currentUser.role_id
+                    )
+
+                    .maybeSingle();
+
+
+                if (
+                    !error &&
+                    data
+                ) {
+
+                    document.getElementById(
+                        "headerUserRole"
+                    ).textContent =
+                        data.name
+                        ||
+                        data.code
+                        ||
+                        "Utilisateur";
+
+                } else {
+
+                    document.getElementById(
+                        "headerUserRole"
+                    ).textContent =
+                        "Utilisateur";
+
+                }
+
+            } else {
+
+                document.getElementById(
+                    "headerUserRole"
+                ).textContent =
+                    "Utilisateur";
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Erreur rôle:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD PAGES
+    ===================================================== */
+
+    async function loadPages() {
+
+
+        showLoading();
+
+
+        try {
+
+
+            const client =
+                getSupabase();
+
+
+            const {
+                data,
+                error
+            } = await client
+
+                .from("pages")
+
+                .select(
+                    `
+                    id,
+                    name,
+                    code,
+                    path,
+                    module,
+                    icon,
+                    description,
+                    sort_order,
+                    is_menu,
+                    is_active,
+                    created_by,
+                    created_at,
+                    updated_by,
+                    updated_at
+                    `
+                )
+
+                .order(
+                    "sort_order",
+                    {
+                        ascending:
+                            true
+                    }
+                )
+
+                .order(
+                    "name",
+                    {
+                        ascending:
+                            true
+                    }
+                );
+
+
+            if (error) {
+
+                console.error(
+                    "Erreur pages:",
+                    error
+                );
+
+
+                showError(
+                    error.message
+                );
+
+
+                return;
+            }
+
+
+            allPages =
+                data
+                ||
+                [];
+
+
+            populateModuleFilter();
+
+
+            updateStats();
+
+
+            applyFilters();
+
+
+        } catch (error) {
+
+
+            console.error(
+                error
+            );
+
+
+            showError(
+                error.message
+                ||
+                "Erreur inconnue"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    function showLoading() {
+
+
+        tableWrapper.innerHTML = `
+
+            <div class="loading">
+
+                <div class="spinner"></div>
+
+                Chargement des pages...
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =====================================================
+       ERROR
+    ===================================================== */
+
+    function showError(
+        message
+    ) {
+
+
+        tableWrapper.innerHTML = `
+
+            <div class="empty">
+
+                <svg viewBox="0 0 24 24">
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                    ></circle>
+
+                    <path
+                        d="M12 8v5"
+                    ></path>
+
+                    <path
+                        d="M12 16h.01"
+                    ></path>
+
+                </svg>
+
+                <div>
+                    Impossible de charger les pages.
+                </div>
+
+                <div style="margin-top:6px;font-size:9px;">
+                    ${escapeHtml(message || "")}
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =====================================================
+       MODULE FILTER
+    ===================================================== */
+
+    function populateModuleFilter() {
+
+
+        const currentValue =
+            moduleFilter.value;
+
+
+        const modules =
+            [
+                ...new Set(
+                    allPages
+                        .map(
+                            page =>
+                                page.module
+                        )
+                        .filter(
+                            Boolean
+                        )
+                )
+            ]
+            .sort(
+                (a, b) =>
+                    String(a)
+                        .localeCompare(
+                            String(b),
+                            "fr"
+                        )
+            );
+
+
+        moduleFilter.innerHTML = `
+
+            <option value="">
+                Tous les modules
+            </option>
+
+        `;
+
+
+        modules.forEach(
+            function(module) {
+
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    module;
+
+
+                option.textContent =
+                    module;
+
+
+                moduleFilter.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        if (
+            modules.includes(
+                currentValue
+            )
+        ) {
+
+            moduleFilter.value =
+                currentValue;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       STATS
+    ===================================================== */
+
+    function updateStats() {
+
+
+        const total =
+            allPages.length;
+
+
+        const active =
+            allPages.filter(
+                page =>
+                    page.is_active === true
+            ).length;
+
+
+        const menu =
+            allPages.filter(
+                page =>
+                    page.is_menu === true
+            ).length;
+
+
+        const modules =
+            new Set(
+                allPages
+                    .map(
+                        page =>
+                            page.module
+                    )
+                    .filter(
+                        Boolean
+                    )
+            ).size;
+
+
+        document.getElementById(
+            "totalPages"
+        ).textContent =
+            total;
+
+
+        document.getElementById(
+            "activePages"
+        ).textContent =
+            active;
+
+
+        document.getElementById(
+            "menuPages"
+        ).textContent =
+            menu;
+
+
+        document.getElementById(
+            "moduleCount"
+        ).textContent =
+            modules;
+
+    }
+
+
+    /* =====================================================
+       FILTERS
+    ===================================================== */
+
+    function applyFilters() {
+
+
+        const search =
+            searchInput.value
+                .trim()
+                .toLowerCase();
+
+
+        const module =
+            moduleFilter.value;
+
+
+        const status =
+            statusFilter.value;
+
+
+        filteredPages =
+            allPages.filter(
+                function(page) {
+
+
+                    const text =
+                        [
+                            page.name,
+                            page.code,
+                            page.path,
+                            page.module,
+                            page.description
+                        ]
+                        .filter(
+                            Boolean
+                        )
+                        .join(" ")
+                        .toLowerCase();
+
+
+                    const matchesSearch =
+                        !search
+                        ||
+                        text.includes(
+                            search
+                        );
+
+
+                    const matchesModule =
+                        !module
+                        ||
+                        page.module ===
+                        module;
+
+
+                    let matchesStatus =
+                        true;
+
+
+                    if (
+                        status ===
+                        "active"
+                    ) {
+
+                        matchesStatus =
+                            page.is_active === true;
+
+                    }
+
+
+                    if (
+                        status ===
+                        "inactive"
+                    ) {
+
+                        matchesStatus =
+                            page.is_active === false;
+
+                    }
+
+
+                    return (
+                        matchesSearch
+                        &&
+                        matchesModule
+                        &&
+                        matchesStatus
+                    );
+
+                }
+            );
+
+
+        renderTable(
+            filteredPages
+        );
+
+    }
+
+
+    /* =====================================================
+       RENDER TABLE
+    ===================================================== */
+
+    function renderTable(
+        pages
+    ) {
+
+
+        tableCount.textContent =
+            pages.length
+            +
+            (
+                pages.length <= 1
+                    ? " page"
+                    : " pages"
+            );
+
+
+        if (
+            pages.length === 0
+        ) {
+
+
+            tableWrapper.innerHTML = `
+
+                <div class="empty">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <rect
+                            x="4"
+                            y="4"
+                            width="16"
+                            height="16"
+                            rx="2"
+                        ></rect>
+
+                        <path
+                            d="M8 9h8"
+                        ></path>
+
+                        <path
+                            d="M8 13h5"
+                        ></path>
+
+                    </svg>
+
+                    <div>
+                        Aucune page trouvée.
+                    </div>
+
+                </div>
+
+            `;
+
+
+            return;
+        }
+
+
+        let html = `
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Page
+                        </th>
+
+                        <th>
+                            Code
+                        </th>
+
+                        <th>
+                            Module
+                        </th>
+
+                        <th>
+                            Path
+                        </th>
+
+                        <th>
+                            Ordre
+                        </th>
+
+                        <th>
+                            Menu
+                        </th>
+
+                        <th>
+                            Statut
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+        `;
+
+
+        pages.forEach(
+            function(page) {
+
+
+                const safeName =
+                    escapeHtml(
+                        page.name
+                        ||
+                        ""
+                    );
+
+
+                const safeCode =
+                    escapeHtml(
+                        page.code
+                        ||
+                        ""
+                    );
+
+
+                const safeModule =
+                    escapeHtml(
+                        page.module
+                        ||
+                        "-"
+                    );
+
+
+                const safePath =
+                    escapeHtml(
+                        page.path
+                        ||
+                        ""
+                    );
+
+
+                const safeDescription =
+                    escapeHtml(
+                        page.description
+                        ||
+                        ""
+                    );
+
+
+                html += `
+
+                    <tr>
+
+                        <td>
+
+                            <div class="page-name">
+
+                                ${safeName}
+
+                            </div>
+
+                            ${
+                                safeDescription
+                                ?
+                                `
+                                <div class="page-description">
+                                    ${safeDescription}
+                                </div>
+                                `
+                                :
+                                ""
+                            }
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="code-badge">
+
+                                ${safeCode}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="module-badge">
+
+                                ${safeModule}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="path-text"
+                                title="${safePath}"
+                            >
+
+                                ${safePath}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            ${Number(
+                                page.sort_order || 0
+                            )}
+
+                        </td>
+
+
+                        <td>
+
+                            ${
+                                page.is_menu
+                                ?
+                                `<span class="yes">Oui</span>`
+                                :
+                                `<span class="no">Non</span>`
+                            }
+
+                        </td>
+
+
+                        <td>
+
+                            ${
+                                page.is_active
+                                ?
+
+                                `
+                                <span class="status active">
+
+                                    <span class="status-dot"></span>
+
+                                    Active
+
+                                </span>
+                                `
+
+                                :
+
+                                `
+                                <span class="status inactive">
+
+                                    <span class="status-dot"></span>
+
+                                    Inactive
+
+                                </span>
+                                `
+                            }
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="actions">
+
+
+                                <!-- EDIT -->
+
+                                <button
+                                    class="action-btn"
+                                    title="Modifier"
+                                    onclick="editPage(${Number(page.id)})"
+                                >
+
+                                    <svg viewBox="0 0 24 24">
+
+                                        <path
+                                            d="M12 20h9"
+                                        ></path>
+
+                                        <path
+                                            d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"
+                                        ></path>
+
+                                    </svg>
+
+                                </button>
+
+
+                                <!-- ACTIVATE -->
+
+                                <button
+                                    class="action-btn"
+                                    title="${
+                                        page.is_active
+                                        ? "Désactiver"
+                                        : "Activer"
+                                    }"
+                                    onclick="togglePage(${Number(page.id)})"
+                                >
+
+                                    ${
+                                        page.is_active
+
+                                        ?
+
+                                        `
+                                        <svg viewBox="0 0 24 24">
+
+                                            <rect
+                                                x="3"
+                                                y="5"
+                                                width="18"
+                                                height="14"
+                                                rx="2"
+                                            ></rect>
+
+                                            <path
+                                                d="M8 12l3 3 5-6"
+                                            ></path>
+
+                                        </svg>
+                                        `
+
+                                        :
+
+                                        `
+                                        <svg viewBox="0 0 24 24">
+
+                                            <circle
+                                                cx="12"
+                                                cy="12"
+                                                r="9"
+                                            ></circle>
+
+                                            <path
+                                                d="M8 12h8"
+                                            ></path>
+
+                                        </svg>
+                                        `
+                                    }
+
+                                </button>
+
+
+                                <!-- DELETE -->
+
+                                <button
+                                    class="action-btn danger"
+                                    title="Supprimer"
+                                    onclick="deletePage(${Number(page.id)})"
+                                >
+
+                                    <svg viewBox="0 0 24 24">
+
+                                        <path
+                                            d="M3 6h18"
+                                        ></path>
+
+                                        <path
+                                            d="M8 6V4h8v2"
+                                        ></path>
+
+                                        <path
+                                            d="M19 6l-1 14H6L5 6"
+                                        ></path>
+
+                                        <path
+                                            d="M10 11v5"
+                                        ></path>
+
+                                        <path
+                                            d="M14 11v5"
+                                        ></path>
+
+                                    </svg>
+
+                                </button>
+
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        );
+
+
+        html += `
+
+                </tbody>
+
+            </table>
+
+        `;
+
+
+        tableWrapper.innerHTML =
+            html;
+
+    }
+
+
+    /* =====================================================
+       OPEN MODAL
+    ===================================================== */
+
+    function openModal(
+        page = null
+    ) {
+
+
+        pageForm.reset();
+
+
+        editingPageId =
+            null;
+
+
+        if (page) {
+
+
+            modalTitle.textContent =
+                "Modifier la page";
+
+
+            editingPageId =
+                Number(
+                    page.id
+                );
+
+
+            document.getElementById(
+                "pageName"
+            ).value =
+                page.name
+                ||
+                "";
+
+
+            document.getElementById(
+                "pageCode"
+            ).value =
+                page.code
+                ||
+                "";
+
+
+            document.getElementById(
+                "pageModule"
+            ).value =
+                page.module
+                ||
+                "";
+
+
+            document.getElementById(
+                "pagePath"
+            ).value =
+                page.path
+                ||
+                "";
+
+
+            document.getElementById(
+                "pageIcon"
+            ).value =
+                page.icon
+                ||
+                "";
+
+
+            document.getElementById(
+                "sortOrder"
+            ).value =
+                page.sort_order
+                ??
+                0;
+
+
+            document.getElementById(
+                "pageDescription"
+            ).value =
+                page.description
+                ||
+                "";
+
+
+            document.getElementById(
+                "isMenu"
+            ).checked =
+                page.is_menu !== false;
+
+
+            document.getElementById(
+                "isActive"
+            ).checked =
+                page.is_active !== false;
+
+
+        } else {
+
+
+            modalTitle.textContent =
+                "Nouvelle page";
+
+
+            document.getElementById(
+                "sortOrder"
+            ).value =
+                0;
+
+
+            document.getElementById(
+                "isMenu"
+            ).checked =
+                true;
+
+
+            document.getElementById(
+                "isActive"
+            ).checked =
+                true;
+
+        }
+
+
+        modalOverlay.classList.add(
+            "show"
+        );
+
+
+        setTimeout(
+            function() {
+
+                document.getElementById(
+                    "pageName"
+                ).focus();
+
+            },
+            50
+        );
+
+    }
+
+
+    /* =====================================================
+       CLOSE MODAL
+    ===================================================== */
+
+    function closeModal() {
+
+
+        modalOverlay.classList.remove(
+            "show"
+        );
+
+
+        editingPageId =
+            null;
+
+    }
+
+
+    /* =====================================================
+       ADD
+    ===================================================== */
+
+    addPageButton.addEventListener(
+        "click",
+        function() {
+
+            openModal();
+
+        }
+    );
+
+
+    /* =====================================================
+       EDIT
+    ===================================================== */
+
+    window.editPage =
+        function(pageId) {
+
+
+            const page =
+                allPages.find(
+                    item =>
+                        Number(item.id)
+                        ===
+                        Number(pageId)
+                );
+
+
+            if (!page) {
+
+                showToast(
+                    "Page introuvable.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            openModal(
+                page
+            );
+
+        };
+
+
+    /* =====================================================
+       SAVE
+    ===================================================== */
+
+    pageForm.addEventListener(
+        "submit",
+        async function(event) {
+
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById(
+                    "pageName"
+                ).value.trim();
+
+
+            const code =
+                document.getElementById(
+                    "pageCode"
+                ).value.trim()
+                .toUpperCase()
+                .replace(
+                    /\s+/g,
+                    "_"
+                );
+
+
+            const module =
+                document.getElementById(
+                    "pageModule"
+                ).value.trim()
+                .toUpperCase();
+
+
+            const path =
+                document.getElementById(
+                    "pagePath"
+                ).value.trim();
+
+
+            const icon =
+                document.getElementById(
+                    "pageIcon"
+                ).value.trim();
+
+
+            const description =
+                document.getElementById(
+                    "pageDescription"
+                ).value.trim();
+
+
+            const sortOrder =
+                Number(
+                    document.getElementById(
+                        "sortOrder"
+                    ).value
+                    ||
+                    0
+                );
+
+
+            const isMenu =
+                document.getElementById(
+                    "isMenu"
+                ).checked;
+
+
+            const isActive =
+                document.getElementById(
+                    "isActive"
+                ).checked;
+
+
+            /* ---------------------------------------------
+               VALIDATION
+            --------------------------------------------- */
+
+            if (!name) {
+
+                showToast(
+                    "Le nom de la page est obligatoire.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            if (!code) {
+
+                showToast(
+                    "Le code est obligatoire.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            if (!module) {
+
+                showToast(
+                    "Le module est obligatoire.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            if (!path) {
+
+                showToast(
+                    "Le path est obligatoire.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            /*
+             * Dashboard protection
+             */
+
+            if (
+                editingPageId !== null
+            ) {
+
+
+                const existingPage =
+                    allPages.find(
+                        item =>
+                            Number(item.id)
+                            ===
+                            Number(
+                                editingPageId
+                            )
+                    );
+
+
+                if (
+                    existingPage &&
+                    String(
+                        existingPage.code
+                        ||
+                        ""
+                    ).toUpperCase()
+                    ===
+                    "DASHBOARD"
+                ) {
+
+
+                    /*
+                     * Le code Dashboard ne doit pas
+                     * être changé.
+                     */
+
+                    if (
+                        code !==
+                        "DASHBOARD"
+                    ) {
+
+                        showToast(
+                            "Le code DASHBOARD est protégé.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+
+                }
+
+            }
+
+
+            /*
+             * Prevent duplicate code
+             */
+
+            const duplicateCode =
+                allPages.find(
+                    page =>
+
+                        String(
+                            page.code
+                            ||
+                            ""
+                        ).toUpperCase()
+                        ===
+                        code
+
+                        &&
+
+                        Number(
+                            page.id
+                        )
+                        !==
+                        Number(
+                            editingPageId
+                            ||
+                            0
+                        )
+                );
+
+
+            if (
+                duplicateCode
+            ) {
+
+                showToast(
+                    "Ce code existe déjà.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            /*
+             * Prevent duplicate path
+             */
+
+            const duplicatePath =
+                allPages.find(
+                    page =>
+
+                        String(
+                            page.path
+                            ||
+                            ""
+                        ).toLowerCase()
+                        ===
+                        path.toLowerCase()
+
+                        &&
+
+                        Number(
+                            page.id
+                        )
+                        !==
+                        Number(
+                            editingPageId
+                            ||
+                            0
+                        )
+                );
+
+
+            if (
+                duplicatePath
+            ) {
+
+                showToast(
+                    "Ce path existe déjà.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            /* ---------------------------------------------
+               SAVE
+            --------------------------------------------- */
+
+            saveButton.disabled =
+                true;
+
+
+            saveButton.textContent =
+                "Enregistrement...";
+
+
+            try {
+
+
+                const client =
+                    getSupabase();
+
+
+                if (
+                    editingPageId === null
+                ) {
+
+
+                    /*
+                     * INSERT
+                     */
+
+                    const {
+                        data,
+                        error
+                    } = await client
+
+                        .from("pages")
+
+                        .insert({
+
+                            name:
+                                name,
+
+                            code:
+                                code,
+
+                            path:
+                                path,
+
+                            module:
+                                module,
+
+                            icon:
+                                icon
+                                ||
+                                null,
+
+                            description:
+                                description
+                                ||
+                                null,
+
+                            sort_order:
+                                sortOrder,
+
+                            is_menu:
+                                isMenu,
+
+                            is_active:
+                                isActive,
+
+                            created_by:
+                                currentUser.id
+
+                        })
+
+                        .select()
+                        .single();
+
+
+                    if (error) {
+
+                        throw error;
+                    }
+
+
+                    /*
+                     * Super Administrateur
+                     *
+                     * Si le nouveau page est créé,
+                     * on l'ajoute automatiquement au
+                     * Super Administrateur avec tous
+                     * les droits.
+                     */
+
+                    await grantPageToSuperAdmin(
+                        data.id
+                    );
+
+
+                    showToast(
+                        "Page créée avec succès.",
+                        "success"
+                    );
+
+
+                } else {
+
+
+                    /*
+                     * UPDATE
+                     */
+
+                    const {
+                        error
+                    } = await client
+
+                        .from("pages")
+
+                        .update({
+
+                            name:
+                                name,
+
+                            code:
+                                code,
+
+                            path:
+                                path,
+
+                            module:
+                                module,
+
+                            icon:
+                                icon
+                                ||
+                                null,
+
+                            description:
+                                description
+                                ||
+                                null,
+
+                            sort_order:
+                                sortOrder,
+
+                            is_menu:
+                                isMenu,
+
+                            is_active:
+                                isActive,
+
+                            updated_by:
+                                currentUser.id,
+
+                            updated_at:
+                                new Date()
+                                    .toISOString()
+
+                        })
+
+                        .eq(
+                            "id",
+                            editingPageId
+                        );
+
+
+                    if (error) {
+
+                        throw error;
+                    }
+
+
+                    showToast(
+                        "Page modifiée avec succès.",
+                        "success"
+                    );
+
+                }
+
+
+                closeModal();
+
+
+                await loadPages();
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "Erreur sauvegarde:",
+                    error
+                );
+
+
+                showToast(
+                    getFriendlyError(
+                        error
+                    ),
+                    "error"
+                );
+
+
+            } finally {
+
+
+                saveButton.disabled =
+                    false;
+
+
+                saveButton.textContent =
+                    "Enregistrer";
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       SUPER ADMIN
+       -----------------------------------------------------
+       code = SUPER_ADMINISTRATEUR
+       ===================================================== */
+
+    async function grantPageToSuperAdmin(
+        pageId
+    ) {
+
+
+        try {
+
+
+            const client =
+                getSupabase();
+
+
+            /*
+             * Chercher le rôle exact
+             */
+
+            const {
+                data: role,
+                error: roleError
+            } = await client
+
+                .from("roles")
+
+                .select(
+                    "id, name, code"
+                )
+
+                .or(
+                    "code.eq.SUPER_ADMINISTRATEUR,name.eq.Super Administrateur"
+                )
+
+                .maybeSingle();
+
+
+            if (
+                roleError
+            ) {
+
+                console.warn(
+                    "Super Admin non trouvé:",
+                    roleError
+                );
+
+                return;
+            }
+
+
+            if (!role) {
+
+                console.warn(
+                    "Role Super Administrateur introuvable."
+                );
+
+                return;
+            }
+
+
+            /*
+             * Ajouter tous les droits
+             */
+
+            const {
+                error
+            } = await client
+
+                .from("role_pages")
+
+                .upsert(
+                    {
+
+                        role_id:
+                            role.id,
+
+                        page_id:
+                            pageId,
+
+                        can_view:
+                            true,
+
+                        can_create:
+                            true,
+
+                        can_edit:
+                            true,
+
+                        can_delete:
+                            true,
+
+                        can_export:
+                            true,
+
+                        created_by:
+                            currentUser.id,
+
+                        updated_by:
+                            currentUser.id,
+
+                        updated_at:
+                            new Date()
+                                .toISOString()
+
+                    },
+                    {
+                        onConflict:
+                            "role_id,page_id"
+                    }
+                );
+
+
+            if (error) {
+
+                console.warn(
+                    "Impossible d'ajouter le Super Admin:",
+                    error
+                );
+
+            }
+
+
+        } catch (error) {
+
+
+            console.warn(
+                "grantPageToSuperAdmin:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       TOGGLE PAGE
+    ===================================================== */
+
+    window.togglePage =
+        async function(pageId) {
+
+
+            const page =
+                allPages.find(
+                    item =>
+                        Number(item.id)
+                        ===
+                        Number(pageId)
+                );
+
+
+            if (!page) {
+
+                showToast(
+                    "Page introuvable.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /*
+             * Dashboard ne peut pas être désactivé
+             */
+
+            if (
+                String(
+                    page.code
+                    ||
+                    ""
+                ).toUpperCase()
+                ===
+                "DASHBOARD"
+                &&
+                page.is_active === true
+            ) {
+
+                showToast(
+                    "Le Tableau de bord ne peut pas être désactivé.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            const newStatus =
+                !page.is_active;
+
+
+            const actionText =
+                newStatus
+                ?
+                "activer"
+                :
+                "désactiver";
+
+
+            const confirmed =
+                confirm(
+                    `Voulez-vous vraiment ${actionText} la page "${page.name}" ?`
+                );
+
+
+            if (!confirmed) {
+
+                return;
+            }
+
+
+            try {
+
+
+                const client =
+                    getSupabase();
+
+
+                const {
+                    error
+                } = await client
+
+                    .from("pages")
+
+                    .update({
+
+                        is_active:
+                            newStatus,
+
+                        updated_by:
+                            currentUser.id,
+
+                        updated_at:
+                            new Date()
+                                .toISOString()
+
+                    })
+
+                    .eq(
+                        "id",
+                        pageId
+                    );
+
+
+                if (error) {
+
+                    throw error;
+                }
+
+
+                showToast(
+                    newStatus
+                    ?
+                    "Page activée."
+                    :
+                    "Page désactivée.",
+                    "success"
+                );
+
+
+                await loadPages();
+
+
+            } catch (error) {
+
+
+                console.error(
+                    error
+                );
+
+
+                showToast(
+                    getFriendlyError(
+                        error
+                    ),
+                    "error"
+                );
+
+            }
+
+        };
+
+
+    /* =====================================================
+       DELETE PAGE
+    ===================================================== */
+
+    window.deletePage =
+        async function(pageId) {
+
+
+            const page =
+                allPages.find(
+                    item =>
+                        Number(item.id)
+                        ===
+                        Number(pageId)
+                );
+
+
+            if (!page) {
+
+                showToast(
+                    "Page introuvable.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /*
+             * Dashboard protégé
+             */
+
+            if (
+                String(
+                    page.code
+                    ||
+                    ""
+                ).toUpperCase()
+                ===
+                "DASHBOARD"
+            ) {
+
+                showToast(
+                    "Le Tableau de bord ne peut pas être supprimé.",
+                    "warning"
+                );
+
+                return;
+            }
+
+
+            const confirmed =
+                confirm(
+                    `ATTENTION\n\nVoulez-vous vraiment supprimer la page "${page.name}" ?\n\nLes associations avec les rôles seront également supprimées.`
+                );
+
+
+            if (!confirmed) {
+
+                return;
+            }
+
+
+            try {
+
+
+                const client =
+                    getSupabase();
+
+
+                const {
+                    error
+                } = await client
+
+                    .from("pages")
+
+                    .delete()
+
+                    .eq(
+                        "id",
+                        pageId
+                    );
+
+
+                if (error) {
+
+                    throw error;
+                }
+
+
+                showToast(
+                    "Page supprimée avec succès.",
+                    "success"
+                );
+
+
+                await loadPages();
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "Erreur suppression:",
+                    error
+                );
+
+
+                showToast(
+                    getFriendlyError(
+                        error
+                    ),
+                    "error"
+                );
+
+            }
+
+        };
+
+
+    /* =====================================================
+       ESCAPE HTML
+    ===================================================== */
+
+    function escapeHtml(
+        value
+    ) {
+
+
+        return String(
+            value
+            ??
+            ""
+        )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+    }
+
+
+    /* =====================================================
+       FRIENDLY ERROR
+    ===================================================== */
+
+    function getFriendlyError(
+        error
+    ) {
+
+
+        if (!error) {
+
+            return "Une erreur est survenue.";
+
+        }
+
+
+        if (
+            error.code ===
+            "23505"
+        ) {
+
+            return "Cette valeur existe déjà.";
+
+        }
+
+
+        if (
+            error.code ===
+            "23503"
+        ) {
+
+            return "Cette opération est liée à d'autres données.";
+
+        }
+
+
+        return (
+            error.message
+            ||
+            "Une erreur est survenue."
+        );
+
+    }
+
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    function showToast(
+        message,
+        type = "success"
+    ) {
+
+
+        const container =
+            document.getElementById(
+                "toastContainer"
+            );
+
+
+        const toast =
+            document.createElement(
+                "div"
+            );
+
+
+        toast.className =
+            "toast " +
+            type;
+
+
+        toast.textContent =
+            message;
+
+
+        container.appendChild(
+            toast
+        );
+
+
+        setTimeout(
+            function() {
+
+                toast.style.opacity =
+                    "0";
+
+                toast.style.transform =
+                    "translateX(15px)";
+
+
+                setTimeout(
+                    function() {
+
+                        toast.remove();
+
+                    },
+                    200
+                );
+
+            },
+            3500
+        );
+
+    }
+
+
+    /* =====================================================
+       EVENTS
+    ===================================================== */
+
+    searchInput.addEventListener(
+        "input",
+        applyFilters
+    );
+
+
+    moduleFilter.addEventListener(
+        "change",
+        applyFilters
+    );
+
+
+    statusFilter.addEventListener(
+        "change",
+        applyFilters
+    );
+
+
+    refreshButton.addEventListener(
+        "click",
+        loadPages
+    );
+
+
+    modalClose.addEventListener(
+        "click",
+        closeModal
+    );
+
+
+    cancelButton.addEventListener(
+        "click",
+        closeModal
+    );
+
+
+    modalOverlay.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                modalOverlay
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       AUTO GENERATE CODE
+       -----------------------------------------------------
+       Exemple:
+       Gestion des employés
+       →
+       GESTION_DES_EMPLOYES
+    ===================================================== */
+
+    document.getElementById(
+        "pageName"
+    ).addEventListener(
+        "input",
+        function() {
+
+
+            /*
+             * seulement lors de la création
+             */
+
+            if (
+                editingPageId !== null
+            ) {
+
+                return;
+            }
+
+
+            const codeInput =
+                document.getElementById(
+                    "pageCode"
+                );
+
+
+            if (
+                codeInput.value.trim()
+            ) {
+
+                return;
+            }
+
+
+            const value =
+                this.value
+                    .normalize(
+                        "NFD"
+                    )
+                    .replace(
+                        /[\u0300-\u036f]/g,
+                        ""
+                    )
+                    .toUpperCase()
+                    .replace(
+                        /[^A-Z0-9]+/g,
+                        "_"
+                    )
+                    .replace(
+                        /^_+|_+$/g,
+                        ""
+                    );
+
+
+            codeInput.value =
+                value;
+
+        }
+    );
+
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    async function initialize() {
+
+
+        const valid =
+            loadCurrentUser();
+
+
+        if (!valid) {
+
+            return;
+        }
+
+
+        await loadUserInfo();
+
+
+        await loadPages();
+
+    }
+
+
+    initialize();
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,4148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magasins - SMTG</title>
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="api/supabase.js"></script>
+<script src="api/permissions.js"></script>
+
+<style>
+:root{
+    --green:#145a1f;
+    --green-dark:#0d4015;
+    --green-light:#eaf5ec;
+    --bg:#f5f7f6;
+    --white:#fff;
+    --border:#dfe7e1;
+    --text:#26332a;
+    --muted:#718078;
+    --danger:#dc3545;
+    --warning:#f59f00;
+    --blue:#0d6efd;
+    --shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+button,input,select,textarea{font-family:inherit}
+
+button{cursor:pointer}
+
+.page{
+    max-width:1800px;
+    margin:auto;
+    padding:22px;
+}
+
+/* HEADER */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:20px;
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.header-icon{
+    width:54px;
+    height:54px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--green),var(--green-dark));
+    color:#fff;
+    font-size:23px;
+    box-shadow:var(--shadow);
+}
+
+h1{
+    margin:0;
+    color:var(--green-dark);
+    font-size:27px;
+}
+
+.subtitle{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.header-actions{
+    display:flex;
+    gap:8px;
+}
+
+/* BUTTONS */
+.btn{
+    border:0;
+    border-radius:9px;
+    min-height:40px;
+    padding:9px 14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.btn-primary{
+    background:var(--green);
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background:var(--green-dark);
+}
+
+.btn-secondary{
+    background:#edf1ee;
+    color:#344039;
+}
+
+.btn-warning{
+    background:#fff2d2;
+    color:#8a5e00;
+}
+
+.btn-danger{
+    background:#ffe8eb;
+    color:#b42333;
+}
+
+.btn-info{
+    background:#e8f1ff;
+    color:#0756b8;
+}
+
+.btn-sm{
+    min-width:35px;
+    min-height:34px;
+    padding:7px 9px;
+    font-size:12px;
+}
+
+/* STATS */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.stat{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px;
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.stat-icon{
+    width:45px;
+    height:45px;
+    border-radius:12px;
+    background:var(--green-light);
+    color:var(--green);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.stat-value{
+    font-size:23px;
+    font-weight:800;
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:4px;
+}
+
+/* FILTER */
+.card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:0 3px 15px rgba(0,0,0,.035);
+}
+
+.filters{
+    padding:15px;
+    margin-bottom:18px;
+    display:grid;
+    grid-template-columns:1.6fr 1fr .8fr auto;
+    gap:10px;
+}
+
+.search{
+    position:relative;
+}
+
+.search i{
+    position:absolute;
+    left:12px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#89958e;
+}
+
+input,select,textarea{
+    width:100%;
+    border:1px solid #d7dfda;
+    border-radius:9px;
+    padding:10px 12px;
+    outline:none;
+    background:#fff;
+    color:var(--text);
+    font-size:13px;
+}
+
+.search input{
+    padding-left:36px;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(20,90,31,.08);
+}
+
+/* TABLE */
+.table-card{
+    overflow:hidden;
+}
+
+.table-head{
+    padding:14px 16px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.table-title{
+    font-size:15px;
+    font-weight:800;
+}
+
+.result-count{
+    color:var(--muted);
+    font-size:12px;
+    font-weight:700;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:1100px;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f4f7f5;
+    padding:12px;
+    text-align:left;
+    color:#506057;
+    font-size:11px;
+    text-transform:uppercase;
+    white-space:nowrap;
+}
+
+td{
+    padding:12px;
+    border-top:1px solid #edf1ee;
+    font-size:13px;
+}
+
+tbody tr:hover{
+    background:#fafcfb;
+}
+
+.code{
+    color:var(--green-dark);
+    font-weight:800;
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:5px 9px;
+    border-radius:8px;
+    background:var(--green-light);
+    color:var(--green-dark);
+    font-size:11px;
+    font-weight:800;
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    border-radius:20px;
+    padding:5px 9px;
+    font-size:11px;
+    font-weight:800;
+}
+
+.status.active{
+    background:#e6f7eb;
+    color:#16753a;
+}
+
+.status.inactive{
+    background:#f1f2f3;
+    color:#66706a;
+}
+
+.actions{
+    display:flex;
+    gap:5px;
+}
+
+.empty,
+.loading{
+    text-align:center;
+    padding:45px;
+    color:var(--muted);
+}
+
+/* MODAL */
+.overlay{
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(15,25,19,.55);
+    backdrop-filter:blur(3px);
+}
+
+.overlay.show{
+    display:flex;
+}
+
+.modal{
+    width:min(760px,100%);
+    max-height:92vh;
+    overflow:auto;
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 25px 70px rgba(0,0,0,.22);
+}
+
+.modal.large{
+    width:min(1100px,100%);
+}
+
+.modal-header{
+    position:sticky;
+    top:0;
+    z-index:3;
+    padding:16px 20px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.modal-title{
+    margin:0;
+    color:var(--green-dark);
+    font-size:18px;
+}
+
+.close{
+    width:36px;
+    height:36px;
+    border:0;
+    border-radius:9px;
+    background:#f0f3f1;
+}
+
+.modal-body{
+    padding:20px;
+}
+
+.modal-footer{
+    position:sticky;
+    bottom:0;
+    z-index:3;
+    padding:14px 20px;
+    background:#fff;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-size:12px;
+    font-weight:800;
+    color:#45534b;
+}
+
+.required{
+    color:var(--danger);
+}
+
+/* EMPACEMENT */
+.info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:18px;
+}
+
+.info-box{
+    padding:12px;
+    border-radius:10px;
+    background:#f4faf5;
+    border:1px solid #dbeadd;
+}
+
+.info-label{
+    color:var(--muted);
+    font-size:11px;
+    margin-bottom:5px;
+}
+
+.info-value{
+    color:var(--green-dark);
+    font-weight:800;
+}
+
+.generator{
+    background:#fbfcfb;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:15px;
+}
+
+.generator-title{
+    color:var(--green-dark);
+    font-weight:800;
+    margin-bottom:12px;
+}
+
+.generator-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.generator-field{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.generator-field label{
+    color:#617067;
+    font-size:11px;
+}
+
+.preview{
+    display:none;
+    margin-top:15px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.preview.show{
+    display:block;
+}
+
+.preview-head{
+    padding:11px;
+    background:#f4f7f5;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.preview-stats{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+.preview-stat{
+    padding:5px 9px;
+    border-radius:7px;
+    background:#fff;
+    border:1px solid var(--border);
+    font-size:11px;
+}
+
+.preview-list{
+    padding:10px;
+    max-height:280px;
+    overflow:auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(145px,1fr));
+    gap:6px;
+}
+
+.preview-item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 9px;
+    border-radius:7px;
+    font-size:11px;
+    background:#f1fbf3;
+    border:1px solid #dcecdf;
+}
+
+.preview-item.exists{
+    background:#fff7e3;
+    border-color:#f1d58a;
+    color:#8a6500;
+}
+
+.existing{
+    margin-top:18px;
+}
+
+.existing-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    max-height:180px;
+    overflow:auto;
+}
+
+.existing-item{
+    padding:5px 8px;
+    border-radius:7px;
+    background:#f1f4f2;
+    border:1px solid #e0e6e1;
+    font-size:11px;
+}
+
+/* TOAST */
+#toastContainer{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:10000;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    width:min(390px,calc(100vw - 40px));
+}
+
+.toast{
+    background:#fff;
+    border:1px solid var(--border);
+    border-left:4px solid var(--green);
+    border-radius:10px;
+    padding:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+    font-size:13px;
+}
+
+.toast.error{
+    border-left-color:var(--danger);
+}
+
+.toast.warning{
+    border-left-color:var(--warning);
+}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .filters{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .generator-grid{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:650px){
+    .page{
+        padding:12px;
+    }
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .header-actions{
+        width:100%;
+    }
+
+    .header-actions .btn{
+        flex:1;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .filters{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <div class="header-left">
+
+            <div class="header-icon">
+                <i class="fa-solid fa-warehouse"></i>
+            </div>
+
+            <div>
+                <h1>Magasins</h1>
+                <div class="subtitle">
+                    Gestion des magasins et des emplacements
+                </div>
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button class="btn btn-secondary" id="btnRefresh">
+                <i class="fa-solid fa-rotate"></i>
+                Actualiser
+            </button>
+
+            <button class="btn btn-primary" id="btnNew">
+                <i class="fa-solid fa-plus"></i>
+                Nouveau magasin
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- STATS -->
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-icon">
+                <i class="fa-solid fa-warehouse"></i>
+            </div>
+            <div>
+                <div class="stat-value" id="statTotal">0</div>
+                <div class="stat-label">Total magasins</div>
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <div class="stat-value" id="statActive">0</div>
+                <div class="stat-label">Magasins actifs</div>
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">
+                <i class="fa-solid fa-circle-pause"></i>
+            </div>
+            <div>
+                <div class="stat-value" id="statInactive">0</div>
+                <div class="stat-label">Magasins inactifs</div>
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">
+                <i class="fa-solid fa-code-branch"></i>
+            </div>
+            <div>
+                <div class="stat-value" id="statDivisions">0</div>
+                <div class="stat-label">Divisions utilisées</div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- FILTERS -->
+    <div class="card filters">
+
+        <div class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Rechercher code, nom, division, type..."
+            >
+        </div>
+
+        <select id="divisionFilter">
+            <option value="">Toutes les divisions</option>
+        </select>
+
+        <select id="statusFilter">
+            <option value="">Tous les statuts</option>
+            <option value="true">Actif</option>
+            <option value="false">Inactif</option>
+        </select>
+
+        <button class="btn btn-secondary" id="btnReset">
+            <i class="fa-solid fa-filter-circle-xmark"></i>
+            Réinitialiser
+        </button>
+
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="card table-card">
+
+        <div class="table-head">
+
+            <div class="table-title">
+                <i class="fa-solid fa-list"></i>
+                Liste des magasins
+            </div>
+
+            <div class="result-count" id="resultCount">
+                0 résultat
+            </div>
+
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Code</th>
+                        <th>Nom</th>
+                        <th>Division</th>
+                        <th>Type</th>
+                        <th>Emplacements</th>
+                        <th>Max palettes</th>
+                        <th>Max tonnage KG</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="10" class="loading">
+                            Chargement...
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL MAGASIN
+====================================================== -->
+
+<div class="overlay" id="magasinOverlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2 class="modal-title" id="magasinModalTitle">
+                Nouveau magasin
+            </h2>
+
+            <button class="close" id="closeMagasin">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <form id="magasinForm">
+
+            <div class="modal-body">
+
+                <input type="hidden" id="magasinId">
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>
+                            Code <span class="required">*</span>
+                        </label>
+
+                        <input
+                            id="code"
+                            required
+                            maxlength="100"
+                            placeholder="Ex : AB07"
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>
+                            Nom <span class="required">*</span>
+                        </label>
+
+                        <input
+                            id="name"
+                            required
+                            maxlength="200"
+                            placeholder="Nom du magasin"
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>
+                            Division <span class="required">*</span>
+                        </label>
+
+                        <select id="divisionId" required>
+                            <option value="">
+                                -- Sélectionner --
+                            </option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Type</label>
+
+                        <input
+                            id="type"
+                            maxlength="100"
+                            placeholder="Ex : Congelé"
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Max palettes</label>
+
+                        <input
+                            id="maxPalettes"
+                            type="number"
+                            min="0"
+                            step="1"
+                            value="0"
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Max tonnage KG</label>
+
+                        <input
+                            id="maxTonnage"
+                            type="number"
+                            min="0"
+                            step="0.001"
+                            value="0"
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Emplacements</label>
+
+                        <select id="hasEmplacements">
+                            <option value="false">Non</option>
+                            <option value="true">Oui</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Statut</label>
+
+                        <select id="isActive">
+                            <option value="true">Actif</option>
+                            <option value="false">Inactif</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group full">
+                        <label>Description</label>
+
+                        <textarea
+                            id="description"
+                            rows="4"
+                            maxlength="1000"
+                            placeholder="Description..."
+                        ></textarea>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelMagasin"
+                >
+                    Annuler
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="saveMagasin"
+                >
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Enregistrer
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL EMPLACEMENTS
+====================================================== -->
+
+<div class="overlay" id="empOverlay">
+
+    <div class="modal large">
+
+        <div class="modal-header">
+
+            <div>
+                <h2 class="modal-title">
+                    Gestion des emplacements
+                </h2>
+
+                <div style="font-size:11px;color:#718078;margin-top:4px">
+                    Création des emplacements du magasin
+                </div>
+            </div>
+
+            <button class="close" id="closeEmp">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div class="info-grid">
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Division
+                    </div>
+
+                    <div
+                        class="info-value"
+                        id="empDivision"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Magasin
+                    </div>
+
+                    <div
+                        class="info-value"
+                        id="empMagasin"
+                    >
+                        -
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- GENERATEUR -->
+            <div class="generator">
+
+                <div class="generator-title">
+                    <i class="fa-solid fa-gears"></i>
+                    Générateur d'emplacements
+                </div>
+
+
+                <div class="generator-grid">
+
+                    <div class="generator-field">
+                        <label>Lettre début</label>
+                        <select id="letterStart"></select>
+                    </div>
+
+                    <div class="generator-field">
+                        <label>Lettre fin</label>
+                        <select id="letterEnd"></select>
+                    </div>
+
+                    <div class="generator-field">
+                        <label>Numéro début</label>
+                        <select id="numberStart"></select>
+                    </div>
+
+                    <div class="generator-field">
+                        <label>Numéro fin</label>
+                        <select id="numberEnd"></select>
+                    </div>
+
+                    <div class="generator-field">
+                        <label>Zone début</label>
+                        <select id="zoneStart"></select>
+                    </div>
+
+                    <div class="generator-field">
+                        <label>Zone fin</label>
+                        <select id="zoneEnd"></select>
+                    </div>
+
+                    <div class="generator-field">
+                        <label>Positions</label>
+                        <select id="positionCount"></select>
+                    </div>
+
+                    <div style="display:flex;align-items:end">
+
+                        <button
+                            class="btn btn-primary"
+                            id="generateEmp"
+                            type="button"
+                            style="width:100%"
+                        >
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            Générer
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    style="
+                        margin-top:10px;
+                        font-size:11px;
+                        color:#718078
+                    "
+                >
+                    Exemple :
+                    <strong>A → R</strong>,
+                    <strong>01 → 18</strong>,
+                    <strong>00 → 03</strong>,
+                    positions
+                    <strong>1 → 3</strong>
+                    =
+                    <strong>A-01-00-1</strong>,
+                    <strong>A-01-00-2</strong>,
+                    <strong>A-01-00-3</strong>...
+                </div>
+
+            </div>
+
+
+            <!-- PREVIEW -->
+            <div class="preview" id="preview">
+
+                <div class="preview-head">
+
+                    <div class="preview-stats">
+
+                        <div class="preview-stat">
+                            Total :
+                            <strong id="previewTotal">0</strong>
+                        </div>
+
+                        <div class="preview-stat">
+                            Nouveaux :
+                            <strong id="previewNew">0</strong>
+                        </div>
+
+                        <div class="preview-stat">
+                            Existants :
+                            <strong id="previewExisting">0</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div style="display:flex;gap:6px">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary btn-sm"
+                            id="selectAllEmp"
+                        >
+                            Tout sélectionner
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary btn-sm"
+                            id="clearEmp"
+                        >
+                            Effacer
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="preview-list"
+                    id="previewList"
+                ></div>
+
+            </div>
+
+
+            <!-- EXISTANTS -->
+            <div class="existing">
+
+                <div
+                    style="
+                        font-weight:800;
+                        font-size:13px;
+                        margin-bottom:8px
+                    "
+                >
+                    <i class="fa-solid fa-location-dot"></i>
+                    Emplacements existants
+                </div>
+
+                <div
+                    class="existing-list"
+                    id="existingList"
+                >
+                    <span style="font-size:12px;color:#718078">
+                        Aucun emplacement.
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancelEmp"
+            >
+                Fermer
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="saveEmp"
+                disabled
+            >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Créer les emplacements
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     CONFIRM DELETE
+====================================================== -->
+
+<div class="overlay" id="confirmOverlay">
+
+    <div
+        class="modal"
+        style="max-width:470px"
+    >
+
+        <div class="modal-header">
+
+            <h2 class="modal-title">
+                Confirmation
+            </h2>
+
+            <button class="close" id="closeConfirm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div id="confirmText"></div>
+
+            <div
+                style="
+                    margin-top:12px;
+                    padding:12px;
+                    border-radius:9px;
+                    background:#fff0f2;
+                    border:1px solid #ffd0d6;
+                    color:#9f1d2d;
+                    font-size:12px
+                "
+            >
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Cette action est irréversible.
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn btn-secondary"
+                id="cancelDelete"
+            >
+                Annuler
+            </button>
+
+            <button
+                class="btn btn-danger"
+                id="confirmDelete"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Supprimer
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="toastContainer"></div>
+
+
+<script>
+"use strict";
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const db = window.smtgSupabase;
+const PAGE_CODE = "MAGASINS";
+
+let currentUser = null;
+let divisions = [];
+let magasins = [];
+let filteredMagasins = [];
+
+let currentMagasin = null;
+let existingCodes = new Set();
+let generatedCodes = [];
+let selectedCodes = new Set();
+
+let deleteMagasinId = null;
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", init);
+
+async function init(){
+
+    try{
+
+        currentUser = getCurrentUser();
+
+        if(!currentUser){
+
+            showToast(
+                "Utilisateur non connecté.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if(!db){
+
+            throw new Error(
+                "Supabase n'est pas initialisé."
+            );
+        }
+
+
+        /* PAGE VIEW */
+
+        if(window.SMTGPermissions){
+
+            const canView =
+                await permission("VIEW");
+
+            if(!canView){
+
+                showToast(
+                    "Accès refusé à cette page.",
+                    "error"
+                );
+
+                /*
+                 * Aucun redirect.
+                 * La page actuelle reste ouverte.
+                 */
+                return;
+            }
+        }
+
+
+        initGenerator();
+
+        bindEvents();
+
+        await loadDivisions();
+
+        await loadMagasins();
+
+    }
+    catch(error){
+
+        console.error(
+            "Erreur Magasins:",
+            error
+        );
+
+        showToast(
+            error?.message ||
+            "Une erreur est survenue lors du chargement des magasins.",
+            "error"
+        );
+
+        /*
+         * IMPORTANT :
+         * Aucun redirect vers index.html.
+         * Magasins reste ouverte.
+         */
+    }
+}
+
+
+/* =========================================================
+   USER
+========================================================= */
+
+function getCurrentUser(){
+
+    try{
+
+        if(
+            window.SMTG &&
+            typeof window.SMTG.getCurrentUser === "function"
+        ){
+
+            const u =
+                window.SMTG.getCurrentUser();
+
+            if(u) return u;
+        }
+
+
+        for(const key of [
+            "smtg_current_user",
+            "smtgUser"
+        ]){
+
+            const s =
+                sessionStorage.getItem(key);
+
+            if(s) return JSON.parse(s);
+
+
+            const l =
+                localStorage.getItem(key);
+
+            if(l) return JSON.parse(l);
+        }
+
+    }
+    catch(error){
+
+        console.warn(error);
+    }
+
+    return null;
+}
+
+
+function userId(){
+
+    return Number(
+        currentUser?.id || 1
+    );
+}
+
+
+/* =========================================================
+   PERMISSIONS
+========================================================= */
+
+async function permission(action){
+
+    try{
+
+        /*
+         * =====================================================
+         * 1. Nouveau/ancien gestionnaire SMTGPermissions
+         * =====================================================
+         */
+
+        if(
+            window.SMTGPermissions &&
+            typeof window.SMTGPermissions.canView === "function"
+        ){
+
+            const methods = {
+
+                VIEW: "canView",
+
+                CREATE: "canCreate",
+
+                EDIT: "canEdit",
+
+                DELETE: "canDelete",
+
+                EXPORT: "canExport"
+
+            };
+
+            const method =
+                methods[action];
+
+            if(
+                method &&
+                typeof window.SMTGPermissions[method] === "function"
+            ){
+
+                /*
+                 * L'ancien gestionnaire peut accepter
+                 * directement le code de page.
+                 */
+
+                const result =
+                    await window.SMTGPermissions[method](
+                        PAGE_CODE
+                    );
+
+                /*
+                 * Si la méthode a réellement répondu
+                 * par un booléen, on l'utilise.
+                 */
+
+                if(typeof result === "boolean"){
+
+                    return result;
+
+                }
+
+            }
+
+        }
+
+
+        /*
+         * =====================================================
+         * 2. PermissionsManager actuel
+         * =====================================================
+         *
+         * IMPORTANT :
+         * PermissionsManager.canView/canCreate/etc.
+         * attendent le page_id numérique,
+         * pas "MAGASINS".
+         *
+         * C'était la cause du :
+         * "Accès refusé à cette page."
+         */
+
+        if(
+            window.PermissionsManager
+        ){
+
+            /*
+             * Initialiser les permissions si nécessaire.
+             */
+
+            let state =
+                typeof window.PermissionsManager.getState === "function"
+                ? window.PermissionsManager.getState()
+                : null;
+
+
+            if(
+                !state ||
+                !state.success ||
+                !Array.isArray(state.pages)
+            ){
+
+                if(
+                    typeof window.PermissionsManager.initialize ===
+                    "function"
+                ){
+
+                    state =
+                        await window.PermissionsManager.initialize(
+                            currentUser
+                        );
+
+                }
+
+            }
+
+
+            /*
+             * Super Administrateur :
+             * accès à toutes les pages/actions.
+             */
+
+            if(
+                state &&
+                state.isSuperAdmin === true
+            ){
+
+                return true;
+
+            }
+
+
+            /*
+             * Chercher la page MAGASINS
+             * dans public.pages.
+             */
+
+            const page =
+                (state?.pages || []).find(
+                    p =>
+                        String(
+                            p.code || ""
+                        )
+                        .trim()
+                        .toUpperCase()
+                        === PAGE_CODE
+                );
+
+
+            if(!page){
+
+                console.warn(
+                    "[MAGASINS] Page MAGASINS introuvable dans les permissions."
+                );
+
+                return false;
+
+            }
+
+
+            const pageId =
+                Number(page.id);
+
+
+            if(!pageId){
+
+                return false;
+
+            }
+
+
+            /*
+             * Vérifier l'action avec les bonnes méthodes.
+             */
+
+            switch(action){
+
+                case "VIEW":
+
+                    return Boolean(
+                        window.PermissionsManager.canView(
+                            pageId
+                        )
+                    );
+
+
+                case "CREATE":
+
+                    return Boolean(
+                        window.PermissionsManager.canCreate(
+                            pageId
+                        )
+                    );
+
+
+                case "EDIT":
+
+                    /*
+                     * PermissionsManager utilise
+                     * canUpdate et non canEdit.
+                     */
+
+                    return Boolean(
+                        window.PermissionsManager.canUpdate(
+                            pageId
+                        )
+                    );
+
+
+                case "DELETE":
+
+                    return Boolean(
+                        window.PermissionsManager.canDelete(
+                            pageId
+                        )
+                    );
+
+
+                case "EXPORT":
+
+                    return Boolean(
+                        window.PermissionsManager.canExport(
+                            pageId
+                        )
+                    );
+
+
+                default:
+
+                    return false;
+
+            }
+
+        }
+
+
+        /*
+         * =====================================================
+         * 3. Aucun système de permissions disponible
+         * =====================================================
+         *
+         * On ne bloque pas la page à cause d'un script
+         * de permissions absent.
+         */
+
+        return true;
+
+    }
+    catch(error){
+
+        console.error(
+            "[MAGASINS] Permission error:",
+            error
+        );
+
+        /*
+         * IMPORTANT :
+         * Une erreur technique du module permissions
+         * ne doit pas faire sortir l'utilisateur
+         * de la page.
+         *
+         * On retourne false pour les actions protégées,
+         * sauf VIEW : la page reste ouverte.
+         */
+
+        if(action === "VIEW"){
+
+            return true;
+
+        }
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+function bindEvents(){
+
+    document
+        .getElementById("btnNew")
+        .addEventListener(
+            "click",
+            openCreate
+        );
+
+
+    document
+        .getElementById("btnRefresh")
+        .addEventListener(
+            "click",
+            refresh
+        );
+
+
+    document
+        .getElementById("btnReset")
+        .addEventListener(
+            "click",
+            resetFilters
+        );
+
+
+    document
+        .getElementById("searchInput")
+        .addEventListener(
+            "input",
+            filter
+        );
+
+
+    document
+        .getElementById("divisionFilter")
+        .addEventListener(
+            "change",
+            filter
+        );
+
+
+    document
+        .getElementById("statusFilter")
+        .addEventListener(
+            "change",
+            filter
+        );
+
+
+    document
+        .getElementById("magasinForm")
+        .addEventListener(
+            "submit",
+            saveMagasin
+        );
+
+
+    document
+        .getElementById("closeMagasin")
+        .addEventListener(
+            "click",
+            closeMagasinModal
+        );
+
+
+    document
+        .getElementById("cancelMagasin")
+        .addEventListener(
+            "click",
+            closeMagasinModal
+        );
+
+
+    document
+        .getElementById("closeEmp")
+        .addEventListener(
+            "click",
+            closeEmpModal
+        );
+
+
+    document
+        .getElementById("cancelEmp")
+        .addEventListener(
+            "click",
+            closeEmpModal
+        );
+
+
+    document
+        .getElementById("generateEmp")
+        .addEventListener(
+            "click",
+            generatePreview
+        );
+
+
+    document
+        .getElementById("selectAllEmp")
+        .addEventListener(
+            "click",
+            selectAll
+        );
+
+
+    document
+        .getElementById("clearEmp")
+        .addEventListener(
+            "click",
+            clearPreview
+        );
+
+
+    document
+        .getElementById("saveEmp")
+        .addEventListener(
+            "click",
+            saveEmplacements
+        );
+
+
+    document
+        .getElementById("closeConfirm")
+        .addEventListener(
+            "click",
+            closeConfirm
+        );
+
+
+    document
+        .getElementById("cancelDelete")
+        .addEventListener(
+            "click",
+            closeConfirm
+        );
+
+
+    document
+        .getElementById("confirmDelete")
+        .addEventListener(
+            "click",
+            executeDelete
+        );
+
+}
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+async function refresh(){
+
+    await loadDivisions();
+    await loadMagasins();
+}
+
+
+/* =========================================================
+   DIVISIONS
+========================================================= */
+
+async function loadDivisions(){
+
+    const {
+        data,
+        error
+    } =
+        await db
+            .from("divisions")
+            .select(
+                "id,code,name,is_active"
+            )
+            .order(
+                "code",
+                {ascending:true}
+            );
+
+
+    if(error) throw error;
+
+
+    divisions =
+        data || [];
+
+
+    fillDivisionSelects();
+}
+
+
+function fillDivisionSelects(){
+
+    const filter =
+        document.getElementById(
+            "divisionFilter"
+        );
+
+    const select =
+        document.getElementById(
+            "divisionId"
+        );
+
+
+    filter.innerHTML =
+        `<option value="">Toutes les divisions</option>`;
+
+
+    select.innerHTML =
+        `<option value="">-- Sélectionner --</option>`;
+
+
+    divisions.forEach(d=>{
+
+        if(d.is_active){
+
+            filter.insertAdjacentHTML(
+                "beforeend",
+                `
+                <option value="${d.id}">
+                    ${escapeHtml(d.code)} - ${escapeHtml(d.name)}
+                </option>
+                `
+            );
+        }
+
+
+        select.insertAdjacentHTML(
+            "beforeend",
+            `
+            <option value="${d.id}">
+                ${escapeHtml(d.code)} - ${escapeHtml(d.name)}
+            </option>
+            `
+        );
+
+    });
+}
+
+
+/* =========================================================
+   MAGASINS
+========================================================= */
+
+async function loadMagasins(){
+
+    document.getElementById(
+        "tableBody"
+    ).innerHTML =
+        `
+        <tr>
+            <td colspan="10" class="loading">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Chargement...
+            </td>
+        </tr>
+        `;
+
+
+    const {
+        data,
+        error
+    } =
+        await db
+            .from("magasins")
+            .select(`
+                id,
+                code,
+                name,
+                description,
+                type,
+                has_emplacements,
+                max_palettes,
+                max_tonnage_kg,
+                is_active,
+                division_id,
+                created_by,
+                created_at,
+                updated_by,
+                updated_at
+            `)
+            .order(
+                "code",
+                {ascending:true}
+            );
+
+
+    if(error) throw error;
+
+
+    magasins =
+        data || [];
+
+
+    await loadEmplacementCounts();
+
+    updateStats();
+
+    filter();
+}
+
+
+/* =========================================================
+   EMPLACEMENT COUNTS
+========================================================= */
+
+async function loadEmplacementCounts(){
+
+    const {
+        data,
+        error
+    } =
+        await db
+            .from("emplacements")
+            .select("magasin_id");
+
+
+    if(error){
+
+        console.warn(
+            "Emplacements:",
+            error
+        );
+
+        magasins =
+            magasins.map(m=>({
+                ...m,
+                emplacement_count:0
+            }));
+
+        return;
+    }
+
+
+    const counts = {};
+
+
+    (data || []).forEach(row=>{
+
+        const id =
+            Number(row.magasin_id);
+
+        counts[id] =
+            (counts[id] || 0) + 1;
+    });
+
+
+    magasins =
+        magasins.map(m=>({
+
+            ...m,
+
+            emplacement_count:
+                counts[Number(m.id)] || 0
+
+        }));
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function filter(){
+
+    const search =
+        document
+            .getElementById("searchInput")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const division =
+        document
+            .getElementById("divisionFilter")
+            .value;
+
+
+    const status =
+        document
+            .getElementById("statusFilter")
+            .value;
+
+
+    filteredMagasins =
+        magasins.filter(m=>{
+
+            const d =
+                getDivision(
+                    m.division_id
+                );
+
+
+            const text =
+                [
+                    m.code,
+                    m.name,
+                    m.type,
+                    m.description,
+                    d?.code,
+                    d?.name
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+
+            const okSearch =
+                !search ||
+                text.includes(search);
+
+
+            const okDivision =
+                !division ||
+                String(m.division_id) ===
+                String(division);
+
+
+            const okStatus =
+                !status ||
+                String(m.is_active) ===
+                String(status);
+
+
+            return (
+                okSearch &&
+                okDivision &&
+                okStatus
+            );
+        });
+
+
+    render();
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+async function render(){
+
+    const body =
+        document.getElementById(
+            "tableBody"
+        );
+
+
+    document.getElementById(
+        "resultCount"
+    ).textContent =
+        `${filteredMagasins.length} résultat(s)`;
+
+
+    if(!filteredMagasins.length){
+
+        body.innerHTML = `
+            <tr>
+                <td colspan="10" class="empty">
+                    <i class="fa-solid fa-warehouse"></i>
+                    <div>Aucun magasin trouvé.</div>
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    const canEdit =
+        await permission("EDIT");
+
+
+    const canDelete =
+        await permission("DELETE");
+
+
+    body.innerHTML =
+        filteredMagasins
+            .map(m=>{
+
+                const d =
+                    getDivision(
+                        m.division_id
+                    );
+
+
+                return `
+                <tr>
+
+                    <td>
+                        ${Number(m.id)}
+                    </td>
+
+                    <td>
+                        <span class="code">
+                            ${escapeHtml(m.code)}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(m.name)}
+                    </td>
+
+                    <td>
+                        ${
+                            d
+                            ?
+                            `
+                            <span class="badge">
+                                <i class="fa-solid fa-code-branch"></i>
+                                ${escapeHtml(d.code)}
+                            </span>
+                            `
+                            :
+                            `<span style="color:#9aa59e">Non affectée</span>`
+                        }
+                    </td>
+
+                    <td>
+                        ${escapeHtml(m.type || "-")}
+                    </td>
+
+                    <td>
+                        <strong>
+                            <i
+                                class="fa-solid fa-location-dot"
+                                style="color:var(--green)"
+                            ></i>
+                            ${Number(
+                                m.emplacement_count || 0
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${formatNumber(m.max_palettes)}
+                    </td>
+
+                    <td>
+                        ${formatKg(m.max_tonnage_kg)}
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="
+                                status
+                                ${
+                                    m.is_active
+                                    ? "active"
+                                    : "inactive"
+                                }
+                            "
+                        >
+
+                            <i
+                                class="
+                                    fa-solid
+                                    ${
+                                        m.is_active
+                                        ? "fa-circle-check"
+                                        : "fa-circle-pause"
+                                    }
+                                "
+                            ></i>
+
+                            ${
+                                m.is_active
+                                ? "Actif"
+                                : "Inactif"
+                            }
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <div class="actions">
+
+                            ${
+                                canEdit
+                                ?
+                                `
+                                <button
+                                    class="btn btn-warning btn-sm"
+                                    onclick="editMagasin(${m.id})"
+                                    title="Modifier"
+                                >
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                `
+                                :
+                                ""
+                            }
+
+                            ${
+                                canDelete
+                                ?
+                                `
+                                <button
+                                    class="btn btn-danger btn-sm"
+                                    onclick="deleteMagasin(${m.id})"
+                                    title="Supprimer"
+                                >
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                                `
+                                :
+                                ""
+                            }
+
+                            ${
+                                m.has_emplacements
+                                ?
+                                `
+                                <button
+                                    class="btn btn-info btn-sm"
+                                    onclick="openEmplacements(${m.id})"
+                                    title="Emplacements"
+                                >
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </button>
+                                `
+                                :
+                                ""
+                            }
+
+                        </div>
+
+                    </td>
+
+                </tr>
+                `;
+            })
+            .join("");
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function updateStats(){
+
+    document.getElementById(
+        "statTotal"
+    ).textContent =
+        magasins.length;
+
+
+    document.getElementById(
+        "statActive"
+    ).textContent =
+        magasins.filter(
+            m=>m.is_active
+        ).length;
+
+
+    document.getElementById(
+        "statInactive"
+    ).textContent =
+        magasins.filter(
+            m=>!m.is_active
+        ).length;
+
+
+    document.getElementById(
+        "statDivisions"
+    ).textContent =
+        new Set(
+            magasins
+                .map(m=>m.division_id)
+                .filter(Boolean)
+        ).size;
+}
+
+
+/* =========================================================
+   CREATE
+========================================================= */
+
+async function openCreate(){
+
+    if(
+        !(await permission("CREATE"))
+    ){
+
+        showToast(
+            "Vous n'avez pas l'autorisation de créer un magasin.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    document
+        .getElementById("magasinForm")
+        .reset();
+
+
+    document.getElementById(
+        "magasinId"
+    ).value = "";
+
+
+    document.getElementById(
+        "magasinModalTitle"
+    ).textContent =
+        "Nouveau magasin";
+
+
+    document.getElementById(
+        "maxPalettes"
+    ).value =
+        0;
+
+
+    document.getElementById(
+        "maxTonnage"
+    ).value =
+        0;
+
+
+    document.getElementById(
+        "hasEmplacements"
+    ).value =
+        "false";
+
+
+    document.getElementById(
+        "isActive"
+    ).value =
+        "true";
+
+
+    document
+        .getElementById("magasinOverlay")
+        .classList.add("show");
+
+
+    document.getElementById(
+        "code"
+    ).focus();
+}
+
+
+/* =========================================================
+   EDIT
+========================================================= */
+
+async function editMagasin(id){
+
+    if(
+        !(await permission("EDIT"))
+    ){
+
+        showToast(
+            "Vous n'avez pas l'autorisation de modifier.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const m =
+        magasins.find(
+            x=>Number(x.id) === Number(id)
+        );
+
+
+    if(!m) return;
+
+
+    document.getElementById(
+        "magasinModalTitle"
+    ).textContent =
+        "Modifier le magasin";
+
+
+    document.getElementById(
+        "magasinId"
+    ).value =
+        m.id;
+
+
+    document.getElementById(
+        "code"
+    ).value =
+        m.code || "";
+
+
+    document.getElementById(
+        "name"
+    ).value =
+        m.name || "";
+
+
+    document.getElementById(
+        "divisionId"
+    ).value =
+        m.division_id || "";
+
+
+    document.getElementById(
+        "type"
+    ).value =
+        m.type || "";
+
+
+    document.getElementById(
+        "maxPalettes"
+    ).value =
+        m.max_palettes ?? 0;
+
+
+    document.getElementById(
+        "maxTonnage"
+    ).value =
+        m.max_tonnage_kg ?? 0;
+
+
+    document.getElementById(
+        "hasEmplacements"
+    ).value =
+        String(Boolean(m.has_emplacements));
+
+
+    document.getElementById(
+        "isActive"
+    ).value =
+        String(Boolean(m.is_active));
+
+
+    document.getElementById(
+        "description"
+    ).value =
+        m.description || "";
+
+
+    document
+        .getElementById("magasinOverlay")
+        .classList.add("show");
+}
+
+
+/* =========================================================
+   CLOSE MAGASIN
+========================================================= */
+
+function closeMagasinModal(){
+
+    document
+        .getElementById("magasinOverlay")
+        .classList.remove("show");
+}
+
+
+/* =========================================================
+   SAVE MAGASIN
+========================================================= */
+
+async function saveMagasin(e){
+
+    e.preventDefault();
+
+
+    const id =
+        document.getElementById(
+            "magasinId"
+        ).value;
+
+
+    const editing =
+        Boolean(id);
+
+
+    const allowed =
+        await permission(
+            editing
+            ? "EDIT"
+            : "CREATE"
+        );
+
+
+    if(!allowed){
+
+        showToast(
+            "Action non autorisée.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const code =
+        document.getElementById(
+            "code"
+        ).value.trim();
+
+
+    const name =
+        document.getElementById(
+            "name"
+        ).value.trim();
+
+
+    const divisionId =
+        document.getElementById(
+            "divisionId"
+        ).value;
+
+
+    const type =
+        document.getElementById(
+            "type"
+        ).value.trim();
+
+
+    const maxPalettes =
+        Number(
+            document.getElementById(
+                "maxPalettes"
+            ).value || 0
+        );
+
+
+    const maxTonnage =
+        Number(
+            document.getElementById(
+                "maxTonnage"
+            ).value || 0
+        );
+
+
+    const hasEmplacements =
+        document.getElementById(
+            "hasEmplacements"
+        ).value === "true";
+
+
+    const isActive =
+        document.getElementById(
+            "isActive"
+        ).value === "true";
+
+
+    const description =
+        document.getElementById(
+            "description"
+        ).value.trim();
+
+
+    if(!code){
+
+        showToast(
+            "Le code est obligatoire.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!name){
+
+        showToast(
+            "Le nom est obligatoire.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!divisionId){
+
+        showToast(
+            "La division est obligatoire.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(maxPalettes < 0 || maxTonnage < 0){
+
+        showToast(
+            "Les capacités ne peuvent pas être négatives.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const payload = {
+
+        code:code,
+        name:name,
+        description:description || null,
+        type:type || null,
+        has_emplacements:hasEmplacements,
+        max_palettes:maxPalettes,
+        max_tonnage_kg:maxTonnage,
+        is_active:isActive,
+        division_id:Number(divisionId)
+
+    };
+
+
+    try{
+
+        let result;
+
+
+        if(editing){
+
+            result =
+                await db
+                    .from("magasins")
+                    .update({
+                        ...payload,
+                        updated_by:userId(),
+                        updated_at:new Date().toISOString()
+                    })
+                    .eq(
+                        "id",
+                        Number(id)
+                    )
+                    .select()
+                    .single();
+
+        }
+        else{
+
+            result =
+                await db
+                    .from("magasins")
+                    .insert({
+                        ...payload,
+                        created_by:userId(),
+                        updated_by:userId()
+                    })
+                    .select()
+                    .single();
+        }
+
+
+        if(result.error)
+            throw result.error;
+
+
+        await logCrud(
+            editing
+            ? "UPDATE"
+            : "CREATE",
+            result.data?.id || id,
+            editing
+            ? `Modification du magasin ${code}`
+            : `Création du magasin ${code}`,
+            {
+                code:code,
+                name:name,
+                division_id:Number(divisionId)
+            }
+        );
+
+
+        closeMagasinModal();
+
+
+        showToast(
+            editing
+            ? "Magasin modifié avec succès."
+            : "Magasin créé avec succès.",
+            "success"
+        );
+
+
+        await loadMagasins();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+
+        if(
+            String(error.message || "")
+                .toLowerCase()
+                .includes("duplicate")
+        ){
+
+            showToast(
+                "Ce code magasin existe déjà.",
+                "error"
+            );
+
+        }
+        else{
+
+            showToast(
+                error.message ||
+                "Erreur d'enregistrement.",
+                "error"
+            );
+        }
+    }
+}
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+async function deleteMagasin(id){
+
+    if(
+        !(await permission("DELETE"))
+    ){
+
+        showToast(
+            "Vous n'avez pas l'autorisation de supprimer.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const m =
+        magasins.find(
+            x=>Number(x.id) === Number(id)
+        );
+
+
+    if(!m) return;
+
+
+    /*
+     * Vérifier emplacements
+     */
+
+    const {
+        count,
+        error
+    } =
+        await db
+            .from("emplacements")
+            .select(
+                "id",
+                {
+                    count:"exact",
+                    head:true
+                }
+            )
+            .eq(
+                "magasin_id",
+                Number(id)
+            );
+
+
+    if(error){
+
+        showToast(
+            error.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(Number(count || 0) > 0){
+
+        showToast(
+            "Impossible de supprimer ce magasin : il contient encore des emplacements.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    deleteMagasinId =
+        Number(id);
+
+
+    document.getElementById(
+        "confirmText"
+    ).innerHTML = `
+
+        Voulez-vous vraiment supprimer
+
+        <strong>
+            ${escapeHtml(m.code)}
+        </strong>
+
+        -
+
+        <strong>
+            ${escapeHtml(m.name)}
+        </strong>
+
+        ?
+
+    `;
+
+
+    document
+        .getElementById("confirmOverlay")
+        .classList.add("show");
+}
+
+
+/* =========================================================
+   EXECUTE DELETE
+========================================================= */
+
+async function executeDelete(){
+
+    if(!deleteMagasinId)
+        return;
+
+
+    try{
+
+        const m =
+            magasins.find(
+                x=>Number(x.id) ===
+                   Number(deleteMagasinId)
+            );
+
+
+        const {
+            error
+        } =
+            await db
+                .from("magasins")
+                .delete()
+                .eq(
+                    "id",
+                    deleteMagasinId
+                );
+
+
+        if(error)
+            throw error;
+
+
+        await logCrud(
+            "DELETE",
+            deleteMagasinId,
+            `Suppression du magasin ${m?.code || deleteMagasinId}`,
+            {
+                code:m?.code || null,
+                name:m?.name || null
+            }
+        );
+
+
+        closeConfirm();
+
+
+        showToast(
+            "Magasin supprimé avec succès.",
+            "success"
+        );
+
+
+        await loadMagasins();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showToast(
+            error.message ||
+            "Impossible de supprimer le magasin.",
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   CONFIRM CLOSE
+========================================================= */
+
+function closeConfirm(){
+
+    document
+        .getElementById("confirmOverlay")
+        .classList.remove("show");
+
+    deleteMagasinId =
+        null;
+}
+
+
+/* =========================================================
+   EMPACEMENTS GENERATOR
+========================================================= */
+
+function initGenerator(){
+
+    const letterStart =
+        document.getElementById(
+            "letterStart"
+        );
+
+    const letterEnd =
+        document.getElementById(
+            "letterEnd"
+        );
+
+
+    for(let i=65;i<=90;i++){
+
+        const l =
+            String.fromCharCode(i);
+
+        letterStart.insertAdjacentHTML(
+            "beforeend",
+            `<option value="${l}">${l}</option>`
+        );
+
+        letterEnd.insertAdjacentHTML(
+            "beforeend",
+            `<option value="${l}">${l}</option>`
+        );
+    }
+
+
+    letterStart.value="A";
+    letterEnd.value="R";
+
+
+    const numberStart =
+        document.getElementById(
+            "numberStart"
+        );
+
+    const numberEnd =
+        document.getElementById(
+            "numberEnd"
+        );
+
+
+    for(let i=1;i<=99;i++){
+
+        const n =
+            String(i).padStart(2,"0");
+
+        numberStart.insertAdjacentHTML(
+            "beforeend",
+            `<option value="${n}">${n}</option>`
+        );
+
+        numberEnd.insertAdjacentHTML(
+            "beforeend",
+            `<option value="${n}">${n}</option>`
+        );
+    }
+
+
+    numberStart.value="01";
+    numberEnd.value="18";
+
+
+    const zoneStart =
+        document.getElementById(
+            "zoneStart"
+        );
+
+    const zoneEnd =
+        document.getElementById(
+            "zoneEnd"
+        );
+
+
+    for(let i=0;i<=10;i++){
+
+        const z =
+            String(i).padStart(2,"0");
+
+        zoneStart.insertAdjacentHTML(
+            "beforeend",
+            `<option value="${z}">${z}</option>`
+        );
+
+        zoneEnd.insertAdjacentHTML(
+            "beforeend",
+            `<option value="${z}">${z}</option>`
+        );
+    }
+
+
+    zoneStart.value="00";
+    zoneEnd.value="03";
+
+
+    const position =
+        document.getElementById(
+            "positionCount"
+        );
+
+
+    for(let i=1;i<=10;i++){
+
+        position.insertAdjacentHTML(
+            "beforeend",
+            `<option value="${i}">${i}</option>`
+        );
+    }
+
+
+    position.value="3";
+}
+
+
+/* =========================================================
+   OPEN EMPACEMENTS
+========================================================= */
+
+async function openEmplacements(id){
+
+    const m =
+        magasins.find(
+            x=>Number(x.id) === Number(id)
+        );
+
+
+    if(!m) return;
+
+
+    if(!m.has_emplacements){
+
+        showToast(
+            "Ce magasin n'utilise pas les emplacements.",
+            "warning"
+        );
+
+        return;
+    }
+
+
+    currentMagasin =
+        m;
+
+
+    const d =
+        getDivision(
+            m.division_id
+        );
+
+
+    document.getElementById(
+        "empDivision"
+    ).textContent =
+        d
+        ? `${d.code} - ${d.name}`
+        : "Non affectée";
+
+
+    document.getElementById(
+        "empMagasin"
+    ).textContent =
+        `${m.code} - ${m.name}`;
+
+
+    generatedCodes=[];
+    selectedCodes=new Set();
+
+
+    document
+        .getElementById("preview")
+        .classList.remove("show");
+
+
+    await loadExisting();
+
+
+    document
+        .getElementById("empOverlay")
+        .classList.add("show");
+}
+
+
+/* =========================================================
+   LOAD EXISTING
+========================================================= */
+
+async function loadExisting(){
+
+    const {
+        data,
+        error
+    } =
+        await db
+            .from("emplacements")
+            .select(
+                "id,code,name,is_active"
+            )
+            .eq(
+                "magasin_id",
+                Number(currentMagasin.id)
+            )
+            .order(
+                "code",
+                {ascending:true}
+            );
+
+
+    if(error)
+        throw error;
+
+
+    existingCodes =
+        new Set(
+            (data || [])
+                .map(
+                    x=>String(
+                        x.code
+                    )
+                    .trim()
+                    .toUpperCase()
+                )
+        );
+
+
+    const list =
+        document.getElementById(
+            "existingList"
+        );
+
+
+    if(!data?.length){
+
+        list.innerHTML = `
+            <span style="font-size:12px;color:#718078">
+                Aucun emplacement.
+            </span>
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        data
+            .map(
+                x=>`
+                    <span class="existing-item">
+                        <i
+                            class="fa-solid fa-location-dot"
+                            style="color:var(--green)"
+                        ></i>
+                        ${escapeHtml(x.code)}
+                    </span>
+                `
+            )
+            .join("");
+}
+
+
+/* =========================================================
+   GENERATE PREVIEW
+========================================================= */
+
+function generatePreview(){
+
+    if(!currentMagasin)
+        return;
+
+
+    const ls =
+        document.getElementById(
+            "letterStart"
+        ).value;
+
+    const le =
+        document.getElementById(
+            "letterEnd"
+        ).value;
+
+    const ns =
+        Number(
+            document.getElementById(
+                "numberStart"
+            ).value
+        );
+
+    const ne =
+        Number(
+            document.getElementById(
+                "numberEnd"
+            ).value
+        );
+
+    const zs =
+        Number(
+            document.getElementById(
+                "zoneStart"
+            ).value
+        );
+
+    const ze =
+        Number(
+            document.getElementById(
+                "zoneEnd"
+            ).value
+        );
+
+    const positions =
+        Number(
+            document.getElementById(
+                "positionCount"
+            ).value
+        );
+
+
+    if(ls > le){
+
+        showToast(
+            "La lettre début doit être avant la lettre fin.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(ns > ne){
+
+        showToast(
+            "Le numéro début doit être inférieur au numéro fin.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(zs > ze){
+
+        showToast(
+            "La zone début doit être inférieure à la zone fin.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    generatedCodes=[];
+
+
+    for(
+        let l=ls.charCodeAt(0);
+        l<=le.charCodeAt(0);
+        l++
+    ){
+
+        const letter =
+            String.fromCharCode(l);
+
+
+        for(
+            let n=ns;
+            n<=ne;
+            n++
+        ){
+
+            const number =
+                String(n).padStart(2,"0");
+
+
+            for(
+                let z=zs;
+                z<=ze;
+                z++
+            ){
+
+                const zone =
+                    String(z).padStart(2,"0");
+
+
+                for(
+                    let p=1;
+                    p<=positions;
+                    p++
+                ){
+
+                    generatedCodes.push(
+                        `${letter}-${number}-${zone}-${p}`
+                    );
+                }
+            }
+        }
+    }
+
+
+    generatedCodes =
+        [...new Set(generatedCodes)];
+
+
+    selectedCodes =
+        new Set(
+            generatedCodes.filter(
+                code =>
+                    !existingCodes.has(
+                        code.toUpperCase()
+                    )
+            )
+        );
+
+
+    renderPreview();
+}
+
+
+/* =========================================================
+   RENDER PREVIEW
+========================================================= */
+
+function renderPreview(){
+
+    const preview =
+        document.getElementById(
+            "preview"
+        );
+
+
+    const list =
+        document.getElementById(
+            "previewList"
+        );
+
+
+    const existing =
+        generatedCodes.filter(
+            code =>
+                existingCodes.has(
+                    code.toUpperCase()
+                )
+        ).length;
+
+
+    document.getElementById(
+        "previewTotal"
+    ).textContent =
+        generatedCodes.length;
+
+
+    document.getElementById(
+        "previewExisting"
+    ).textContent =
+        existing;
+
+
+    document.getElementById(
+        "previewNew"
+    ).textContent =
+        generatedCodes.length-existing;
+
+
+    list.innerHTML =
+        generatedCodes
+            .map(
+                code=>{
+
+                    const exists =
+                        existingCodes.has(
+                            code.toUpperCase()
+                        );
+
+
+                    const checked =
+                        selectedCodes.has(code);
+
+
+                    return `
+
+                    <label
+                        class="
+                            preview-item
+                            ${exists ? "exists" : ""}
+                        "
+                    >
+
+                        <input
+                            type="checkbox"
+                            ${checked ? "checked" : ""}
+                            ${exists ? "disabled" : ""}
+                            data-code="${escapeHtml(code)}"
+                        >
+
+                        <span>
+                            ${exists ? "✓" : "＋"}
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(code)}
+                        </strong>
+
+                    </label>
+
+                    `;
+                }
+            )
+            .join("");
+
+
+    list
+        .querySelectorAll(
+            "input[data-code]"
+        )
+        .forEach(
+            checkbox=>{
+
+                checkbox.addEventListener(
+                    "change",
+                    ()=>{
+
+                        const code =
+                            checkbox.dataset.code;
+
+
+                        if(checkbox.checked){
+
+                            selectedCodes.add(
+                                code
+                            );
+
+                        }
+                        else{
+
+                            selectedCodes.delete(
+                                code
+                            );
+                        }
+
+
+                        updateEmpButton();
+                    }
+                );
+            }
+        );
+
+
+    preview.classList.add("show");
+
+    updateEmpButton();
+}
+
+
+/* =========================================================
+   SELECT ALL
+========================================================= */
+
+function selectAll(){
+
+    const selectable =
+        generatedCodes.filter(
+            code =>
+                !existingCodes.has(
+                    code.toUpperCase()
+                )
+        );
+
+
+    const all =
+        selectable.length &&
+        selectable.every(
+            code =>
+                selectedCodes.has(code)
+        );
+
+
+    selectedCodes =
+        all
+        ? new Set()
+        : new Set(selectable);
+
+
+    renderPreview();
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+function clearPreview(){
+
+    generatedCodes=[];
+    selectedCodes=new Set();
+
+    document
+        .getElementById("preview")
+        .classList.remove("show");
+
+    document.getElementById(
+        "previewList"
+    ).innerHTML="";
+
+    updateEmpButton();
+}
+
+
+/* =========================================================
+   BUTTON EMP
+========================================================= */
+
+function updateEmpButton(){
+
+    document.getElementById(
+        "saveEmp"
+    ).disabled =
+        selectedCodes.size === 0;
+}
+
+
+/* =========================================================
+   SAVE EMPACEMENTS
+========================================================= */
+
+async function saveEmplacements(){
+
+    if(
+        !(await permission("CREATE"))
+    ){
+
+        showToast(
+            "Vous n'avez pas l'autorisation de créer des emplacements.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!currentMagasin)
+        return;
+
+
+    const codes =
+        [...selectedCodes];
+
+
+    if(!codes.length){
+
+        showToast(
+            "Aucun emplacement sélectionné.",
+            "warning"
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "saveEmp"
+        );
+
+
+    button.disabled=true;
+
+
+    try{
+
+        /*
+         * Vérification DB une deuxième fois
+         */
+
+        const {
+            data,
+            error
+        } =
+            await db
+                .from("emplacements")
+                .select("code")
+                .eq(
+                    "magasin_id",
+                    Number(currentMagasin.id)
+                );
+
+
+        if(error)
+            throw error;
+
+
+        const dbCodes =
+            new Set(
+                (data || [])
+                    .map(
+                        x=>String(
+                            x.code
+                        )
+                        .trim()
+                        .toUpperCase()
+                    )
+            );
+
+
+        const finalCodes =
+            codes.filter(
+                code =>
+                    !dbCodes.has(
+                        code.toUpperCase()
+                    )
+            );
+
+
+        if(!finalCodes.length){
+
+            showToast(
+                "Tous les emplacements sélectionnés existent déjà.",
+                "warning"
+            );
+
+            return;
+        }
+
+
+        const rows =
+            finalCodes.map(
+                code=>({
+
+                    magasin_id:
+                        Number(
+                            currentMagasin.id
+                        ),
+
+                    code:
+                        code,
+
+                    name:
+                        `Emplacement ${code}`,
+
+                    description:
+                        null,
+
+                    type:
+                        null,
+
+                    max_palettes:
+                        1,
+
+                    max_tonnage_kg:
+                        0,
+
+                    is_active:
+                        true,
+
+                    created_by:
+                        userId(),
+
+                    updated_by:
+                        userId()
+
+                })
+            );
+
+
+        /*
+         * Insert par lots
+         */
+
+        const batchSize=500;
+
+
+        for(
+            let i=0;
+            i<rows.length;
+            i+=batchSize
+        ){
+
+            const batch =
+                rows.slice(
+                    i,
+                    i+batchSize
+                );
+
+
+            const {
+                error:insertError
+            } =
+                await db
+                    .from("emplacements")
+                    .insert(batch);
+
+
+            if(insertError)
+                throw insertError;
+        }
+
+
+        await logCrud(
+            "CREATE",
+            currentMagasin.id,
+            `Création de ${finalCodes.length} emplacement(s) pour ${currentMagasin.code}`,
+            {
+                magasin_id:currentMagasin.id,
+                magasin_code:currentMagasin.code,
+                division_id:currentMagasin.division_id,
+                count:finalCodes.length,
+                codes:finalCodes
+            }
+        );
+
+
+        showToast(
+            `${finalCodes.length} emplacement(s) créé(s) avec succès.`,
+            "success"
+        );
+
+
+        await loadExisting();
+
+        await loadMagasins();
+
+
+        selectedCodes=new Set();
+
+        renderPreview();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showToast(
+            error.message ||
+            "Erreur lors de la création des emplacements.",
+            "error"
+        );
+
+    }
+    finally{
+
+        updateEmpButton();
+    }
+}
+
+
+/* =========================================================
+   CLOSE EMP
+========================================================= */
+
+function closeEmpModal(){
+
+    document
+        .getElementById("empOverlay")
+        .classList.remove("show");
+
+    currentMagasin=null;
+}
+
+
+/* =========================================================
+   CRUD LOG
+========================================================= */
+
+async function logCrud(
+    action,
+    entityId,
+    description,
+    metadata
+){
+
+    try{
+
+        if(
+            window.SMTG &&
+            typeof window.SMTG.logCrudAction ===
+            "function"
+        ){
+
+            await window.SMTG.logCrudAction(
+
+                action,
+
+                "ADMINISTRATION",
+
+                PAGE_CODE,
+
+                entityId,
+
+                description,
+
+                metadata
+
+            );
+        }
+
+    }
+    catch(error){
+
+        console.warn(
+            "LOG ERROR:",
+            error
+        );
+    }
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetFilters(){
+
+    document.getElementById(
+        "searchInput"
+    ).value="";
+
+
+    document.getElementById(
+        "divisionFilter"
+    ).value="";
+
+
+    document.getElementById(
+        "statusFilter"
+    ).value="";
+
+
+    filter();
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function getDivision(id){
+
+    return divisions.find(
+        d =>
+            Number(d.id) ===
+            Number(id)
+    ) || null;
+}
+
+
+function formatNumber(value){
+
+    return Number(
+        value || 0
+    ).toLocaleString(
+        "fr-FR",
+        {
+            maximumFractionDigits:0
+        }
+    );
+}
+
+
+function formatKg(value){
+
+    return Number(
+        value || 0
+    ).toLocaleString(
+        "fr-FR",
+        {
+            minimumFractionDigits:3,
+            maximumFractionDigits:3
+        }
+    );
+}
+
+
+function escapeHtml(value){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+
+        return "";
+    }
+
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(
+    message,
+    type="success"
+){
+
+    const container =
+        document.getElementById(
+            "toastContainer"
+        );
+
+
+    const div =
+        document.createElement("div");
+
+
+    div.className =
+        `toast ${type}`;
+
+
+    const icon =
+        type === "error"
+        ? "fa-circle-exclamation"
+        : type === "warning"
+        ? "fa-triangle-exclamation"
+        : "fa-circle-check";
+
+
+    div.innerHTML = `
+
+        <i
+            class="fa-solid ${icon}"
+            style="margin-right:8px"
+        ></i>
+
+        ${escapeHtml(message)}
+
+    `;
+
+
+    container.appendChild(div);
+
+
+    setTimeout(
+        ()=>div.remove(),
+        4500
+    );
+}
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+window.editMagasin =
+    editMagasin;
+
+window.deleteMagasin =
+    deleteMagasin;
+
+window.openEmplacements =
+    openEmplacements;
+
+</script>
+
+</body>
+</html>

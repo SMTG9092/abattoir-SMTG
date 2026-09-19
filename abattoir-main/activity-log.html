@@ -1,0 +1,3386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Journal d'activité - SMTG Abattoir</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #1769aa;
+            --primary-dark: #0d47a1;
+            --secondary: #0f172a;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --muted: #64748b;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --info: #0284c7;
+            --purple: #7c3aed;
+            --shadow: 0 4px 18px rgba(15, 23, 42, 0.07);
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .page {
+            width: 100%;
+            max-width: none;
+            padding: 24px;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            box-shadow: 0 5px 15px rgba(23, 105, 170, 0.22);
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .refresh-btn {
+            border: none;
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: #f0f7ff;
+            border-color: #b9d7ef;
+        }
+
+        .refresh-btn.loading i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .stat-icon.blue {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .stat-icon.green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .stat-icon.orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .stat-icon.red {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .stat-icon.purple {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .stat-info {
+            min-width: 0;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           FILTERS
+        ========================= */
+
+        .filter-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .filter-title i {
+            color: var(--primary);
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns:
+                minmax(220px, 2fr)
+                minmax(160px, 1fr)
+                minmax(160px, 1fr)
+                minmax(160px, 1fr)
+                minmax(140px, 1fr)
+                minmax(140px, 1fr)
+                auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .field {
+            min-width: 0;
+        }
+
+        .field label {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .input,
+        .select {
+            width: 100%;
+            height: 42px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 0 12px;
+            background: #fff;
+            color: var(--text);
+            outline: none;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .input:focus,
+        .select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.09);
+        }
+
+        .clear-btn {
+            height: 42px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--muted);
+            border-radius: 9px;
+            padding: 0 14px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .clear-btn:hover {
+            background: #f8fafc;
+            color: var(--danger);
+            border-color: #fecaca;
+        }
+
+        /* =========================
+           TABLE CARD
+        ========================= */
+
+        .table-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 17px 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .table-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .table-title i {
+            color: var(--primary);
+        }
+
+        .result-count {
+            background: #eff6ff;
+            color: var(--primary-dark);
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1250px;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8fafc;
+        }
+
+        th {
+            padding: 13px 14px;
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #64748b;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 13px 14px;
+            font-size: 13px;
+            border-bottom: 1px solid #edf1f5;
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .id-cell {
+            color: var(--muted);
+            font-weight: 700;
+            width: 65px;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #e0f2fe;
+            color: #0369a1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .user-login {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .action-badge,
+        .module-badge,
+        .entity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border-radius: 7px;
+            padding: 5px 9px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .action-create {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .action-update {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .action-delete {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .action-login {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .action-logout {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .action-export {
+            background: #f3e8ff;
+            color: #7e22ce;
+        }
+
+        .action-system {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .action-default {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .module-badge {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .entity-badge {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            color: #475569;
+        }
+
+        .description {
+            max-width: 360px;
+            line-height: 1.45;
+            color: #475569;
+        }
+
+        .page-name {
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .page-code {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+
+        .date-cell {
+            white-space: nowrap;
+        }
+
+        .date-main {
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .date-time {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .details-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--primary);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .details-btn:hover {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        /* =========================
+           EMPTY / LOADING
+        ========================= */
+
+        .state {
+            padding: 55px 20px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .state i {
+            font-size: 35px;
+            margin-bottom: 12px;
+            color: #94a3b8;
+        }
+
+        .state h3 {
+            font-size: 15px;
+            color: #475569;
+            margin-bottom: 5px;
+        }
+
+        .state p {
+            font-size: 13px;
+        }
+
+        .loader {
+            width: 34px;
+            height: 34px;
+            border: 3px solid #dbeafe;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 14px;
+        }
+
+        /* =========================
+           PAGINATION
+        ========================= */
+
+        .pagination {
+            padding: 15px 18px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-info {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .page-btn {
+            min-width: 34px;
+            height: 34px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            color: #475569;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: var(--primary);
+        }
+
+        .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.48);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 9999;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 720px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .modal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .modal-title i {
+            color: var(--primary);
+        }
+
+        .close-btn {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .detail-item {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            background: #fafcff;
+            min-width: 0;
+        }
+
+        .detail-item.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            color: var(--text);
+            font-size: 13px;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .json-box {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 14px;
+            border-radius: 9px;
+            font-family: Consolas, monospace;
+            font-size: 11px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            min-width: 280px;
+            max-width: 420px;
+            background: #0f172a;
+            color: white;
+            padding: 13px 16px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            font-size: 13px;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        .toast.error {
+            background: #991b1b;
+        }
+
+        .toast.success {
+            background: #166534;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1400px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .filters {
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+            }
+
+            .filters .search-field {
+                grid-column: span 3;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .page {
+                padding: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .filters {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .filters .search-field {
+                grid-column: span 2;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-item.full {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .page {
+                padding: 12px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+            }
+
+            .header-title h1 {
+                font-size: 20px;
+            }
+
+            .header-icon {
+                width: 46px;
+                height: 46px;
+            }
+
+            .refresh-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .filters .search-field {
+                grid-column: auto;
+            }
+
+            .pagination {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .pagination-buttons {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            .toast {
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <div class="page-header">
+
+        <div class="header-left">
+
+            <div class="header-icon">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+
+            <div class="header-title">
+                <h1>Journal d'activité</h1>
+                <p>Historique des opérations effectuées dans le système</p>
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            class="refresh-btn"
+            id="refreshBtn"
+            onclick="loadLogs()"
+        >
+            <i class="fa-solid fa-rotate"></i>
+            Actualiser
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         STATISTICS
+    ========================== -->
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-list"></i>
+            </div>
+
+            <div class="stat-info">
+                <div class="stat-label">Total activités</div>
+                <div class="stat-value" id="statTotal">0</div>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+
+            <div class="stat-info">
+                <div class="stat-label">Utilisateurs</div>
+                <div class="stat-value" id="statUsers">0</div>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-plus"></i>
+            </div>
+
+            <div class="stat-info">
+                <div class="stat-label">Créations</div>
+                <div class="stat-value" id="statCreate">0</div>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon red">
+                <i class="fa-solid fa-trash"></i>
+            </div>
+
+            <div class="stat-info">
+                <div class="stat-label">Suppressions</div>
+                <div class="stat-value" id="statDelete">0</div>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon purple">
+                <i class="fa-solid fa-pen"></i>
+            </div>
+
+            <div class="stat-info">
+                <div class="stat-label">Modifications</div>
+                <div class="stat-value" id="statUpdate">0</div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+    <div class="filter-card">
+
+        <div class="filter-title">
+            <i class="fa-solid fa-filter"></i>
+            Filtres et recherche
+        </div>
+
+        <div class="filters">
+
+            <div class="field search-field">
+
+                <label for="searchInput">
+                    Recherche
+                </label>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="input"
+                    placeholder="Utilisateur, description, page, entité..."
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="userFilter">
+                    Utilisateur
+                </label>
+
+                <select
+                    id="userFilter"
+                    class="select"
+                >
+                    <option value="">Tous les utilisateurs</option>
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="actionFilter">
+                    Action
+                </label>
+
+                <select
+                    id="actionFilter"
+                    class="select"
+                >
+                    <option value="">Toutes les actions</option>
+                    <option value="CREATE">Création</option>
+                    <option value="UPDATE">Modification</option>
+                    <option value="DELETE">Suppression</option>
+                    <option value="LOGIN">Connexion</option>
+                    <option value="LOGOUT">Déconnexion</option>
+                    <option value="EXPORT">Export</option>
+                    <option value="SYSTEM">Système</option>
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="moduleFilter">
+                    Module
+                </label>
+
+                <select
+                    id="moduleFilter"
+                    class="select"
+                >
+                    <option value="">Tous les modules</option>
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="dateFrom">
+                    Du
+                </label>
+
+                <input
+                    type="date"
+                    id="dateFrom"
+                    class="input"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="dateTo">
+                    Au
+                </label>
+
+                <input
+                    type="date"
+                    id="dateTo"
+                    class="input"
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                class="clear-btn"
+                onclick="clearFilters()"
+            >
+                <i class="fa-solid fa-xmark"></i>
+                Effacer
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TABLE
+    ========================== -->
+    <div class="table-card">
+
+        <div class="table-header">
+
+            <div class="table-title">
+                <i class="fa-solid fa-table-list"></i>
+                Activités enregistrées
+            </div>
+
+            <div
+                class="result-count"
+                id="resultCount"
+            >
+                0 résultat
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Utilisateur</th>
+
+                        <th>Action</th>
+
+                        <th>Module</th>
+
+                        <th>Page</th>
+
+                        <th>Description</th>
+
+                        <th>Entité</th>
+
+                        <th>Date / Heure</th>
+
+                        <th>Détails</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="logsBody">
+
+                    <tr>
+                        <td colspan="9">
+
+                            <div class="state">
+
+                                <div class="loader"></div>
+
+                                <h3>Chargement...</h3>
+
+                                <p>
+                                    Récupération du journal d'activité
+                                </p>
+
+                            </div>
+
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =========================
+             PAGINATION
+        ========================== -->
+
+        <div class="pagination">
+
+            <div
+                class="pagination-info"
+                id="paginationInfo"
+            >
+                0 - 0 sur 0
+            </div>
+
+            <div
+                class="pagination-buttons"
+                id="paginationButtons"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     DETAILS MODAL
+========================== -->
+
+<div
+    class="modal-overlay"
+    id="detailsModal"
+    onclick="closeModalOnOverlay(event)"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div class="modal-title">
+                <i class="fa-solid fa-circle-info"></i>
+                Détails de l'activité
+            </div>
+
+            <button
+                type="button"
+                class="close-btn"
+                onclick="closeDetails()"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div
+            class="modal-body"
+            id="detailsBody"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TOAST
+========================== -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    <i class="fa-solid fa-circle-info"></i>
+    <span id="toastMessage"></span>
+</div>
+
+
+<!-- =========================
+     SUPABASE
+========================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="api/supabase.js"></script>
+
+
+<script>
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let supabaseClient = null;
+
+let allLogs = [];
+let filteredLogs = [];
+
+let currentPage = 1;
+
+const PAGE_SIZE = 25;
+
+
+/* =========================================================
+   INITIALISATION
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", async function () {
+
+    try {
+
+        supabaseClient = getSupabase();
+
+        setupFilters();
+
+        await loadLogs();
+
+    } catch (error) {
+
+        console.error(
+            "Erreur initialisation:",
+            error
+        );
+
+        showError(
+            "Impossible d'initialiser le journal d'activité."
+        );
+
+    }
+
+});
+
+
+/* =========================================================
+   FILTER EVENTS
+========================================================= */
+
+function setupFilters() {
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+    const userFilter =
+        document.getElementById("userFilter");
+
+    const actionFilter =
+        document.getElementById("actionFilter");
+
+    const moduleFilter =
+        document.getElementById("moduleFilter");
+
+    const dateFrom =
+        document.getElementById("dateFrom");
+
+    const dateTo =
+        document.getElementById("dateTo");
+
+
+    searchInput.addEventListener(
+        "input",
+        applyFilters
+    );
+
+    userFilter.addEventListener(
+        "change",
+        applyFilters
+    );
+
+    actionFilter.addEventListener(
+        "change",
+        applyFilters
+    );
+
+    moduleFilter.addEventListener(
+        "change",
+        applyFilters
+    );
+
+    dateFrom.addEventListener(
+        "change",
+        applyFilters
+    );
+
+    dateTo.addEventListener(
+        "change",
+        applyFilters
+    );
+
+}
+
+
+/* =========================================================
+   LOAD LOGS
+========================================================= */
+
+async function loadLogs() {
+
+    const refreshBtn =
+        document.getElementById("refreshBtn");
+
+    refreshBtn.classList.add("loading");
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("activity_logs")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        allLogs =
+            Array.isArray(data)
+                ? data
+                : [];
+
+
+        populateUserFilter();
+
+        populateModuleFilter();
+
+        updateStatistics();
+
+        currentPage = 1;
+
+        applyFilters();
+
+
+    } catch (error) {
+
+        console.error(
+            "Erreur chargement activity_logs:",
+            error
+        );
+
+        showError(
+            "Erreur lors du chargement du journal : "
+            + (error.message || "Erreur inconnue")
+        );
+
+    } finally {
+
+        refreshBtn.classList.remove(
+            "loading"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   USERS FILTER
+========================================================= */
+
+function populateUserFilter() {
+
+    const select =
+        document.getElementById("userFilter");
+
+    const currentValue =
+        select.value;
+
+
+    const users = new Map();
+
+
+    allLogs.forEach(log => {
+
+        const key =
+            log.user_id ??
+            log.username ??
+            log.full_name ??
+            "";
+
+
+        if (!key) {
+            return;
+        }
+
+
+        const label =
+            log.full_name
+            || log.username
+            || ("User #" + log.user_id);
+
+
+        if (!users.has(String(key))) {
+
+            users.set(
+                String(key),
+                label
+            );
+
+        }
+
+    });
+
+
+    select.innerHTML =
+        '<option value="">Tous les utilisateurs</option>';
+
+
+    Array.from(users.entries())
+        .sort(
+            (a, b) =>
+                a[1].localeCompare(
+                    b[1],
+                    "fr",
+                    {
+                        sensitivity: "base"
+                    }
+                )
+        )
+        .forEach(
+            ([value, label]) => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = value;
+
+                option.textContent = label;
+
+                select.appendChild(option);
+
+            }
+        );
+
+
+    if (
+        Array.from(
+            select.options
+        ).some(
+            option =>
+                option.value === currentValue
+        )
+    ) {
+
+        select.value = currentValue;
+
+    }
+
+}
+
+
+/* =========================================================
+   MODULE FILTER
+========================================================= */
+
+function populateModuleFilter() {
+
+    const select =
+        document.getElementById("moduleFilter");
+
+    const currentValue =
+        select.value;
+
+
+    const modules =
+        [
+            ...new Set(
+                allLogs
+                    .map(log =>
+                        normalizeValue(
+                            log.module
+                        )
+                    )
+                    .filter(Boolean)
+            )
+        ]
+        .sort(
+            (a, b) =>
+                a.localeCompare(
+                    b,
+                    "fr"
+                )
+        );
+
+
+    select.innerHTML =
+        '<option value="">Tous les modules</option>';
+
+
+    modules.forEach(module => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = module;
+
+        option.textContent =
+            module;
+
+        select.appendChild(option);
+
+    });
+
+
+    if (
+        modules.includes(
+            currentValue
+        )
+    ) {
+
+        select.value =
+            currentValue;
+
+    }
+
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+function updateStatistics() {
+
+    const total =
+        allLogs.length;
+
+
+    const users =
+        new Set(
+            allLogs
+                .map(
+                    log =>
+                        log.user_id
+                        ?? log.username
+                        ?? log.full_name
+                )
+                .filter(
+                    value =>
+                        value !== null
+                        &&
+                        value !== undefined
+                        &&
+                        value !== ""
+                )
+        ).size;
+
+
+    const create =
+        countAction("CREATE");
+
+
+    const update =
+        countAction("UPDATE");
+
+
+    const remove =
+        countAction("DELETE");
+
+
+    document.getElementById(
+        "statTotal"
+    ).textContent =
+        formatNumber(total);
+
+
+    document.getElementById(
+        "statUsers"
+    ).textContent =
+        formatNumber(users);
+
+
+    document.getElementById(
+        "statCreate"
+    ).textContent =
+        formatNumber(create);
+
+
+    document.getElementById(
+        "statDelete"
+    ).textContent =
+        formatNumber(remove);
+
+
+    document.getElementById(
+        "statUpdate"
+    ).textContent =
+        formatNumber(update);
+
+}
+
+
+/* =========================================================
+   COUNT ACTION
+========================================================= */
+
+function countAction(action) {
+
+    return allLogs.filter(
+        log =>
+            normalizeAction(
+                log.action
+            ) === action
+    ).length;
+
+}
+
+
+/* =========================================================
+   APPLY FILTERS
+========================================================= */
+
+function applyFilters() {
+
+    const search =
+        normalizeValue(
+            document.getElementById(
+                "searchInput"
+            ).value
+        ).toLowerCase();
+
+
+    const user =
+        document.getElementById(
+            "userFilter"
+        ).value;
+
+
+    const action =
+        document.getElementById(
+            "actionFilter"
+        ).value;
+
+
+    const module =
+        normalizeValue(
+            document.getElementById(
+                "moduleFilter"
+            ).value
+        );
+
+
+    const dateFrom =
+        document.getElementById(
+            "dateFrom"
+        ).value;
+
+
+    const dateTo =
+        document.getElementById(
+            "dateTo"
+        ).value;
+
+
+    filteredLogs =
+        allLogs.filter(log => {
+
+
+            /* USER */
+
+            if (user) {
+
+                const logUser =
+                    String(
+                        log.user_id
+                        ?? log.username
+                        ?? log.full_name
+                        ?? ""
+                    );
+
+
+                if (
+                    logUser !== String(user)
+                ) {
+
+                    return false;
+
+                }
+
+            }
+
+
+            /* ACTION */
+
+            if (action) {
+
+                if (
+                    normalizeAction(
+                        log.action
+                    ) !== action
+                ) {
+
+                    return false;
+
+                }
+
+            }
+
+
+            /* MODULE */
+
+            if (module) {
+
+                if (
+                    normalizeValue(
+                        log.module
+                    ) !== module
+                ) {
+
+                    return false;
+
+                }
+
+            }
+
+
+            /* SEARCH */
+
+            if (search) {
+
+                const searchable =
+                    [
+                        log.id,
+                        log.user_id,
+                        log.username,
+                        log.full_name,
+                        log.action,
+                        log.module,
+                        log.page,
+                        log.page_code,
+                        log.description,
+                        log.entity_type,
+                        log.entity_id,
+                        log.ip_address
+                    ]
+                    .map(
+                        value =>
+                            normalizeValue(
+                                value
+                            ).toLowerCase()
+                    )
+                    .join(" ");
+
+
+                if (
+                    !searchable.includes(
+                        search
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+            }
+
+
+            /* DATE FROM */
+
+            if (dateFrom) {
+
+                const logDate =
+                    new Date(
+                        log.created_at
+                    );
+
+
+                const fromDate =
+                    new Date(
+                        dateFrom
+                        + "T00:00:00"
+                    );
+
+
+                if (
+                    isNaN(
+                        logDate.getTime()
+                    )
+                    ||
+                    logDate < fromDate
+                ) {
+
+                    return false;
+
+                }
+
+            }
+
+
+            /* DATE TO */
+
+            if (dateTo) {
+
+                const logDate =
+                    new Date(
+                        log.created_at
+                    );
+
+
+                const toDate =
+                    new Date(
+                        dateTo
+                        + "T23:59:59"
+                    );
+
+
+                if (
+                    isNaN(
+                        logDate.getTime()
+                    )
+                    ||
+                    logDate > toDate
+                ) {
+
+                    return false;
+
+                }
+
+            }
+
+
+            return true;
+
+        });
+
+
+    currentPage = 1;
+
+    renderTable();
+
+}
+
+
+/* =========================================================
+   RENDER TABLE
+========================================================= */
+
+function renderTable() {
+
+    const tbody =
+        document.getElementById(
+            "logsBody"
+        );
+
+
+    const total =
+        filteredLogs.length;
+
+
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                total / PAGE_SIZE
+            )
+        );
+
+
+    if (
+        currentPage > totalPages
+    ) {
+
+        currentPage =
+            totalPages;
+
+    }
+
+
+    const start =
+        (currentPage - 1)
+        * PAGE_SIZE;
+
+
+    const end =
+        Math.min(
+            start + PAGE_SIZE,
+            total
+        );
+
+
+    const pageLogs =
+        filteredLogs.slice(
+            start,
+            end
+        );
+
+
+    document.getElementById(
+        "resultCount"
+    ).textContent =
+        formatNumber(total)
+        + (
+            total > 1
+                ? " résultats"
+                : " résultat"
+        );
+
+
+    document.getElementById(
+        "paginationInfo"
+    ).textContent =
+        total === 0
+            ? "0 - 0 sur 0"
+            : (
+                (start + 1)
+                + " - "
+                + end
+                + " sur "
+                + total
+            );
+
+
+    if (pageLogs.length === 0) {
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td colspan="9">
+
+                    <div class="state">
+
+                        <i class="fa-regular fa-folder-open"></i>
+
+                        <h3>Aucune activité trouvée</h3>
+
+                        <p>
+                            Aucune ligne ne correspond aux critères sélectionnés.
+                        </p>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        renderPagination();
+
+        return;
+
+    }
+
+
+    tbody.innerHTML =
+        pageLogs
+            .map(
+                log =>
+                    createRow(log)
+            )
+            .join("");
+
+
+    renderPagination();
+
+}
+
+
+/* =========================================================
+   CREATE ROW
+========================================================= */
+
+function createRow(log) {
+
+    const userName =
+        normalizeValue(
+            log.full_name
+        )
+        ||
+        normalizeValue(
+            log.username
+        )
+        ||
+        (
+            log.user_id
+                ? "Utilisateur #" + log.user_id
+                : "Système"
+        );
+
+
+    const username =
+        normalizeValue(
+            log.username
+        );
+
+
+    const initials =
+        getInitials(
+            userName
+        );
+
+
+    const action =
+        normalizeAction(
+            log.action
+        );
+
+
+    const actionClass =
+        getActionClass(
+            action
+        );
+
+
+    const actionLabel =
+        getActionLabel(
+            action,
+            log.action
+        );
+
+
+    const module =
+        normalizeValue(
+            log.module
+        )
+        || "—";
+
+
+    const page =
+        normalizeValue(
+            log.page
+        )
+        || "—";
+
+
+    const pageCode =
+        normalizeValue(
+            log.page_code
+        );
+
+
+    const description =
+        normalizeValue(
+            log.description
+        )
+        || "—";
+
+
+    const entity =
+        normalizeValue(
+            log.entity_type
+        );
+
+
+    const entityId =
+        normalizeValue(
+            log.entity_id
+        );
+
+
+    const entityHtml =
+        entity
+            ? `
+                <span class="entity-badge">
+                    ${escapeHtml(entity)}
+                    ${
+                        entityId
+                            ? " #" + escapeHtml(entityId)
+                            : ""
+                    }
+                </span>
+              `
+            : "—";
+
+
+    const date =
+        formatDate(
+            log.created_at
+        );
+
+
+    return `
+
+        <tr>
+
+            <td class="id-cell">
+                #${escapeHtml(log.id)}
+            </td>
+
+
+            <td>
+
+                <div class="user-cell">
+
+                    <div class="avatar">
+                        ${escapeHtml(initials)}
+                    </div>
+
+                    <div>
+
+                        <div class="user-name">
+                            ${escapeHtml(userName)}
+                        </div>
+
+                        ${
+                            username
+                                ? `
+                                    <div class="user-login">
+                                        @${escapeHtml(username)}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <span class="action-badge ${actionClass}">
+                    ${getActionIcon(action)}
+                    ${escapeHtml(actionLabel)}
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="module-badge">
+                    ${escapeHtml(module)}
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <div class="page-name">
+                    ${escapeHtml(page)}
+                </div>
+
+                ${
+                    pageCode
+                        ? `
+                            <div class="page-code">
+                                ${escapeHtml(pageCode)}
+                            </div>
+                          `
+                        : ""
+                }
+
+            </td>
+
+
+            <td>
+
+                <div
+                    class="description"
+                    title="${escapeHtml(description)}"
+                >
+                    ${escapeHtml(
+                        truncate(
+                            description,
+                            110
+                        )
+                    )}
+                </div>
+
+            </td>
+
+
+            <td>
+                ${entityHtml}
+            </td>
+
+
+            <td class="date-cell">
+
+                <div class="date-main">
+                    ${escapeHtml(date.date)}
+                </div>
+
+                <div class="date-time">
+                    ${escapeHtml(date.time)}
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <button
+                    type="button"
+                    class="details-btn"
+                    title="Voir les détails"
+                    onclick="openDetails(${Number(log.id)})"
+                >
+                    <i class="fa-solid fa-eye"></i>
+                </button>
+
+            </td>
+
+        </tr>
+
+    `;
+
+}
+
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+function renderPagination() {
+
+    const container =
+        document.getElementById(
+            "paginationButtons"
+        );
+
+
+    const total =
+        filteredLogs.length;
+
+
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                total / PAGE_SIZE
+            )
+        );
+
+
+    let html = "";
+
+
+    html += `
+
+        <button
+            type="button"
+            class="page-btn"
+            onclick="goToPage(${currentPage - 1})"
+            ${currentPage <= 1 ? "disabled" : ""}
+            title="Page précédente"
+        >
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+    `;
+
+
+    const pages =
+        getPaginationPages(
+            currentPage,
+            totalPages
+        );
+
+
+    pages.forEach(page => {
+
+        if (page === "...") {
+
+            html += `
+                <span
+                    style="
+                        padding:0 5px;
+                        color:#94a3b8;
+                    "
+                >
+                    ...
+                </span>
+            `;
+
+        } else {
+
+            html += `
+
+                <button
+                    type="button"
+                    class="page-btn ${
+                        page === currentPage
+                            ? "active"
+                            : ""
+                    }"
+                    onclick="goToPage(${page})"
+                >
+                    ${page}
+                </button>
+
+            `;
+
+        }
+
+    });
+
+
+    html += `
+
+        <button
+            type="button"
+            class="page-btn"
+            onclick="goToPage(${currentPage + 1})"
+            ${
+                currentPage >= totalPages
+                    ? "disabled"
+                    : ""
+            }
+            title="Page suivante"
+        >
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+    `;
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+/* =========================================================
+   PAGINATION PAGES
+========================================================= */
+
+function getPaginationPages(
+    current,
+    total
+) {
+
+    if (total <= 7) {
+
+        return Array.from(
+            {
+                length: total
+            },
+            (_, i) => i + 1
+        );
+
+    }
+
+
+    const pages = [];
+
+
+    pages.push(1);
+
+
+    if (current > 4) {
+
+        pages.push("...");
+
+    }
+
+
+    const start =
+        Math.max(
+            2,
+            current - 2
+        );
+
+
+    const end =
+        Math.min(
+            total - 1,
+            current + 2
+        );
+
+
+    for (
+        let i = start;
+        i <= end;
+        i++
+    ) {
+
+        pages.push(i);
+
+    }
+
+
+    if (
+        current < total - 3
+    ) {
+
+        pages.push("...");
+
+    }
+
+
+    pages.push(total);
+
+
+    return pages;
+
+}
+
+
+/* =========================================================
+   GO TO PAGE
+========================================================= */
+
+function goToPage(page) {
+
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                filteredLogs.length
+                / PAGE_SIZE
+            )
+        );
+
+
+    if (
+        page < 1
+        ||
+        page > totalPages
+    ) {
+
+        return;
+
+    }
+
+
+    currentPage =
+        page;
+
+
+    renderTable();
+
+}
+
+
+/* =========================================================
+   DETAILS
+========================================================= */
+
+function openDetails(id) {
+
+    const log =
+        allLogs.find(
+            item =>
+                Number(item.id)
+                === Number(id)
+        );
+
+
+    if (!log) {
+
+        showToast(
+            "Activité introuvable.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const date =
+        formatDate(
+            log.created_at
+        );
+
+
+    const metadata =
+        log.metadata
+            ? JSON.stringify(
+                log.metadata,
+                null,
+                2
+            )
+            : "";
+
+
+    document.getElementById(
+        "detailsBody"
+    ).innerHTML = `
+
+        <div class="detail-grid">
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    ID
+                </div>
+
+                <div class="detail-value">
+                    #${escapeHtml(log.id)}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Date / Heure
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(date.full)}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Utilisateur
+                </div>
+
+                <div class="detail-value">
+                    ${
+                        escapeHtml(
+                            log.full_name
+                            || log.username
+                            || "—"
+                        )
+                    }
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    User ID
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.user_id ?? "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Username
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.username || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Action
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.action || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Module
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.module || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Page
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.page || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Page Code
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.page_code || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Type d'entité
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.entity_type || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    ID Entité
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.entity_id || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    Adresse IP
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.ip_address || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item full">
+
+                <div class="detail-label">
+                    Description
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.description || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item full">
+
+                <div class="detail-label">
+                    User Agent
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        log.user_agent || "—"
+                    )}
+                </div>
+
+            </div>
+
+
+            ${
+                metadata
+                    ? `
+
+                        <div class="detail-item full">
+
+                            <div class="detail-label">
+                                Metadata
+                            </div>
+
+                            <div class="json-box">
+                                ${escapeHtml(metadata)}
+                            </div>
+
+                        </div>
+
+                      `
+                    : ""
+            }
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "detailsModal"
+    ).classList.add("show");
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeDetails() {
+
+    document.getElementById(
+        "detailsModal"
+    ).classList.remove("show");
+
+}
+
+
+function closeModalOnOverlay(event) {
+
+    if (
+        event.target.id
+        === "detailsModal"
+    ) {
+
+        closeDetails();
+
+    }
+
+}
+
+
+/* =========================================================
+   CLEAR FILTERS
+========================================================= */
+
+function clearFilters() {
+
+    document.getElementById(
+        "searchInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "userFilter"
+    ).value = "";
+
+
+    document.getElementById(
+        "actionFilter"
+    ).value = "";
+
+
+    document.getElementById(
+        "moduleFilter"
+    ).value = "";
+
+
+    document.getElementById(
+        "dateFrom"
+    ).value = "";
+
+
+    document.getElementById(
+        "dateTo"
+    ).value = "";
+
+
+    currentPage = 1;
+
+    applyFilters();
+
+}
+
+
+/* =========================================================
+   ACTION NORMALIZATION
+========================================================= */
+
+function normalizeAction(
+    action
+) {
+
+    return normalizeValue(
+        action
+    )
+    .toUpperCase()
+    .trim();
+
+}
+
+
+/* =========================================================
+   ACTION LABEL
+========================================================= */
+
+function getActionLabel(
+    action,
+    original
+) {
+
+    switch (action) {
+
+        case "CREATE":
+            return "Création";
+
+        case "UPDATE":
+            return "Modification";
+
+        case "DELETE":
+            return "Suppression";
+
+        case "LOGIN":
+            return "Connexion";
+
+        case "LOGOUT":
+            return "Déconnexion";
+
+        case "EXPORT":
+            return "Export";
+
+        case "SYSTEM":
+            return "Système";
+
+        default:
+            return original || "—";
+
+    }
+
+}
+
+
+/* =========================================================
+   ACTION CLASS
+========================================================= */
+
+function getActionClass(
+    action
+) {
+
+    switch (action) {
+
+        case "CREATE":
+            return "action-create";
+
+        case "UPDATE":
+            return "action-update";
+
+        case "DELETE":
+            return "action-delete";
+
+        case "LOGIN":
+            return "action-login";
+
+        case "LOGOUT":
+            return "action-logout";
+
+        case "EXPORT":
+            return "action-export";
+
+        case "SYSTEM":
+            return "action-system";
+
+        default:
+            return "action-default";
+
+    }
+
+}
+
+
+/* =========================================================
+   ACTION ICON
+========================================================= */
+
+function getActionIcon(
+    action
+) {
+
+    const icons = {
+
+        CREATE:
+            '<i class="fa-solid fa-plus"></i>',
+
+        UPDATE:
+            '<i class="fa-solid fa-pen"></i>',
+
+        DELETE:
+            '<i class="fa-solid fa-trash"></i>',
+
+        LOGIN:
+            '<i class="fa-solid fa-right-to-bracket"></i>',
+
+        LOGOUT:
+            '<i class="fa-solid fa-right-from-bracket"></i>',
+
+        EXPORT:
+            '<i class="fa-solid fa-file-export"></i>',
+
+        SYSTEM:
+            '<i class="fa-solid fa-gear"></i>'
+
+    };
+
+
+    return (
+        icons[action]
+        ||
+        '<i class="fa-solid fa-circle"></i>'
+    );
+
+}
+
+
+/* =========================================================
+   DATE FORMAT
+========================================================= */
+
+function formatDate(
+    value
+) {
+
+    if (!value) {
+
+        return {
+            date: "—",
+            time: "—",
+            full: "—"
+        };
+
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return {
+            date: value,
+            time: "",
+            full: value
+        };
+
+    }
+
+
+    const datePart =
+        date.toLocaleDateString(
+            "fr-FR",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            }
+        );
+
+
+    const timePart =
+        date.toLocaleTimeString(
+            "fr-FR",
+            {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            }
+        );
+
+
+    return {
+
+        date: datePart,
+
+        time: timePart,
+
+        full:
+            datePart
+            + " "
+            + timePart
+
+    };
+
+}
+
+
+/* =========================================================
+   INITIALS
+========================================================= */
+
+function getInitials(
+    value
+) {
+
+    const text =
+        normalizeValue(
+            value
+        );
+
+
+    if (!text) {
+
+        return "?";
+
+    }
+
+
+    const parts =
+        text
+            .split(/\s+/)
+            .filter(Boolean);
+
+
+    if (
+        parts.length === 1
+    ) {
+
+        return parts[0]
+            .substring(0, 2)
+            .toUpperCase();
+
+    }
+
+
+    return (
+        parts[0][0]
+        +
+        parts[parts.length - 1][0]
+    ).toUpperCase();
+
+}
+
+
+/* =========================================================
+   NORMALIZE VALUE
+========================================================= */
+
+function normalizeValue(
+    value
+) {
+
+    if (
+        value === null
+        ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value).trim();
+
+}
+
+
+/* =========================================================
+   TRUNCATE
+========================================================= */
+
+function truncate(
+    text,
+    max
+) {
+
+    const value =
+        normalizeValue(
+            text
+        );
+
+
+    if (
+        value.length <= max
+    ) {
+
+        return value;
+
+    }
+
+
+    return (
+        value.substring(
+            0,
+            max
+        )
+        + "..."
+    );
+
+}
+
+
+/* =========================================================
+   FORMAT NUMBER
+========================================================= */
+
+function formatNumber(
+    value
+) {
+
+    return Number(
+        value || 0
+    ).toLocaleString(
+        "fr-FR"
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(
+    value
+) {
+
+    if (
+        value === null
+        ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(
+    message,
+    type = ""
+) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    const messageElement =
+        document.getElementById(
+            "toastMessage"
+        );
+
+
+    messageElement.textContent =
+        message;
+
+
+    toast.className =
+        "toast show "
+        + type;
+
+
+    setTimeout(
+        () => {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+        3500
+    );
+
+}
+
+
+/* =========================================================
+   ERROR STATE
+========================================================= */
+
+function showError(
+    message
+) {
+
+    const tbody =
+        document.getElementById(
+            "logsBody"
+        );
+
+
+    tbody.innerHTML = `
+
+        <tr>
+
+            <td colspan="9">
+
+                <div class="state">
+
+                    <i
+                        class="fa-solid fa-triangle-exclamation"
+                        style="color:#dc2626;"
+                    ></i>
+
+                    <h3>
+                        Erreur de chargement
+                    </h3>
+
+                    <p>
+                        ${escapeHtml(message)}
+                    </p>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    `;
+
+
+    showToast(
+        message,
+        "error"
+    );
+
+}
+
+
+/* =========================================================
+   ESC CLOSE MODAL
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeDetails();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

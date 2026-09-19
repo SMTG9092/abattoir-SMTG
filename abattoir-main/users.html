@@ -1,0 +1,5302 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Utilisateurs - SMTG</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f5f8fc,
+                    #edf3fa
+                );
+
+            color: #172a44;
+            min-height: 100vh;
+        }
+
+        .page {
+            padding: 28px;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1450px;
+            margin: auto;
+        }
+
+        /* =================================================
+           HEADER
+        ================================================= */
+
+        .page-header {
+            background: #fff;
+            border: 1px solid #e2e9f2;
+            border-radius: 18px;
+            padding: 20px 22px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            box-shadow:
+                0 8px 30px
+                rgba(28, 49, 78, .07);
+
+            margin-bottom: 18px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-icon {
+            width: 58px;
+            height: 58px;
+
+            border-radius: 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4b4bf5,
+                    #4338ca
+                );
+
+            color: white;
+            font-size: 25px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 750;
+            color: #17233b;
+        }
+
+        .header-title p {
+            margin-top: 4px;
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 9px;
+        }
+
+        /* =================================================
+           BUTTONS
+        ================================================= */
+
+        .btn {
+            height: 42px;
+            padding: 0 16px;
+
+            border-radius: 9px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            border: 1px solid transparent;
+
+            font-size: 13px;
+            font-weight: 650;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background:
+                linear-gradient(
+                    135deg,
+                    #4b4bf5,
+                    #4338ca
+                );
+
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #334155;
+            border-color: #dce4ee;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* =================================================
+           PERMISSION INFO
+        ================================================= */
+
+        .permission-info {
+            display: none;
+
+            align-items: center;
+
+            gap: 9px;
+
+            background: #eff6ff;
+
+            border:
+                1px solid #bfdbfe;
+
+            color: #315bb7;
+
+            padding: 10px 14px;
+
+            border-radius: 10px;
+
+            margin-bottom: 15px;
+
+            font-size: 12px;
+        }
+
+        .permission-info.show {
+            display: flex;
+        }
+
+        /* =================================================
+           STATS
+        ================================================= */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 16px;
+
+            margin-bottom: 18px;
+        }
+
+        .stat-card {
+            background: white;
+
+            border:
+                1px solid #e1e8f1;
+
+            border-radius: 14px;
+
+            padding: 18px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            box-shadow:
+                0 6px 20px
+                rgba(28,49,78,.05);
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+        }
+
+        .stat-card:nth-child(1)
+        .stat-icon {
+            background: #eaf0ff;
+            color: #4b4bf5;
+        }
+
+        .stat-card:nth-child(2)
+        .stat-icon {
+            background: #e8faf2;
+            color: #059669;
+        }
+
+        .stat-card:nth-child(3)
+        .stat-icon {
+            background: #fff3e7;
+            color: #ea580c;
+        }
+
+        .stat-card:nth-child(4)
+        .stat-icon {
+            background: #f1eaff;
+            color: #7c3aed;
+        }
+
+        .stat-number {
+            font-size: 27px;
+            font-weight: 750;
+        }
+
+        .stat-label {
+            margin-top: 2px;
+            font-size: 12px;
+            color: #6c7c91;
+        }
+
+        /* =================================================
+           TOOLBAR
+        ================================================= */
+
+        .toolbar {
+            background: white;
+
+            border:
+                1px solid #e1e8f1;
+
+            border-radius: 14px;
+
+            padding: 12px;
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-bottom: 14px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-box i {
+            position: absolute;
+
+            left: 14px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #718096;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 40px;
+
+            border:
+                1px solid #d9e2ed;
+
+            border-radius: 9px;
+
+            padding:
+                0 12px 0 40px;
+
+            outline: none;
+
+            font-size: 13px;
+        }
+
+        .search-box input:focus {
+            border-color: #4b4bf5;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(75,75,245,.09);
+        }
+
+        .filter-select {
+            width: 180px;
+
+            height: 40px;
+
+            border:
+                1px solid #d9e2ed;
+
+            border-radius: 9px;
+
+            padding: 0 11px;
+
+            background: white;
+
+            outline: none;
+
+            font-size: 13px;
+        }
+
+        /* =================================================
+           TABLE
+        ================================================= */
+
+        .table-card {
+            background: white;
+
+            border:
+                1px solid #e1e8f1;
+
+            border-radius: 14px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 6px 20px
+                rgba(28,49,78,.05);
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 950px;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f5f8fb;
+
+            padding:
+                13px 15px;
+
+            text-align: left;
+
+            font-size: 12px;
+
+            color: #29415f;
+
+            font-weight: 750;
+
+            border-bottom:
+                1px solid #e1e8f1;
+        }
+
+        tbody td {
+            padding:
+                12px 15px;
+
+            border-bottom:
+                1px solid #e7edf4;
+
+            font-size: 12px;
+
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #fbfdff;
+        }
+
+        /* =================================================
+           USER
+        ================================================= */
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #e7edf5,
+                    #dce5ef
+                );
+
+            color: #243b5a;
+
+            font-size: 12px;
+            font-weight: 750;
+
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            font-weight: 750;
+            color: #172a44;
+        }
+
+        .user-id {
+            margin-top: 3px;
+            font-size: 11px;
+            color: #7b8ba0;
+        }
+
+        .system-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+
+            margin-left: 5px;
+
+            padding:
+                3px 7px;
+
+            border-radius: 20px;
+
+            background: #fff4d6;
+
+            color: #946200;
+
+            font-size: 9px;
+
+            font-weight: 700;
+        }
+
+        /* =================================================
+           ROLE
+        ================================================= */
+
+        .role-badge {
+            display: inline-flex;
+
+            padding:
+                5px 10px;
+
+            border-radius: 20px;
+
+            background: #eaf0ff;
+
+            color: #4053cf;
+
+            font-size: 11px;
+
+            font-weight: 650;
+        }
+
+        .role-badge.no-role {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        /* =================================================
+           STATUS
+        ================================================= */
+
+        .status-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding:
+                5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: 650;
+        }
+
+        .status-badge::before {
+            content: "";
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+        }
+
+        .status-active {
+            background: #e8faf2;
+            color: #059669;
+        }
+
+        .status-active::before {
+            background: #10b981;
+        }
+
+        .status-inactive {
+            background: #feeeee;
+            color: #dc2626;
+        }
+
+        .status-inactive::before {
+            background: #ef4444;
+        }
+
+        /* =================================================
+           ACTIONS
+        ================================================= */
+
+        .actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .action-btn {
+            width: 35px;
+            height: 32px;
+
+            border-radius: 8px;
+
+            border: none;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-edit {
+            background: #edf3ff;
+            color: #2563eb;
+        }
+
+        .action-toggle {
+            background: #eafaf4;
+            color: #059669;
+        }
+
+        .action-delete {
+            background: #fff0f1;
+            color: #dc2626;
+        }
+
+        .action-protected {
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        /* =================================================
+           EMPTY / LOADING
+        ================================================= */
+
+        .loading-state {
+            min-height: 170px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            color: #73849a;
+
+            font-size: 12px;
+        }
+
+        .spinner {
+            width: 29px;
+            height: 29px;
+
+            border:
+                3px solid #e5eaf2;
+
+            border-top-color:
+                #4b4bf5;
+
+            border-radius: 50%;
+
+            animation:
+                spin .8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =================================================
+           FOOTER
+        ================================================= */
+
+        .table-footer {
+            padding:
+                12px 15px;
+
+            border-top:
+                1px solid #e5ebf2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+        .display-info {
+            color: #718096;
+            font-size: 11px;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 5px;
+        }
+
+        .page-btn {
+            width: 34px;
+            height: 32px;
+
+            background: white;
+
+            border:
+                1px solid #dce4ed;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            background: #4b4bf5;
+            color: white;
+            border-color: #4b4bf5;
+        }
+
+        .page-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        /* =================================================
+           MODAL
+        ================================================= */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+
+            background:
+                rgba(15,23,42,.48);
+
+            backdrop-filter:
+                blur(3px);
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 99999;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 560px;
+
+            background: white;
+
+            border-radius: 17px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 25px 70px
+                rgba(0,0,0,.2);
+        }
+
+        .modal-header {
+            padding:
+                17px 20px;
+
+            border-bottom:
+                1px solid #e5ebf2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-title-icon {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 9px;
+
+            background: #edf1ff;
+
+            color: #4b4bf5;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-title h2 {
+            font-size: 17px;
+        }
+
+        .modal-close {
+            width: 35px;
+            height: 35px;
+
+            border: none;
+
+            background: transparent;
+
+            cursor: pointer;
+
+            color: #64748b;
+
+            font-size: 16px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #33465f;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 41px;
+
+            border:
+                1px solid #d9e2ec;
+
+            border-radius: 8px;
+
+            padding:
+                0 11px;
+
+            outline: none;
+
+            font-size: 13px;
+        }
+
+        .form-control:focus {
+            border-color: #4b4bf5;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(75,75,245,.09);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 42px;
+        }
+
+        .password-toggle {
+            position: absolute;
+
+            right: 8px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            width: 32px;
+            height: 32px;
+
+            border: none;
+
+            background: transparent;
+
+            cursor: pointer;
+
+            color: #718096;
+        }
+
+        .form-help {
+            color: #7b8ba0;
+            font-size: 10px;
+        }
+
+        /* =================================================
+           SWITCH
+        ================================================= */
+
+        .switch-line {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .switch {
+            position: relative;
+
+            width: 42px;
+            height: 23px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+
+            background: #cbd5e1;
+
+            border-radius: 20px;
+
+            cursor: pointer;
+        }
+
+        .slider::before {
+            content: "";
+
+            position: absolute;
+
+            width: 17px;
+            height: 17px;
+
+            left: 3px;
+            top: 3px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            transition: .2s;
+        }
+
+        .switch input:checked + .slider {
+            background: #4b4bf5;
+        }
+
+        .switch input:checked + .slider::before {
+            transform:
+                translateX(19px);
+        }
+
+        /* =================================================
+           MODAL FOOTER
+        ================================================= */
+
+        .modal-footer {
+            padding:
+                14px 20px;
+
+            border-top:
+                1px solid #e5ebf2;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 9px;
+        }
+
+        /* =================================================
+           TOAST
+        ================================================= */
+
+        .toast-container {
+            position: fixed;
+
+            right: 20px;
+            bottom: 20px;
+
+            z-index: 100000;
+
+            width:
+                min(
+                    390px,
+                    calc(100vw - 40px)
+                );
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 9px;
+        }
+
+        .toast {
+            background: white;
+
+            border:
+                1px solid #e3eaf2;
+
+            border-radius: 11px;
+
+            padding: 13px;
+
+            box-shadow:
+                0 12px 35px
+                rgba(20,35,55,.15);
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+        .toast-icon {
+            width: 34px;
+            height: 34px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast.success .toast-icon {
+            background: #e8faf2;
+            color: #059669;
+        }
+
+        .toast.error .toast-icon {
+            background: #fff0f1;
+            color: #dc2626;
+        }
+
+        .toast.warning .toast-icon {
+            background: #fff5df;
+            color: #d97706;
+        }
+
+        .toast-body {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 750;
+            font-size: 12px;
+        }
+
+        .toast-message {
+            color: #718096;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .toast-close {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+
+        /* =================================================
+           RESPONSIVE
+        ================================================= */
+
+        @media(max-width:1000px) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+        }
+
+        @media(max-width:700px) {
+
+            .page {
+                padding: 12px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .header-actions .btn {
+                flex: 1;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .table-footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+<div class="container">
+
+
+    <!-- =================================================
+         HEADER
+    ================================================= -->
+
+    <div class="page-header">
+
+        <div class="header-left">
+
+            <div class="header-icon">
+
+                <i class="fa-solid fa-users"></i>
+
+            </div>
+
+            <div class="header-title">
+
+                <h1>
+                    Gestion des utilisateurs
+                </h1>
+
+                <p>
+                    Gérez les comptes et les accès au système
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="btnRefresh"
+            >
+
+                <i class="fa-solid fa-rotate"></i>
+
+                Actualiser
+
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="btnNewUser"
+            >
+
+                <i class="fa-solid fa-plus"></i>
+
+                Nouvel utilisateur
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         PERMISSION
+    ================================================= -->
+
+    <div
+        class="permission-info"
+        id="permissionInfo"
+    >
+
+        <i class="fa-solid fa-shield-halved"></i>
+
+        <span id="permissionInfoText"></span>
+
+    </div>
+
+
+    <!-- =================================================
+         STATS
+    ================================================= -->
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-users"></i>
+
+            </div>
+
+            <div>
+
+                <div
+                    class="stat-number"
+                    id="statTotal"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Utilisateurs total
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-user-check"></i>
+
+            </div>
+
+            <div>
+
+                <div
+                    class="stat-number"
+                    id="statActive"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Utilisateurs actifs
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-user-xmark"></i>
+
+            </div>
+
+            <div>
+
+                <div
+                    class="stat-number"
+                    id="statInactive"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Utilisateurs inactifs
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+            </div>
+
+            <div>
+
+                <div
+                    class="stat-number"
+                    id="statRoles"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Rôles système
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =================================================
+         FILTER
+    ================================================= -->
+
+    <div class="toolbar">
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Rechercher un utilisateur..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <select
+            id="statusFilter"
+            class="filter-select"
+        >
+
+            <option value="">
+                Tous les statuts
+            </option>
+
+            <option value="active">
+                Actifs
+            </option>
+
+            <option value="inactive">
+                Inactifs
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- =================================================
+         TABLE
+    ================================================= -->
+
+    <div class="table-card">
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Utilisateur
+                        </th>
+
+                        <th>
+                            Rôle
+                        </th>
+
+                        <th>
+                            Statut
+                        </th>
+
+                        <th>
+                            Créé le
+                        </th>
+
+                        <th>
+                            Dernière modification
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="usersTableBody"
+                >
+
+                    <tr>
+
+                        <td colspan="6">
+
+                            <div class="loading-state">
+
+                                <div class="spinner"></div>
+
+                                Chargement des utilisateurs...
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="table-footer">
+
+            <div
+                class="display-info"
+                id="displayInfo"
+            >
+                Affichage de 0 utilisateur
+            </div>
+
+
+            <div
+                class="pagination"
+                id="pagination"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     USER MODAL
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="userModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div class="modal-title">
+
+                <div class="modal-title-icon">
+
+                    <i
+                        class="fa-solid fa-user-plus"
+                        id="userModalIcon"
+                    ></i>
+
+                </div>
+
+                <h2 id="userModalTitle">
+                    Nouvel utilisateur
+                </h2>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="modal-close"
+                id="btnCloseUserModal"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <form id="userForm">
+
+
+            <div class="modal-body">
+
+                <div class="form-grid">
+
+
+                    <div class="form-group full">
+
+                        <label class="form-label">
+
+                            Nom d'utilisateur
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="username"
+                            maxlength="100"
+                            required
+                            autocomplete="off"
+                            placeholder="Ex: YASSINE"
+                        >
+
+
+                        <div class="form-help">
+
+                            Le nom d'utilisateur sera enregistré en MAJUSCULES.
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label class="form-label">
+
+                            Nom complet
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="fullName"
+                            maxlength="200"
+                            required
+                            placeholder="Nom et prénom"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+
+                            Mot de passe
+
+                            <span
+                                class="required"
+                                id="passwordRequired"
+                            >
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="password"
+                                autocomplete="new-password"
+                                placeholder="Mot de passe"
+                            >
+
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="togglePassword"
+                            >
+
+                                <i class="fa-solid fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            class="form-help"
+                            id="passwordHelp"
+                        >
+                            Obligatoire lors de la création.
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+
+                            Rôle
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <select
+                            class="form-control"
+                            id="roleId"
+                            required
+                        >
+
+                            <option value="">
+                                Sélectionner un rôle
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label class="form-label">
+                            Statut
+                        </label>
+
+
+                        <div class="switch-line">
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="isActive"
+                                    checked
+                                >
+
+                                <span class="slider"></span>
+
+                            </label>
+
+
+                            <span id="statusLabel">
+                                Actif
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="btnCancelUser"
+                >
+                    Annuler
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="btnSaveUser"
+                >
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Enregistrer
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     DELETE MODAL
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="deleteModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-body">
+
+            <div
+                style="
+                    width:52px;
+                    height:52px;
+                    border-radius:50%;
+                    background:#fff0f1;
+                    color:#ef4444;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:22px;
+                    margin-bottom:15px;
+                "
+            >
+
+                <i class="fa-solid fa-trash"></i>
+
+            </div>
+
+
+            <h3
+                style="
+                    font-size:18px;
+                    margin-bottom:8px;
+                "
+            >
+                Supprimer l'utilisateur
+            </h3>
+
+
+            <p
+                style="
+                    color:#63738a;
+                    line-height:1.6;
+                    font-size:13px;
+                "
+            >
+
+                Êtes-vous sûr de vouloir supprimer
+                l'utilisateur
+
+                <strong
+                    id="deleteUserName"
+                ></strong>
+
+                ?
+
+                <br>
+
+                Cette action est irréversible.
+
+            </p>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                id="btnCancelDelete"
+            >
+                Annuler
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                id="btnConfirmDelete"
+            >
+
+                <i class="fa-solid fa-trash"></i>
+
+                Supprimer
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+====================================================== -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+
+<!-- =====================================================
+     SCRIPTS
+     ORDRE OBLIGATOIRE
+====================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="./api/supabase.js"></script>
+
+<script src="./api/permissions.js"></script>
+
+
+<script>
+
+"use strict";
+
+
+/* =====================================================
+   CONFIG
+===================================================== */
+
+const PAGE_CODE = "USERS";
+
+const PAGE_SIZE = 8;
+
+
+/* =====================================================
+   DATABASE
+===================================================== */
+
+const db =
+    window.smtgSupabase;
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let users = [];
+
+let roles = [];
+
+let filteredUsers = [];
+
+let currentPage = 1;
+
+let editingUserId = null;
+
+let deletingUserId = null;
+
+let currentUser = null;
+
+
+/* =====================================================
+   GET CURRENT USER
+===================================================== */
+
+function getCurrentUser() {
+
+    const keys = [
+        "smtg_current_user",
+        "smtgUser"
+    ];
+
+
+    for (
+        const key of keys
+    ) {
+
+        try {
+
+            const raw =
+                sessionStorage.getItem(
+                    key
+                );
+
+
+            if (raw) {
+
+                const user =
+                    JSON.parse(raw);
+
+
+                if (user) {
+
+                    return user;
+
+                }
+
+            }
+
+        }
+        catch (error) {
+
+            console.warn(
+                "SessionStorage:",
+                error
+            );
+
+        }
+
+    }
+
+
+    for (
+        const key of keys
+    ) {
+
+        try {
+
+            const raw =
+                localStorage.getItem(
+                    key
+                );
+
+
+            if (raw) {
+
+                const user =
+                    JSON.parse(raw);
+
+
+                if (user) {
+
+                    return user;
+
+                }
+
+            }
+
+        }
+        catch (error) {}
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================================
+   PERMISSION
+===================================================== */
+
+function canView() {
+
+    if (
+        !window.SMTGPermissions
+    ) {
+
+        return false;
+
+    }
+
+    return SMTGPermissions.canView(
+        PAGE_CODE
+    );
+
+}
+
+
+function canCreate() {
+
+    if (
+        !window.SMTGPermissions
+    ) {
+
+        return false;
+
+    }
+
+    return SMTGPermissions.canCreate(
+        PAGE_CODE
+    );
+
+}
+
+
+function canEdit() {
+
+    if (
+        !window.SMTGPermissions
+    ) {
+
+        return false;
+
+    }
+
+    return SMTGPermissions.canEdit(
+        PAGE_CODE
+    );
+
+}
+
+
+function canDelete() {
+
+    if (
+        !window.SMTGPermissions
+    ) {
+
+        return false;
+
+    }
+
+    return SMTGPermissions.canDelete(
+        PAGE_CODE
+    );
+
+}
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+async function init() {
+
+    currentUser =
+        getCurrentUser();
+
+
+    console.log(
+        "👤 Current user:",
+        currentUser
+    );
+
+
+    if (!db) {
+
+        console.error(
+            "❌ SMTG Supabase client introuvable."
+        );
+
+
+        showToast(
+            "error",
+            "Erreur",
+            "Supabase n'est pas chargé."
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+    -----------------------------------------------
+    CHARGEMENT DES PERMISSIONS
+    -----------------------------------------------
+    */
+
+    if (
+        window.SMTGPermissions
+    ) {
+
+        await SMTGPermissions.load();
+
+
+        console.log(
+            "🔐 Permission USERS:",
+            SMTGPermissions.getPermission(
+                PAGE_CODE
+            )
+        );
+
+
+        if (
+            !canView()
+        ) {
+
+            showAccessDenied();
+
+            return;
+
+        }
+
+    }
+    else {
+
+        console.error(
+            "❌ SMTGPermissions introuvable."
+        );
+
+
+        showToast(
+            "error",
+            "Erreur",
+            "Le module des permissions n'est pas chargé."
+        );
+
+
+        return;
+
+    }
+
+
+    setupEvents();
+
+
+    applyPermissionUI();
+
+
+    await loadRoles();
+
+
+    await loadUsers();
+
+
+    applyFilters();
+
+}
+
+
+/* =====================================================
+   EVENTS
+===================================================== */
+
+function setupEvents() {
+
+
+    document
+        .getElementById(
+            "btnRefresh"
+        )
+        .addEventListener(
+            "click",
+            refreshAll
+        );
+
+
+    document
+        .getElementById(
+            "btnNewUser"
+        )
+        .addEventListener(
+            "click",
+            openCreateModal
+        );
+
+
+    document
+        .getElementById(
+            "searchInput"
+        )
+        .addEventListener(
+            "input",
+            function () {
+
+                currentPage = 1;
+
+                applyFilters();
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "statusFilter"
+        )
+        .addEventListener(
+            "change",
+            function () {
+
+                currentPage = 1;
+
+                applyFilters();
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "btnCloseUserModal"
+        )
+        .addEventListener(
+            "click",
+            closeUserModal
+        );
+
+
+    document
+        .getElementById(
+            "btnCancelUser"
+        )
+        .addEventListener(
+            "click",
+            closeUserModal
+        );
+
+
+    document
+        .getElementById(
+            "btnCancelDelete"
+        )
+        .addEventListener(
+            "click",
+            closeDeleteModal
+        );
+
+
+    document
+        .getElementById(
+            "btnConfirmDelete"
+        )
+        .addEventListener(
+            "click",
+            confirmDelete
+        );
+
+
+    document
+        .getElementById(
+            "userForm"
+        )
+        .addEventListener(
+            "submit",
+            saveUser
+        );
+
+
+    document
+        .getElementById(
+            "togglePassword"
+        )
+        .addEventListener(
+            "click",
+            togglePassword
+        );
+
+
+    document
+        .getElementById(
+            "isActive"
+        )
+        .addEventListener(
+            "change",
+            updateStatusLabel
+        );
+
+
+    /*
+    USERNAME TO UPPERCASE
+    */
+
+    document
+        .getElementById(
+            "username"
+        )
+        .addEventListener(
+            "input",
+            function () {
+
+                const start =
+                    this.selectionStart;
+
+                const end =
+                    this.selectionEnd;
+
+
+                this.value =
+                    this.value
+                        .toUpperCase();
+
+
+                try {
+
+                    this.setSelectionRange(
+                        start,
+                        end
+                    );
+
+                }
+                catch (e) {}
+
+            }
+        );
+
+
+    /*
+    TABLE ACTIONS
+    */
+
+    document
+        .getElementById(
+            "usersTableBody"
+        )
+        .addEventListener(
+            "click",
+            handleTableAction
+        );
+
+
+    /*
+    ESC
+    */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                closeUserModal();
+
+                closeDeleteModal();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   REFRESH
+===================================================== */
+
+async function refreshAll() {
+
+    await loadRoles();
+
+    await loadUsers();
+
+    applyFilters();
+
+
+    showToast(
+        "success",
+        "Actualisé",
+        "Les données ont été actualisées."
+    );
+
+}
+
+
+/* =====================================================
+   PERMISSION UI
+===================================================== */
+
+function applyPermissionUI() {
+
+    const create =
+        canCreate();
+
+
+    const edit =
+        canEdit();
+
+
+    const del =
+        canDelete();
+
+
+    const button =
+        document.getElementById(
+            "btnNewUser"
+        );
+
+
+    if (button) {
+
+        button.style.display =
+            create
+                ? "inline-flex"
+                : "none";
+
+    }
+
+
+    const info =
+        document.getElementById(
+            "permissionInfo"
+        );
+
+
+    const text =
+        document.getElementById(
+            "permissionInfoText"
+        );
+
+
+    const rights = [
+        "VIEW"
+    ];
+
+
+    if (create) {
+
+        rights.push(
+            "CREATE"
+        );
+
+    }
+
+
+    if (edit) {
+
+        rights.push(
+            "EDIT"
+        );
+
+    }
+
+
+    if (del) {
+
+        rights.push(
+            "DELETE"
+        );
+
+    }
+
+
+    /*
+    Toujours afficher les droits
+    pour voir clairement ce qui est actif.
+    */
+
+    info.classList.add(
+        "show"
+    );
+
+
+    text.textContent =
+        "Permissions disponibles : "
+        +
+        rights.join(
+            " • "
+        );
+
+}
+
+
+/* =====================================================
+   LOAD ROLES
+===================================================== */
+
+async function loadRoles() {
+
+    try {
+
+        const {
+            data,
+            error
+        } = await db
+            .from("roles")
+            .select(
+                "id,name,code,is_active"
+            )
+            .order(
+                "name",
+                {
+                    ascending: true
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "❌ Erreur roles:",
+                error
+            );
+
+
+            roles = [];
+
+
+            return;
+
+        }
+
+
+        roles =
+            (data || [])
+                .filter(
+                    role =>
+                        role.is_active !== false
+                );
+
+
+        /*
+        SELECT ROLE
+        */
+
+        const select =
+            document.getElementById(
+                "roleId"
+            );
+
+
+        select.innerHTML =
+            `
+                <option value="">
+                    Sélectionner un rôle
+                </option>
+            `;
+
+
+        roles.forEach(
+            function (role) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    role.id;
+
+
+                option.textContent =
+                    role.name;
+
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        document.getElementById(
+            "statRoles"
+        ).textContent =
+            roles.length;
+
+
+        console.log(
+            "✅ Roles chargés:",
+            roles.length
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "❌ Exception roles:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD USERS
+   IMPORTANT :
+   Pas de relation users -> roles
+===================================================== */
+
+async function loadUsers() {
+
+    const body =
+        document.getElementById(
+            "usersTableBody"
+        );
+
+
+    body.innerHTML =
+        `
+            <tr>
+
+                <td colspan="6">
+
+                    <div class="loading-state">
+
+                        <div class="spinner"></div>
+
+                        Chargement des utilisateurs...
+
+                    </div>
+
+                </td>
+
+            </tr>
+        `;
+
+
+    try {
+
+        /*
+        -----------------------------------------------
+        USERS SEUL
+        -----------------------------------------------
+        */
+
+        const {
+            data,
+            error
+        } = await db
+            .from("users")
+            .select(
+                `
+                id,
+                username,
+                full_name,
+                password,
+                role_id,
+                is_active,
+                created_by,
+                created_at,
+                updated_by,
+                updated_at,
+                is_system
+                `
+            )
+            .order(
+                "username",
+                {
+                    ascending: true
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "❌ ERREUR USERS:",
+                error
+            );
+
+
+            console.error(
+                "Code:",
+                error.code
+            );
+
+
+            console.error(
+                "Message:",
+                error.message
+            );
+
+
+            console.error(
+                "Details:",
+                error.details
+            );
+
+
+            console.error(
+                "Hint:",
+                error.hint
+            );
+
+
+            users = [];
+
+
+            body.innerHTML =
+                `
+                    <tr>
+
+                        <td colspan="6">
+
+                            <div class="loading-state">
+
+                                <i
+                                    class="fa-solid fa-triangle-exclamation"
+                                    style="
+                                        font-size:30px;
+                                        color:#ef4444;
+                                    "
+                                ></i>
+
+                                <div>
+                                    Impossible de charger les utilisateurs.
+                                </div>
+
+                                <small
+                                    style="
+                                        color:#94a3b8;
+                                    "
+                                >
+                                    ${escapeHtml(
+                                        error.message ||
+                                        "Erreur Supabase"
+                                    )}
+                                </small>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                `;
+
+
+            updateStats();
+
+
+            return;
+
+        }
+
+
+        /*
+        -----------------------------------------------
+        USERS OK
+        -----------------------------------------------
+        */
+
+        users =
+            data || [];
+
+
+        console.log(
+            "✅ Users chargés:",
+            users.length
+        );
+
+
+        /*
+        -----------------------------------------------
+        AJOUT ROLE MANUELLEMENT
+        -----------------------------------------------
+        */
+
+        users =
+            users.map(
+                function (user) {
+
+                    const role =
+                        roles.find(
+                            function (item) {
+
+                                return Number(
+                                    item.id
+                                ) === Number(
+                                    user.role_id
+                                );
+
+                            }
+                        );
+
+
+                    return {
+
+                        ...user,
+
+                        role:
+                            role ||
+                            null
+
+                    };
+
+                }
+            );
+
+
+        updateStats();
+
+
+    }
+    catch (error) {
+
+        console.error(
+            "❌ Exception loadUsers:",
+            error
+        );
+
+
+        users = [];
+
+
+        body.innerHTML =
+            `
+                <tr>
+
+                    <td colspan="6">
+
+                        <div class="loading-state">
+
+                            <i
+                                class="fa-solid fa-triangle-exclamation"
+                                style="
+                                    font-size:30px;
+                                    color:#ef4444;
+                                "
+                            ></i>
+
+                            <div>
+                                Erreur lors du chargement.
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+            `;
+
+    }
+
+}
+
+
+/* =====================================================
+   STATS
+===================================================== */
+
+function updateStats() {
+
+    const total =
+        users.length;
+
+
+    const active =
+        users.filter(
+            user =>
+                user.is_active === true
+        ).length;
+
+
+    const inactive =
+        users.filter(
+            user =>
+                user.is_active !== true
+        ).length;
+
+
+    document.getElementById(
+        "statTotal"
+    ).textContent =
+        total;
+
+
+    document.getElementById(
+        "statActive"
+    ).textContent =
+        active;
+
+
+    document.getElementById(
+        "statInactive"
+    ).textContent =
+        inactive;
+
+
+    /*
+    Nombre de rôles réellement utilisés
+    */
+
+    const usedRoles =
+        new Set(
+            users
+                .filter(
+                    user =>
+                        user.role_id
+                )
+                .map(
+                    user =>
+                        user.role_id
+                )
+        );
+
+
+    document.getElementById(
+        "statRoles"
+    ).textContent =
+        usedRoles.size;
+
+}
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+function applyFilters() {
+
+    const search =
+        document.getElementById(
+            "searchInput"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const status =
+        document.getElementById(
+            "statusFilter"
+        )
+        .value;
+
+
+    filteredUsers =
+        users.filter(
+            function (user) {
+
+                const text =
+                    [
+                        user.username,
+                        user.full_name,
+                        user.role?.name,
+                        user.role?.code
+                    ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+
+                const searchMatch =
+                    !search ||
+                    text.includes(
+                        search
+                    );
+
+
+                let statusMatch =
+                    true;
+
+
+                if (
+                    status ===
+                    "active"
+                ) {
+
+                    statusMatch =
+                        user.is_active === true;
+
+                }
+
+
+                if (
+                    status ===
+                    "inactive"
+                ) {
+
+                    statusMatch =
+                        user.is_active !== true;
+
+                }
+
+
+                return (
+                    searchMatch &&
+                    statusMatch
+                );
+
+            }
+        );
+
+
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                filteredUsers.length /
+                PAGE_SIZE
+            )
+        );
+
+
+    if (
+        currentPage >
+        totalPages
+    ) {
+
+        currentPage =
+            totalPages;
+
+    }
+
+
+    renderTable();
+
+    renderPagination();
+
+}
+
+
+/* =====================================================
+   RENDER TABLE
+===================================================== */
+
+function renderTable() {
+
+    const body =
+        document.getElementById(
+            "usersTableBody"
+        );
+
+
+    const start =
+        (
+            currentPage - 1
+        )
+        *
+        PAGE_SIZE;
+
+
+    const end =
+        start +
+        PAGE_SIZE;
+
+
+    const list =
+        filteredUsers.slice(
+            start,
+            end
+        );
+
+
+    if (
+        list.length === 0
+    ) {
+
+        body.innerHTML =
+            `
+                <tr>
+
+                    <td colspan="6">
+
+                        <div class="loading-state">
+
+                            <i
+                                class="fa-solid fa-users-slash"
+                                style="
+                                    font-size:34px;
+                                    color:#73849a;
+                                "
+                            ></i>
+
+                            <div>
+                                Aucun utilisateur trouvé.
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+            `;
+
+
+        document.getElementById(
+            "displayInfo"
+        ).textContent =
+            "Affichage de 0 utilisateur";
+
+
+        return;
+
+    }
+
+
+    body.innerHTML =
+        list
+            .map(
+                renderUserRow
+            )
+            .join("");
+
+
+    const first =
+        start + 1;
+
+
+    const last =
+        Math.min(
+            end,
+            filteredUsers.length
+        );
+
+
+    document.getElementById(
+        "displayInfo"
+    ).textContent =
+        `Affichage de ${first} à ${last} sur ${filteredUsers.length} utilisateur(s)`;
+
+}
+
+
+/* =====================================================
+   USER ROW
+===================================================== */
+
+function renderUserRow(user) {
+
+    const protectedUser =
+        isProtectedUser(
+            user
+        );
+
+
+    const active =
+        user.is_active === true;
+
+
+    const roleName =
+        user.role?.name ||
+        "Aucun rôle";
+
+
+    const initials =
+        getInitials(
+            user.full_name ||
+            user.username
+        );
+
+
+    const created =
+        formatDate(
+            user.created_at
+        );
+
+
+    const updated =
+        formatDate(
+            user.updated_at
+        );
+
+
+    let actions = "";
+
+
+    if (
+        protectedUser
+    ) {
+
+        actions =
+            `
+                <button
+                    type="button"
+                    class="
+                        action-btn
+                        action-protected
+                    "
+                    disabled
+                    title="SYSTEM protégé"
+                >
+
+                    <i class="fa-solid fa-lock"></i>
+
+                </button>
+            `;
+
+    }
+    else {
+
+        if (
+            canEdit()
+        ) {
+
+            actions +=
+                `
+                    <button
+                        type="button"
+                        class="
+                            action-btn
+                            action-edit
+                        "
+                        data-action="edit"
+                        data-id="${user.id}"
+                        title="Modifier"
+                    >
+
+                        <i class="fa-solid fa-pen"></i>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="
+                            action-btn
+                            action-toggle
+                        "
+                        data-action="toggle"
+                        data-id="${user.id}"
+                        title="${
+                            active
+                            ?
+                            "Désactiver"
+                            :
+                            "Activer"
+                        }"
+                    >
+
+                        <i class="fa-solid fa-power-off"></i>
+
+                    </button>
+                `;
+
+        }
+
+
+        if (
+            canDelete()
+        ) {
+
+            actions +=
+                `
+                    <button
+                        type="button"
+                        class="
+                            action-btn
+                            action-delete
+                        "
+                        data-action="delete"
+                        data-id="${user.id}"
+                        title="Supprimer"
+                    >
+
+                        <i class="fa-solid fa-trash"></i>
+
+                    </button>
+                `;
+
+        }
+
+
+        if (!actions) {
+
+            actions =
+                `
+                    <span
+                        style="
+                            color:#94a3b8;
+                            font-size:11px;
+                        "
+                    >
+                        Aucune action
+                    </span>
+                `;
+
+        }
+
+    }
+
+
+    return `
+
+        <tr>
+
+            <td>
+
+                <div class="user-cell">
+
+                    <div class="avatar">
+
+                        ${escapeHtml(
+                            initials
+                        )}
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="user-name">
+
+                            ${escapeHtml(
+                                user.username ||
+                                ""
+                            )}
+
+                            ${
+                                protectedUser
+                                ?
+                                `
+                                    <span
+                                        class="system-badge"
+                                    >
+
+                                        <i class="fa-solid fa-lock"></i>
+
+                                        SYSTEM
+
+                                    </span>
+                                `
+                                :
+                                ""
+                            }
+
+                        </div>
+
+
+                        <div class="user-id">
+
+                            ${escapeHtml(
+                                user.full_name ||
+                                ""
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <span
+                    class="
+                        role-badge
+                        ${
+                            !user.role
+                            ?
+                            "no-role"
+                            :
+                            ""
+                        }
+                    "
+                >
+
+                    ${escapeHtml(
+                        roleName
+                    )}
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span
+                    class="
+                        status-badge
+                        ${
+                            active
+                            ?
+                            "status-active"
+                            :
+                            "status-inactive"
+                        }
+                    "
+                >
+
+                    ${
+                        active
+                        ?
+                        "Actif"
+                        :
+                        "Inactif"
+                    }
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <div>
+                    ${created.date}
+                </div>
+
+                <div
+                    style="
+                        color:#8795a7;
+                        font-size:10px;
+                        margin-top:2px;
+                    "
+                >
+                    ${created.time}
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <div>
+                    ${updated.date}
+                </div>
+
+                <div
+                    style="
+                        color:#8795a7;
+                        font-size:10px;
+                        margin-top:2px;
+                    "
+                >
+                    ${updated.time}
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <div class="actions">
+
+                    ${actions}
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    `;
+
+}
+
+
+/* =====================================================
+   TABLE ACTION
+===================================================== */
+
+async function handleTableAction(event) {
+
+    const button =
+        event.target.closest(
+            "[data-action]"
+        );
+
+
+    if (!button) {
+        return;
+    }
+
+
+    const id =
+        Number(
+            button.dataset.id
+        );
+
+
+    const action =
+        button.dataset.action;
+
+
+    if (
+        action ===
+        "edit"
+    ) {
+
+        editUser(
+            id
+        );
+
+    }
+
+
+    else if (
+        action ===
+        "toggle"
+    ) {
+
+        await toggleUser(
+            id
+        );
+
+    }
+
+
+    else if (
+        action ===
+        "delete"
+    ) {
+
+        deleteUser(
+            id
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CREATE
+===================================================== */
+
+function openCreateModal() {
+
+    if (
+        !canCreate()
+    ) {
+
+        showToast(
+            "warning",
+            "Accès refusé",
+            "Vous n'avez pas la permission CREATE."
+        );
+
+        return;
+
+    }
+
+
+    editingUserId =
+        null;
+
+
+    document.getElementById(
+        "userModalTitle"
+    ).textContent =
+        "Nouvel utilisateur";
+
+
+    document.getElementById(
+        "userModalIcon"
+    ).className =
+        "fa-solid fa-user-plus";
+
+
+    document.getElementById(
+        "userForm"
+    ).reset();
+
+
+    document.getElementById(
+        "isActive"
+    ).checked =
+        true;
+
+
+    document.getElementById(
+        "password"
+    ).required =
+        true;
+
+
+    document.getElementById(
+        "passwordRequired"
+    ).style.display =
+        "inline";
+
+
+    document.getElementById(
+        "passwordHelp"
+    ).textContent =
+        "Obligatoire lors de la création.";
+
+
+    updateStatusLabel();
+
+
+    document.getElementById(
+        "userModal"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+
+/* =====================================================
+   EDIT
+===================================================== */
+
+function editUser(id) {
+
+    if (
+        !canEdit()
+    ) {
+
+        showToast(
+            "warning",
+            "Accès refusé",
+            "Vous n'avez pas la permission EDIT."
+        );
+
+        return;
+
+    }
+
+
+    const user =
+        users.find(
+            item =>
+                Number(item.id) ===
+                Number(id)
+        );
+
+
+    if (!user) {
+
+        showToast(
+            "error",
+            "Erreur",
+            "Utilisateur introuvable."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        isProtectedUser(
+            user
+        )
+    ) {
+
+        showToast(
+            "warning",
+            "Utilisateur protégé",
+            "Le compte SYSTEM ne peut pas être modifié."
+        );
+
+        return;
+
+    }
+
+
+    editingUserId =
+        user.id;
+
+
+    document.getElementById(
+        "userModalTitle"
+    ).textContent =
+        "Modifier l'utilisateur";
+
+
+    document.getElementById(
+        "userModalIcon"
+    ).className =
+        "fa-solid fa-user-pen";
+
+
+    document.getElementById(
+        "username"
+    ).value =
+        (
+            user.username ||
+            ""
+        )
+        .toUpperCase();
+
+
+    document.getElementById(
+        "fullName"
+    ).value =
+        user.full_name ||
+        "";
+
+
+    document.getElementById(
+        "password"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "password"
+    ).required =
+        false;
+
+
+    document.getElementById(
+        "passwordRequired"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "passwordHelp"
+    ).textContent =
+        "Laissez vide pour conserver le mot de passe actuel.";
+
+
+    document.getElementById(
+        "roleId"
+    ).value =
+        user.role_id ||
+        "";
+
+
+    document.getElementById(
+        "isActive"
+    ).checked =
+        user.is_active === true;
+
+
+    updateStatusLabel();
+
+
+    document.getElementById(
+        "userModal"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+async function saveUser(event) {
+
+    event.preventDefault();
+
+
+    const isEdit =
+        Boolean(
+            editingUserId
+        );
+
+
+    if (
+        isEdit &&
+        !canEdit()
+    ) {
+
+        showToast(
+            "warning",
+            "Accès refusé",
+            "Vous n'avez pas la permission EDIT."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !isEdit &&
+        !canCreate()
+    ) {
+
+        showToast(
+            "warning",
+            "Accès refusé",
+            "Vous n'avez pas la permission CREATE."
+        );
+
+        return;
+
+    }
+
+
+    const username =
+        document.getElementById(
+            "username"
+        )
+        .value
+        .trim()
+        .toUpperCase();
+
+
+    const fullName =
+        document.getElementById(
+            "fullName"
+        )
+        .value
+        .trim();
+
+
+    /*
+    IMPORTANT:
+    password ne passe jamais par toUpperCase()
+    */
+
+    const password =
+        document.getElementById(
+            "password"
+        ).value;
+
+
+    const roleId =
+        document.getElementById(
+            "roleId"
+        ).value;
+
+
+    const isActive =
+        document.getElementById(
+            "isActive"
+        ).checked;
+
+
+    if (!username) {
+
+        showToast(
+            "warning",
+            "Champ obligatoire",
+            "Nom d'utilisateur obligatoire."
+        );
+
+        return;
+
+    }
+
+
+    if (!fullName) {
+
+        showToast(
+            "warning",
+            "Champ obligatoire",
+            "Nom complet obligatoire."
+        );
+
+        return;
+
+    }
+
+
+    if (!roleId) {
+
+        showToast(
+            "warning",
+            "Champ obligatoire",
+            "Veuillez sélectionner un rôle."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !isEdit &&
+        !password
+    ) {
+
+        showToast(
+            "warning",
+            "Champ obligatoire",
+            "Mot de passe obligatoire."
+        );
+
+        return;
+
+    }
+
+
+    /*
+    DUPLICATE
+    */
+
+    const duplicate =
+        users.find(
+            function (user) {
+
+                return (
+
+                    String(
+                        user.username ||
+                        ""
+                    )
+                    .toUpperCase()
+                    ===
+                    username
+
+                    &&
+
+                    Number(
+                        user.id
+                    )
+                    !==
+                    Number(
+                        editingUserId
+                    )
+
+                );
+
+            }
+        );
+
+
+    if (duplicate) {
+
+        showToast(
+            "error",
+            "Nom déjà utilisé",
+            `${username} existe déjà.`
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "btnSaveUser"
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.innerHTML =
+        `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+
+            Enregistrement...
+        `;
+
+
+    try {
+
+        const auditUserId =
+            currentUser?.id ||
+            null;
+
+
+        if (
+            isEdit
+        ) {
+
+            const payload = {
+
+                username:
+                    username,
+
+                full_name:
+                    fullName,
+
+                role_id:
+                    Number(
+                        roleId
+                    ),
+
+                is_active:
+                    isActive,
+
+                updated_by:
+                    auditUserId,
+
+                updated_at:
+                    new Date()
+                        .toISOString()
+
+            };
+
+
+            /*
+            Password uniquement
+            s'il a été saisi.
+            */
+
+            if (password) {
+
+                payload.password =
+                    password;
+
+            }
+
+
+            const {
+                error
+            } = await db
+                .from("users")
+                .update(
+                    payload
+                )
+                .eq(
+                    "id",
+                    editingUserId
+                );
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            await writeAudit(
+                "UPDATE",
+                editingUserId,
+                "Modification utilisateur",
+                {
+                    username:
+                        username,
+
+                    full_name:
+                        fullName,
+
+                    role_id:
+                        Number(
+                            roleId
+                        ),
+
+                    is_active:
+                        isActive
+                }
+            );
+
+
+            showToast(
+                "success",
+                "Succès",
+                "Utilisateur modifié avec succès."
+            );
+
+        }
+        else {
+
+            const payload = {
+
+                username:
+                    username,
+
+                full_name:
+                    fullName,
+
+                password:
+                    password,
+
+                role_id:
+                    Number(
+                        roleId
+                    ),
+
+                is_active:
+                    isActive,
+
+                created_by:
+                    auditUserId,
+
+                updated_by:
+                    auditUserId
+
+            };
+
+
+            const {
+                data,
+                error
+            } = await db
+                .from("users")
+                .insert(
+                    payload
+                )
+                .select(
+                    "id"
+                )
+                .single();
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            await writeAudit(
+                "CREATE",
+                data?.id || null,
+                "Création utilisateur",
+                {
+                    username:
+                        username,
+
+                    full_name:
+                        fullName,
+
+                    role_id:
+                        Number(
+                            roleId
+                        ),
+
+                    is_active:
+                        isActive
+                }
+            );
+
+
+            showToast(
+                "success",
+                "Succès",
+                "Utilisateur créé avec succès."
+            );
+
+        }
+
+
+        closeUserModal();
+
+
+        await loadUsers();
+
+
+        applyFilters();
+
+    }
+    catch (error) {
+
+        console.error(
+            "❌ SAVE USER:",
+            error
+        );
+
+
+        showToast(
+            "error",
+            "Erreur",
+            error.message ||
+            "Impossible d'enregistrer l'utilisateur."
+        );
+
+    }
+    finally {
+
+        button.disabled =
+            false;
+
+
+        button.innerHTML =
+            `
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                Enregistrer
+            `;
+
+    }
+
+}
+
+
+/* =====================================================
+   TOGGLE
+===================================================== */
+
+async function toggleUser(id) {
+
+    if (
+        !canEdit()
+    ) {
+
+        showToast(
+            "warning",
+            "Accès refusé",
+            "Vous n'avez pas la permission EDIT."
+        );
+
+        return;
+
+    }
+
+
+    const user =
+        users.find(
+            item =>
+                Number(item.id) ===
+                Number(id)
+        );
+
+
+    if (!user) {
+        return;
+    }
+
+
+    if (
+        isProtectedUser(
+            user
+        )
+    ) {
+
+        showToast(
+            "warning",
+            "Utilisateur protégé",
+            "SYSTEM ne peut pas être désactivé."
+        );
+
+        return;
+
+    }
+
+
+    const newStatus =
+        !user.is_active;
+
+
+    try {
+
+        const {
+            error
+        } = await db
+            .from("users")
+            .update({
+
+                is_active:
+                    newStatus,
+
+                updated_by:
+                    currentUser?.id ||
+                    null,
+
+                updated_at:
+                    new Date()
+                        .toISOString()
+
+            })
+            .eq(
+                "id",
+                id
+            );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        await writeAudit(
+            "UPDATE",
+            id,
+            newStatus
+                ?
+                "Activation utilisateur"
+                :
+                "Désactivation utilisateur",
+            {
+                username:
+                    user.username,
+
+                is_active:
+                    newStatus
+            }
+        );
+
+
+        await loadUsers();
+
+
+        applyFilters();
+
+
+        showToast(
+            "success",
+            newStatus
+                ?
+                "Utilisateur activé"
+                :
+                "Utilisateur désactivé",
+            user.username
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "TOGGLE:",
+            error
+        );
+
+
+        showToast(
+            "error",
+            "Erreur",
+            error.message ||
+            "Impossible de modifier le statut."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+function deleteUser(id) {
+
+    if (
+        !canDelete()
+    ) {
+
+        showToast(
+            "warning",
+            "Accès refusé",
+            "Vous n'avez pas la permission DELETE."
+        );
+
+        return;
+
+    }
+
+
+    const user =
+        users.find(
+            item =>
+                Number(item.id) ===
+                Number(id)
+        );
+
+
+    if (!user) {
+        return;
+    }
+
+
+    if (
+        isProtectedUser(
+            user
+        )
+    ) {
+
+        showToast(
+            "warning",
+            "Utilisateur protégé",
+            "SYSTEM ne peut pas être supprimé."
+        );
+
+        return;
+
+    }
+
+
+    deletingUserId =
+        user.id;
+
+
+    document.getElementById(
+        "deleteUserName"
+    ).textContent =
+        user.username;
+
+
+    document.getElementById(
+        "deleteModal"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+
+/* =====================================================
+   CONFIRM DELETE
+===================================================== */
+
+async function confirmDelete() {
+
+    if (
+        !canDelete()
+    ) {
+
+        showToast(
+            "warning",
+            "Accès refusé",
+            "Vous n'avez pas la permission DELETE."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !deletingUserId
+    ) {
+
+        return;
+
+    }
+
+
+    const user =
+        users.find(
+            item =>
+                Number(item.id) ===
+                Number(deletingUserId)
+        );
+
+
+    if (
+        !user ||
+        isProtectedUser(user)
+    ) {
+
+        closeDeleteModal();
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "btnConfirmDelete"
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.innerHTML =
+        `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+
+            Suppression...
+        `;
+
+
+    try {
+
+        const {
+            error
+        } = await db
+            .from("users")
+            .delete()
+            .eq(
+                "id",
+                deletingUserId
+            );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        await writeAudit(
+            "DELETE",
+            deletingUserId,
+            "Suppression utilisateur",
+            {
+                username:
+                    user.username,
+
+                full_name:
+                    user.full_name
+            }
+        );
+
+
+        closeDeleteModal();
+
+
+        await loadUsers();
+
+
+        applyFilters();
+
+
+        showToast(
+            "success",
+            "Succès",
+            "Utilisateur supprimé avec succès."
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "DELETE:",
+            error
+        );
+
+
+        showToast(
+            "error",
+            "Erreur",
+            error.message ||
+            "Impossible de supprimer."
+        );
+
+    }
+    finally {
+
+        button.disabled =
+            false;
+
+
+        button.innerHTML =
+            `
+                <i class="fa-solid fa-trash"></i>
+
+                Supprimer
+            `;
+
+    }
+
+}
+
+
+/* =====================================================
+   PROTECTED SYSTEM
+===================================================== */
+
+function isProtectedUser(user) {
+
+    if (!user) {
+
+        return false;
+
+    }
+
+
+    return (
+
+        user.is_system === true
+
+        ||
+
+        String(
+            user.username ||
+            ""
+        )
+        .trim()
+        .toUpperCase()
+        ===
+        "SYSTEM"
+
+    );
+
+}
+
+
+/* =====================================================
+   MODALS
+===================================================== */
+
+function closeUserModal() {
+
+    document
+        .getElementById(
+            "userModal"
+        )
+        .classList.remove(
+            "show"
+        );
+
+
+    editingUserId =
+        null;
+
+}
+
+
+function closeDeleteModal() {
+
+    document
+        .getElementById(
+            "deleteModal"
+        )
+        .classList.remove(
+            "show"
+        );
+
+
+    deletingUserId =
+        null;
+
+}
+
+
+/* =====================================================
+   PASSWORD
+===================================================== */
+
+function togglePassword() {
+
+    const input =
+        document.getElementById(
+            "password"
+        );
+
+
+    const button =
+        document.getElementById(
+            "togglePassword"
+        );
+
+
+    if (
+        input.type ===
+        "password"
+    ) {
+
+        input.type =
+            "text";
+
+
+        button.innerHTML =
+            `
+                <i class="fa-solid fa-eye-slash"></i>
+            `;
+
+    }
+    else {
+
+        input.type =
+            "password";
+
+
+        button.innerHTML =
+            `
+                <i class="fa-solid fa-eye"></i>
+            `;
+
+    }
+
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function updateStatusLabel() {
+
+    const checked =
+        document.getElementById(
+            "isActive"
+        ).checked;
+
+
+    document.getElementById(
+        "statusLabel"
+    ).textContent =
+        checked
+            ?
+            "Actif"
+            :
+            "Inactif";
+
+}
+
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
+function renderPagination() {
+
+    const container =
+        document.getElementById(
+            "pagination"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const totalPages =
+        Math.ceil(
+            filteredUsers.length /
+            PAGE_SIZE
+        );
+
+
+    if (
+        totalPages <= 1
+    ) {
+
+        return;
+
+    }
+
+
+    const previous =
+        document.createElement(
+            "button"
+        );
+
+
+    previous.className =
+        "page-btn";
+
+
+    previous.innerHTML =
+        `
+            <i class="fa-solid fa-chevron-left"></i>
+        `;
+
+
+    previous.disabled =
+        currentPage === 1;
+
+
+    previous.onclick =
+        function () {
+
+            if (
+                currentPage > 1
+            ) {
+
+                currentPage--;
+
+                renderTable();
+
+                renderPagination();
+
+            }
+
+        };
+
+
+    container.appendChild(
+        previous
+    );
+
+
+    for (
+        let i = 1;
+        i <= totalPages;
+        i++
+    ) {
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+
+        button.className =
+            "page-btn";
+
+
+        button.textContent =
+            i;
+
+
+        if (
+            i === currentPage
+        ) {
+
+            button.classList.add(
+                "active"
+            );
+
+        }
+
+
+        button.onclick =
+            function () {
+
+                currentPage =
+                    i;
+
+                renderTable();
+
+                renderPagination();
+
+            };
+
+
+        container.appendChild(
+            button
+        );
+
+    }
+
+
+    const next =
+        document.createElement(
+            "button"
+        );
+
+
+    next.className =
+        "page-btn";
+
+
+    next.innerHTML =
+        `
+            <i class="fa-solid fa-chevron-right"></i>
+        `;
+
+
+    next.disabled =
+        currentPage ===
+        totalPages;
+
+
+    next.onclick =
+        function () {
+
+            if (
+                currentPage <
+                totalPages
+            ) {
+
+                currentPage++;
+
+                renderTable();
+
+                renderPagination();
+
+            }
+
+        };
+
+
+    container.appendChild(
+        next
+    );
+
+}
+
+
+/* =====================================================
+   DATE
+===================================================== */
+
+function formatDate(value) {
+
+    if (!value) {
+
+        return {
+            date: "-",
+            time: ""
+        };
+
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return {
+            date: "-",
+            time: ""
+        };
+
+    }
+
+
+    return {
+
+        date:
+            date.toLocaleDateString(
+                "fr-FR",
+                {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
+                }
+            ),
+
+        time:
+            date.toLocaleTimeString(
+                "fr-FR",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            )
+
+    };
+
+}
+
+
+/* =====================================================
+   INITIALS
+===================================================== */
+
+function getInitials(value) {
+
+    const text =
+        String(
+            value ||
+            ""
+        )
+        .trim();
+
+
+    if (!text) {
+
+        return "U";
+
+    }
+
+
+    const parts =
+        text.split(
+            /\s+/
+        );
+
+
+    if (
+        parts.length === 1
+    ) {
+
+        return parts[0]
+            .substring(
+                0,
+                2
+            )
+            .toUpperCase();
+
+    }
+
+
+    return (
+        parts[0][0]
+        +
+        parts[
+            parts.length - 1
+        ][0]
+    )
+    .toUpperCase();
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value) {
+
+    return String(
+        value ??
+        ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   AUDIT
+===================================================== */
+
+async function writeAudit(
+    action,
+    entityId,
+    description,
+    details
+) {
+
+    try {
+
+        if (
+            window.SMTG &&
+            typeof
+            window.SMTG.logCrudAction ===
+            "function"
+        ) {
+
+            await window.SMTG.logCrudAction(
+
+                action,
+
+                "ADMINISTRATION",
+
+                "USERS",
+
+                entityId,
+
+                description,
+
+                details
+
+            );
+
+        }
+
+    }
+    catch (error) {
+
+        console.warn(
+            "Audit:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(
+    type,
+    title,
+    message
+) {
+
+    const container =
+        document.getElementById(
+            "toastContainer"
+        );
+
+
+    const toast =
+        document.createElement(
+            "div"
+        );
+
+
+    toast.className =
+        `toast ${type}`;
+
+
+    let icon =
+        "fa-circle-info";
+
+
+    if (
+        type ===
+        "success"
+    ) {
+
+        icon =
+            "fa-circle-check";
+
+    }
+
+
+    if (
+        type ===
+        "error"
+    ) {
+
+        icon =
+            "fa-circle-xmark";
+
+    }
+
+
+    if (
+        type ===
+        "warning"
+    ) {
+
+        icon =
+            "fa-triangle-exclamation";
+
+    }
+
+
+    toast.innerHTML =
+        `
+
+            <div class="toast-icon">
+
+                <i
+                    class="
+                        fa-solid
+                        ${icon}
+                    "
+                ></i>
+
+            </div>
+
+
+            <div class="toast-body">
+
+                <div class="toast-title">
+
+                    ${escapeHtml(
+                        title
+                    )}
+
+                </div>
+
+
+                <div class="toast-message">
+
+                    ${escapeHtml(
+                        message
+                    )}
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="toast-close"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        `;
+
+
+    toast
+        .querySelector(
+            ".toast-close"
+        )
+        .onclick =
+        function () {
+
+            toast.remove();
+
+        };
+
+
+    container.appendChild(
+        toast
+    );
+
+
+    setTimeout(
+        function () {
+
+            if (
+                toast.parentNode
+            ) {
+
+                toast.remove();
+
+            }
+
+        },
+        5000
+    );
+
+}
+
+
+/* =====================================================
+   ACCESS DENIED
+===================================================== */
+
+function showAccessDenied() {
+
+    document.body.innerHTML = `
+
+        <div
+            style="
+                min-height:100vh;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                background:#f5f8fc;
+                padding:20px;
+            "
+        >
+
+            <div
+                style="
+                    width:100%;
+                    max-width:460px;
+                    background:white;
+                    padding:40px;
+                    border-radius:18px;
+                    text-align:center;
+                    box-shadow:0 20px 60px rgba(0,0,0,.12);
+                "
+            >
+
+                <div
+                    style="
+                        width:70px;
+                        height:70px;
+                        margin:0 auto 18px;
+                        border-radius:50%;
+                        background:#fff0f1;
+                        color:#ef4444;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:28px;
+                    "
+                >
+
+                    <i class="fa-solid fa-lock"></i>
+
+                </div>
+
+
+                <h2
+                    style="
+                        color:#172a44;
+                        margin-bottom:10px;
+                    "
+                >
+                    Accès refusé
+                </h2>
+
+
+                <p
+                    style="
+                        color:#64748b;
+                        line-height:1.6;
+                    "
+                >
+
+                    Vous n'avez pas la permission
+                    d'accéder à la gestion des utilisateurs.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
+
+</script>
+
+
+</body>
+
+</html>

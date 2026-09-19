@@ -1,0 +1,4841 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Divisions - SMTG</title>
+
+
+    <!-- =====================================================
+         FONT AWESOME
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         SUPABASE JS V2
+    ====================================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <!-- =====================================================
+         SMTG API
+    ====================================================== -->
+
+    <script src="api/supabase.js"></script>
+
+    <script src="api/permissions.js"></script>
+
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    box-sizing:border-box;
+}
+
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+}
+
+
+body{
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:#f4f7f5;
+
+    color:#1f2937;
+
+    overflow-x:hidden;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+
+    background:#145a1f;
+
+    color:#fff;
+
+    padding:18px 25px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0,0,0,.15);
+
+}
+
+
+.header-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    min-width:0;
+}
+
+
+.header-icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:12px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .15
+        );
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:22px;
+
+    flex-shrink:0;
+}
+
+
+.header-title{
+
+    min-width:0;
+}
+
+
+.header-title h1{
+
+    margin:0;
+
+    font-size:23px;
+
+    font-weight:700;
+}
+
+
+.header-title p{
+
+    margin:4px 0 0;
+
+    font-size:13px;
+
+    opacity:.82;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+
+    border:0;
+
+    border-radius:9px;
+
+    padding:11px 17px;
+
+    cursor:pointer;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    font-weight:600;
+
+    font-size:13px;
+
+    transition:.2s;
+
+    white-space:nowrap;
+}
+
+
+.btn:hover{
+
+    transform:
+        translateY(-1px);
+}
+
+
+.btn:disabled{
+
+    opacity:.55;
+
+    cursor:not-allowed;
+
+    transform:none;
+}
+
+
+.btn-primary{
+
+    background:#145a1f;
+
+    color:#fff;
+}
+
+
+.btn-primary:hover{
+
+    background:#0f4618;
+}
+
+
+.btn-secondary{
+
+    background:#eef2f0;
+
+    color:#374151;
+}
+
+
+.btn-secondary:hover{
+
+    background:#e1e7e4;
+}
+
+
+.btn-danger{
+
+    background:#dc2626;
+
+    color:#fff;
+}
+
+
+.btn-danger:hover{
+
+    background:#b91c1c;
+}
+
+
+.btn-export{
+
+    background:#e9f7ed;
+
+    color:#145a1f;
+
+    border:
+        1px solid
+        #c9e8d0;
+}
+
+
+.btn-export:hover{
+
+    background:#d9f0df;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container{
+
+    width:100%;
+
+    max-width:1500px;
+
+    margin:auto;
+
+    padding:22px;
+}
+
+
+/* =========================================================
+   PERMISSION INFO
+========================================================= */
+
+.permission-info{
+
+    display:none;
+
+    align-items:center;
+
+    gap:9px;
+
+    padding:11px 14px;
+
+    margin-bottom:18px;
+
+    background:#eef8f0;
+
+    border:
+        1px solid
+        #cce8d1;
+
+    color:#145a1f;
+
+    border-radius:10px;
+
+    font-size:12px;
+}
+
+
+.permission-info.show{
+
+    display:flex;
+}
+
+
+.permission-info i{
+
+    font-size:14px;
+}
+
+
+.permission-info strong{
+
+    font-weight:700;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            1fr
+        );
+
+    gap:15px;
+
+    margin-bottom:20px;
+}
+
+
+.stat-card{
+
+    background:#fff;
+
+    border-radius:14px;
+
+    padding:18px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(
+            0,
+            0,
+            0,
+            .07
+        );
+}
+
+
+.stat-top{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+}
+
+
+.stat-label{
+
+    color:#6b7280;
+
+    font-size:13px;
+}
+
+
+.stat-value{
+
+    margin-top:8px;
+
+    font-size:27px;
+
+    font-weight:700;
+}
+
+
+.stat-icon{
+
+    width:44px;
+
+    height:44px;
+
+    border-radius:11px;
+
+    background:#e8f3ea;
+
+    color:#145a1f;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:19px;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+
+    background:#fff;
+
+    border-radius:14px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(
+            0,
+            0,
+            0,
+            .07
+        );
+
+    margin-bottom:20px;
+}
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.filters{
+
+    padding:18px;
+}
+
+
+.filters-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        2fr
+        1fr
+        auto;
+
+    gap:12px;
+
+    align-items:end;
+}
+
+
+.field{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+}
+
+
+.field label{
+
+    font-size:12px;
+
+    font-weight:700;
+
+    color:#4b5563;
+}
+
+
+input,
+select{
+
+    width:100%;
+
+    border:
+        1px solid
+        #d1d5db;
+
+    border-radius:8px;
+
+    padding:10px 11px;
+
+    background:#fff;
+
+    font-size:14px;
+
+    outline:none;
+
+    color:#1f2937;
+}
+
+
+input:focus,
+select:focus{
+
+    border-color:#145a1f;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(
+            20,
+            90,
+            31,
+            .08
+        );
+}
+
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.table-header{
+
+    padding:16px 18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    border-bottom:
+        1px solid
+        #e5e7eb;
+}
+
+
+.table-title{
+
+    font-size:16px;
+
+    font-weight:700;
+}
+
+
+.table-count{
+
+    color:#6b7280;
+
+    font-size:13px;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrap{
+
+    overflow:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:900px;
+}
+
+
+thead th{
+
+    background:#f8faf9;
+
+    padding:12px;
+
+    text-align:left;
+
+    font-size:12px;
+
+    color:#4b5563;
+
+    white-space:nowrap;
+
+    border-bottom:
+        1px solid
+        #e5e7eb;
+}
+
+
+tbody td{
+
+    padding:13px 12px;
+
+    border-bottom:
+        1px solid
+        #eef0ef;
+
+    font-size:13px;
+
+    white-space:nowrap;
+}
+
+
+tbody tr:hover{
+
+    background:#fafcfb;
+}
+
+
+.code{
+
+    font-weight:700;
+
+    color:#145a1f;
+}
+
+
+.name{
+
+    font-weight:600;
+}
+
+
+.description{
+
+    color:#6b7280;
+}
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    padding:5px 9px;
+
+    border-radius:20px;
+
+    font-size:11px;
+
+    font-weight:700;
+}
+
+
+.badge-active{
+
+    background:#dcfce7;
+
+    color:#166534;
+}
+
+
+.badge-inactive{
+
+    background:#fee2e2;
+
+    color:#991b1b;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions{
+
+    display:flex;
+
+    gap:6px;
+}
+
+
+.action-btn{
+
+    width:33px;
+
+    height:33px;
+
+    border:0;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:.2s;
+}
+
+
+.action-btn:hover{
+
+    transform:
+        translateY(-1px);
+}
+
+
+.action-edit{
+
+    background:#e0f2fe;
+
+    color:#0369a1;
+}
+
+
+.action-delete{
+
+    background:#fee2e2;
+
+    color:#b91c1c;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty{
+
+    padding:45px 20px;
+
+    text-align:center;
+
+    color:#6b7280;
+}
+
+
+.empty i{
+
+    font-size:40px;
+
+    margin-bottom:12px;
+
+    opacity:.4;
+
+    display:block;
+}
+
+
+.empty div{
+
+    font-size:14px;
+
+    font-weight:600;
+}
+
+
+.empty small{
+
+    display:block;
+
+    margin-top:8px;
+
+    font-size:11px;
+
+    color:#9ca3af;
+
+    max-width:800px;
+
+    margin-left:auto;
+
+    margin-right:auto;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading{
+
+    padding:40px;
+
+    text-align:center;
+
+    color:#6b7280;
+}
+
+
+.loading i{
+
+    font-size:25px;
+
+    animation:
+        spin 1s linear infinite;
+}
+
+
+@keyframes spin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:9999;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            .48
+        );
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+}
+
+
+.modal.show{
+
+    display:flex;
+}
+
+
+.modal-box{
+
+    width:100%;
+
+    max-width:650px;
+
+    max-height:92vh;
+
+    overflow:auto;
+
+    background:#fff;
+
+    border-radius:16px;
+
+    box-shadow:
+        0 15px 50px
+        rgba(
+            0,
+            0,
+            0,
+            .25
+        );
+}
+
+
+.modal-header{
+
+    padding:18px 20px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    border-bottom:
+        1px solid
+        #e5e7eb;
+}
+
+
+.modal-header h2{
+
+    margin:0;
+
+    font-size:19px;
+}
+
+
+.close-btn{
+
+    width:35px;
+
+    height:35px;
+
+    border:0;
+
+    border-radius:8px;
+
+    background:#f3f4f6;
+
+    cursor:pointer;
+
+    font-size:17px;
+
+    color:#374151;
+}
+
+
+.modal-body{
+
+    padding:20px;
+}
+
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap:15px;
+}
+
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+}
+
+
+.form-group.full{
+
+    grid-column:
+        1 / -1;
+}
+
+
+.form-group label{
+
+    font-size:13px;
+
+    font-weight:700;
+}
+
+
+.required{
+
+    color:#dc2626;
+}
+
+
+.help{
+
+    color:#6b7280;
+
+    font-size:11px;
+}
+
+
+.modal-footer{
+
+    padding:15px 20px;
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:10px;
+
+    border-top:
+        1px solid
+        #e5e7eb;
+}
+
+
+/* =========================================================
+   ACCESS DENIED
+========================================================= */
+
+.access-denied{
+
+    display:none;
+
+    min-height:
+        350px;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:50px 20px;
+}
+
+
+.access-denied.show{
+
+    display:flex;
+}
+
+
+.access-denied-inner{
+
+    max-width:500px;
+}
+
+
+.access-denied-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:18px;
+
+    margin:
+        0 auto 18px;
+
+    background:#fee2e2;
+
+    color:#b91c1c;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+}
+
+
+.access-denied h2{
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.access-denied p{
+
+    margin:0;
+
+    color:#6b7280;
+
+    font-size:13px;
+
+    line-height:1.6;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+
+    position:fixed;
+
+    right:20px;
+
+    bottom:20px;
+
+    z-index:20000;
+
+    min-width:280px;
+
+    max-width:420px;
+
+    padding:14px 17px;
+
+    border-radius:10px;
+
+    color:#fff;
+
+    background:#111827;
+
+    box-shadow:
+        0 8px 30px
+        rgba(
+            0,
+            0,
+            0,
+            .25
+        );
+
+    display:none;
+}
+
+
+.toast.show{
+
+    display:block;
+}
+
+
+.toast.success{
+
+    background:#166534;
+}
+
+
+.toast.error{
+
+    background:#b91c1c;
+}
+
+
+.toast.warning{
+
+    background:#b45309;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+    .stats{
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+    }
+
+
+    .filters-grid{
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+    }
+
+}
+
+
+@media(max-width:700px){
+
+    .header{
+
+        padding:15px;
+
+    }
+
+
+    .header-title h1{
+
+        font-size:19px;
+
+    }
+
+
+    .container{
+
+        padding:12px;
+
+    }
+
+
+    .stats{
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+    }
+
+
+    .filters-grid{
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .form-grid{
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .form-group.full{
+
+        grid-column:auto;
+
+    }
+
+
+    .header .btn{
+
+        padding:
+            9px 11px;
+
+    }
+
+
+    .header .btn span{
+
+        display:none;
+
+    }
+
+}
+
+
+@media(max-width:450px){
+
+    .stats{
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .header-left{
+
+        gap:9px;
+
+    }
+
+
+    .header-icon{
+
+        width:40px;
+
+        height:40px;
+
+    }
+
+
+    .header-title h1{
+
+        font-size:17px;
+
+    }
+
+
+    .header-title p{
+
+        font-size:10px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================== -->
+
+<header class="header">
+
+    <div class="header-left">
+
+        <div class="header-icon">
+
+            <i
+                class="fa-solid fa-code-branch"
+            ></i>
+
+        </div>
+
+
+        <div class="header-title">
+
+            <h1>
+                Divisions
+            </h1>
+
+            <p>
+                Gestion des divisions
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="headerActions"
+        style="
+            display:flex;
+            gap:8px;
+            align-items:center;
+        "
+    >
+
+        <!-- EXPORT -->
+
+        <button
+            id="btnExport"
+            class="btn btn-export"
+            type="button"
+            onclick="exportCSV()"
+            style="display:none;"
+        >
+
+            <i
+                class="fa-solid fa-file-excel"
+            ></i>
+
+            <span>
+                Exporter
+            </span>
+
+        </button>
+
+
+        <!-- ADD -->
+
+        <button
+            id="btnAdd"
+            class="btn btn-primary"
+            type="button"
+            onclick="openAddModal()"
+            style="display:none;"
+        >
+
+            <i
+                class="fa-solid fa-plus"
+            ></i>
+
+            <span>
+                Ajouter
+            </span>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN
+========================================================== -->
+
+<div class="container">
+
+
+    <!-- =====================================================
+         PERMISSION INFO
+    ====================================================== -->
+
+    <div
+        id="permissionInfo"
+        class="permission-info"
+    >
+
+        <i
+            class="fa-solid fa-shield-halved"
+        ></i>
+
+        <span>
+            Permissions disponibles :
+            <strong id="permissionText">
+                -
+            </strong>
+        </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         ACCESS DENIED
+    ====================================================== -->
+
+    <div
+        id="accessDenied"
+        class="card access-denied"
+    >
+
+        <div class="access-denied-inner">
+
+            <div class="access-denied-icon">
+
+                <i
+                    class="fa-solid fa-lock"
+                ></i>
+
+            </div>
+
+
+            <h2>
+                Accès refusé
+            </h2>
+
+
+            <p>
+                Vous n'avez pas la permission
+                d'accéder à la gestion des divisions.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         APPLICATION CONTENT
+    ====================================================== -->
+
+    <div id="pageContent">
+
+
+        <!-- =================================================
+             STATS
+        ================================================== -->
+
+        <div class="stats">
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Total divisions
+                        </div>
+
+                        <div
+                            class="stat-value"
+                            id="statTotal"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon">
+
+                        <i
+                            class="fa-solid fa-code-branch"
+                        ></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Divisions actives
+                        </div>
+
+                        <div
+                            class="stat-value"
+                            id="statActive"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon">
+
+                        <i
+                            class="fa-solid fa-circle-check"
+                        ></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Divisions inactives
+                        </div>
+
+                        <div
+                            class="stat-value"
+                            id="statInactive"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon">
+
+                        <i
+                            class="fa-solid fa-circle-xmark"
+                        ></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Affichées
+                        </div>
+
+                        <div
+                            class="stat-value"
+                            id="statDisplayed"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon">
+
+                        <i
+                            class="fa-solid fa-filter"
+                        ></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             FILTERS
+        ================================================== -->
+
+        <div class="card filters">
+
+            <div class="filters-grid">
+
+
+                <div class="field">
+
+                    <label>
+                        Recherche
+                    </label>
+
+                    <input
+                        type="text"
+                        id="search"
+                        placeholder="Code, nom ou description..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Statut
+                    </label>
+
+                    <select
+                        id="filterStatus"
+                    >
+
+                        <option value="">
+                            Tous
+                        </option>
+
+                        <option value="ACTIF">
+                            Actif
+                        </option>
+
+                        <option value="INACTIF">
+                            Inactif
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        &nbsp;
+                    </label>
+
+                    <button
+                        class="btn btn-secondary"
+                        type="button"
+                        onclick="resetFilters()"
+                    >
+
+                        <i
+                            class="fa-solid fa-rotate-left"
+                        ></i>
+
+                        Réinitialiser
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABLE
+        ================================================== -->
+
+        <div class="card">
+
+
+            <div class="table-header">
+
+
+                <div class="table-title">
+
+                    <i
+                        class="fa-solid fa-code-branch"
+                        style="
+                            color:#145a1f;
+                            margin-right:7px;
+                        "
+                    ></i>
+
+                    Liste des divisions
+
+                </div>
+
+
+                <div
+                    class="table-count"
+                    id="tableCount"
+                >
+                    0 division
+                </div>
+
+
+            </div>
+
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ID
+                            </th>
+
+                            <th>
+                                Code
+                            </th>
+
+                            <th>
+                                Nom
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Statut
+                            </th>
+
+                            <th>
+                                Créée le
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="tableBody"
+                    >
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                            >
+
+                                <div class="loading">
+
+                                    <i
+                                        class="fa-solid fa-spinner"
+                                    ></i>
+
+                                    <div>
+                                        Vérification des permissions...
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     MODAL
+========================================================== -->
+
+<div
+    class="modal"
+    id="divisionModal"
+>
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">
+                Ajouter une division
+            </h2>
+
+
+            <button
+                class="close-btn"
+                type="button"
+                onclick="closeModal()"
+            >
+
+                <i
+                    class="fa-solid fa-xmark"
+                ></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+
+            <form
+                id="divisionForm"
+            >
+
+
+                <input
+                    type="hidden"
+                    id="divisionId"
+                >
+
+
+                <div class="form-grid">
+
+
+                    <!-- CODE -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Code
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="code"
+                            maxlength="50"
+                            required
+                            placeholder="Ex : ABS01"
+                        >
+
+
+                        <div class="help">
+
+                            Le code sera enregistré
+                            en majuscules.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- NAME -->
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Nom
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="name"
+                            maxlength="150"
+                            required
+                            placeholder="Nom de la division"
+                        >
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="form-group full">
+
+                        <label>
+                            Description
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="description"
+                            maxlength="500"
+                            placeholder="Description de la division"
+                        >
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Statut
+                        </label>
+
+
+                        <select
+                            id="status"
+                        >
+
+                            <option value="ACTIF">
+                                Actif
+                            </option>
+
+                            <option value="INACTIF">
+                                Inactif
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+
+            <button
+                class="btn btn-secondary"
+                type="button"
+                onclick="closeModal()"
+            >
+
+                Annuler
+
+            </button>
+
+
+            <button
+                class="btn btn-primary"
+                id="btnSaveDivision"
+                type="button"
+                onclick="saveDivision()"
+            >
+
+                <i
+                    class="fa-solid fa-floppy-disk"
+                ></i>
+
+                Enregistrer
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================== -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+"use strict";
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let db = null;
+
+let currentUser = null;
+
+let divisions = [];
+
+let editingId = null;
+
+let pagePermission = {
+
+    view:false,
+
+    create:false,
+
+    edit:false,
+
+    delete:false,
+
+    export:false
+
+};
+
+let permissionsReady = false;
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initPage
+);
+
+
+async function initPage(){
+
+    try{
+
+
+        /* ==============================================
+           SUPABASE CLIENT
+        =============================================== */
+
+        db =
+            window.smtgSupabase;
+
+
+        if(!db){
+
+            throw new Error(
+                "Client Supabase SMTG introuvable. Vérifiez api/supabase.js."
+            );
+
+        }
+
+
+        /* ==============================================
+           CURRENT USER
+        =============================================== */
+
+        currentUser =
+            getCurrentUser();
+
+
+        if(!currentUser){
+
+            showAccessDenied(
+                "Session utilisateur introuvable."
+            );
+
+            return;
+
+        }
+
+
+        /* ==============================================
+           EVENTS
+        =============================================== */
+
+        setupEvents();
+
+
+        /* ==============================================
+           CHECK PERMISSIONS
+        =============================================== */
+
+        const allowed =
+            await checkPermissions();
+
+
+        if(!allowed){
+
+            return;
+
+        }
+
+
+        /* ==============================================
+           LOAD DATA
+        =============================================== */
+
+        await loadDivisions();
+
+
+    }
+    catch(error){
+
+        console.error(
+            "DIVISIONS INIT:",
+            error
+        );
+
+
+        showPageError(
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   GET CURRENT USER
+========================================================= */
+
+function getCurrentUser(){
+
+    const keys = [
+
+        "smtg_current_user",
+
+        "smtgUser"
+
+    ];
+
+
+    for(
+        const key of keys
+    ){
+
+        try{
+
+            const value =
+                sessionStorage.getItem(
+                    key
+                );
+
+
+            if(value){
+
+                return JSON.parse(
+                    value
+                );
+
+            }
+
+        }
+        catch(error){
+
+            console.warn(
+                "Session storage:",
+                error
+            );
+
+        }
+
+
+        try{
+
+            const value =
+                localStorage.getItem(
+                    key
+                );
+
+
+            if(value){
+
+                return JSON.parse(
+                    value
+                );
+
+            }
+
+        }
+        catch(error){
+
+            console.warn(
+                "Local storage:",
+                error
+            );
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   CURRENT USER ID
+========================================================= */
+
+function getCurrentUserId(){
+
+    if(
+        currentUser &&
+        currentUser.id
+    ){
+
+        return Number(
+            currentUser.id
+        );
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   CHECK PERMISSIONS
+========================================================= */
+
+async function checkPermissions(){
+
+    /*
+     * =====================================================
+     * On utilise api/permissions.js.
+     *
+     * Aucune vérification "Admin" hardcodée.
+     * =====================================================
+     */
+
+    if(
+        !window.SMTGPermissions
+    ){
+
+        console.error(
+            "SMTGPermissions introuvable."
+        );
+
+
+        showAccessDenied(
+            "Le système de permissions n'est pas chargé."
+        );
+
+
+        return false;
+
+    }
+
+
+    try{
+
+
+        /* ==============================================
+           VIEW
+        =============================================== */
+
+        let canView =
+            false;
+
+
+        if(
+            typeof
+            window.SMTGPermissions
+                .canView ===
+            "function"
+        ){
+
+            canView =
+                await window.SMTGPermissions
+                    .canView(
+                        "DIVISIONS"
+                    );
+
+        }
+
+
+        /*
+         * Fallback avec requireCurrentPageAccess
+         */
+
+        if(
+            !canView &&
+            typeof
+            window.SMTGPermissions
+                .requirePageAccess ===
+            "function"
+        ){
+
+            canView =
+                await window.SMTGPermissions
+                    .requirePageAccess(
+                        "DIVISIONS",
+                        false
+                    );
+
+        }
+
+
+        if(!canView){
+
+            showAccessDenied(
+                "Vous n'avez pas la permission VIEW pour cette page."
+            );
+
+
+            return false;
+
+        }
+
+
+        pagePermission.view =
+            true;
+
+
+        /* ==============================================
+           CREATE
+        =============================================== */
+
+        if(
+            typeof
+            window.SMTGPermissions
+                .canCreate ===
+            "function"
+        ){
+
+            pagePermission.create =
+                await window.SMTGPermissions
+                    .canCreate(
+                        "DIVISIONS"
+                    );
+
+        }
+
+
+        /* ==============================================
+           EDIT
+        =============================================== */
+
+        if(
+            typeof
+            window.SMTGPermissions
+                .canEdit ===
+            "function"
+        ){
+
+            pagePermission.edit =
+                await window.SMTGPermissions
+                    .canEdit(
+                        "DIVISIONS"
+                    );
+
+        }
+
+
+        /* ==============================================
+           DELETE
+        =============================================== */
+
+        if(
+            typeof
+            window.SMTGPermissions
+                .canDelete ===
+            "function"
+        ){
+
+            pagePermission.delete =
+                await window.SMTGPermissions
+                    .canDelete(
+                        "DIVISIONS"
+                    );
+
+        }
+
+
+        /* ==============================================
+           EXPORT
+        =============================================== */
+
+        if(
+            typeof
+            window.SMTGPermissions
+                .canExport ===
+            "function"
+        ){
+
+            pagePermission.export =
+                await window.SMTGPermissions
+                    .canExport(
+                        "DIVISIONS"
+                    );
+
+        }
+
+
+        permissionsReady =
+            true;
+
+
+        applyPermissionUI();
+
+
+        return true;
+
+
+    }
+    catch(error){
+
+        console.error(
+            "CHECK PERMISSIONS:",
+            error
+        );
+
+
+        showAccessDenied(
+            error.message ||
+            "Impossible de vérifier les permissions."
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   APPLY PERMISSION UI
+========================================================= */
+
+function applyPermissionUI(){
+
+    /* ==============================================
+       ADD
+    =============================================== */
+
+    const btnAdd =
+        document.getElementById(
+            "btnAdd"
+        );
+
+
+    if(
+        pagePermission.create
+    ){
+
+        btnAdd.style.display =
+            "inline-flex";
+
+    }
+    else{
+
+        btnAdd.style.display =
+            "none";
+
+    }
+
+
+    /* ==============================================
+       EXPORT
+    =============================================== */
+
+    const btnExport =
+        document.getElementById(
+            "btnExport"
+        );
+
+
+    if(
+        pagePermission.export
+    ){
+
+        btnExport.style.display =
+            "inline-flex";
+
+    }
+    else{
+
+        btnExport.style.display =
+            "none";
+
+    }
+
+
+    /* ==============================================
+       INFO
+    =============================================== */
+
+    const available = [];
+
+
+    if(
+        pagePermission.view
+    ){
+
+        available.push(
+            "VIEW"
+        );
+
+    }
+
+
+    if(
+        pagePermission.create
+    ){
+
+        available.push(
+            "CREATE"
+        );
+
+    }
+
+
+    if(
+        pagePermission.edit
+    ){
+
+        available.push(
+            "EDIT"
+        );
+
+    }
+
+
+    if(
+        pagePermission.delete
+    ){
+
+        available.push(
+            "DELETE"
+        );
+
+    }
+
+
+    if(
+        pagePermission.export
+    ){
+
+        available.push(
+            "EXPORT"
+        );
+
+    }
+
+
+    document.getElementById(
+        "permissionText"
+    ).textContent =
+        available.join(
+            " • "
+        );
+
+
+    document.getElementById(
+        "permissionInfo"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   SETUP EVENTS
+========================================================= */
+
+function setupEvents(){
+
+    document
+        .getElementById(
+            "search"
+        )
+        .addEventListener(
+            "input",
+            render
+        );
+
+
+    document
+        .getElementById(
+            "filterStatus"
+        )
+        .addEventListener(
+            "change",
+            render
+        );
+
+
+    document
+        .getElementById(
+            "divisionForm"
+        )
+        .addEventListener(
+            "submit",
+            function(event){
+
+                event.preventDefault();
+
+                saveDivision();
+
+            }
+        );
+
+
+    document.addEventListener(
+        "keydown",
+        function(event){
+
+            if(
+                event.key ===
+                "Escape"
+            ){
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "divisionModal"
+        )
+        .addEventListener(
+            "click",
+            function(event){
+
+                if(
+                    event.target ===
+                    this
+                ){
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   LOAD DIVISIONS
+========================================================= */
+
+async function loadDivisions(){
+
+    const tbody =
+        document.getElementById(
+            "tableBody"
+        );
+
+
+    tbody.innerHTML = `
+
+        <tr>
+
+            <td colspan="7">
+
+                <div class="loading">
+
+                    <i
+                        class="fa-solid fa-spinner"
+                    ></i>
+
+                    <div>
+                        Chargement des divisions...
+                    </div>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    `;
+
+
+    try{
+
+
+        const rows = [];
+
+        const pageSize =
+            1000;
+
+        let from =
+            0;
+
+
+        while(true){
+
+            const to =
+                from +
+                pageSize -
+                1;
+
+
+            const {
+                data,
+                error
+            } =
+                await db
+
+                    .from(
+                        "divisions"
+                    )
+
+                    .select(`
+                        id,
+                        code,
+                        name,
+                        description,
+                        is_active,
+                        created_by,
+                        created_at,
+                        updated_by,
+                        updated_at
+                    `)
+
+                    .order(
+                        "code",
+                        {
+                            ascending:
+                                true
+                        }
+                    )
+
+                    .range(
+                        from,
+                        to
+                    );
+
+
+            if(error){
+
+                throw error;
+
+            }
+
+
+            if(
+                !data ||
+                data.length === 0
+            ){
+
+                break;
+
+            }
+
+
+            rows.push(
+                ...data
+            );
+
+
+            if(
+                data.length <
+                pageSize
+            ){
+
+                break;
+
+            }
+
+
+            from +=
+                pageSize;
+
+        }
+
+
+        divisions =
+            rows;
+
+
+        updateStats();
+
+        render();
+
+
+    }
+    catch(error){
+
+        console.error(
+            "LOAD DIVISIONS:",
+            error
+        );
+
+
+        showPageError(
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function updateStats(){
+
+    const total =
+        divisions.length;
+
+
+    const active =
+        divisions.filter(
+            division =>
+                division.is_active ===
+                true
+        ).length;
+
+
+    const inactive =
+        divisions.filter(
+            division =>
+                division.is_active ===
+                false
+        ).length;
+
+
+    document.getElementById(
+        "statTotal"
+    ).textContent =
+        total.toLocaleString(
+            "fr-FR"
+        );
+
+
+    document.getElementById(
+        "statActive"
+    ).textContent =
+        active.toLocaleString(
+            "fr-FR"
+        );
+
+
+    document.getElementById(
+        "statInactive"
+    ).textContent =
+        inactive.toLocaleString(
+            "fr-FR"
+        );
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render(){
+
+    const search =
+        document.getElementById(
+            "search"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const status =
+        document.getElementById(
+            "filterStatus"
+        ).value;
+
+
+    const filtered =
+        divisions.filter(
+            division => {
+
+
+                const code =
+                    String(
+                        division.code ||
+                        ""
+                    )
+                    .toLowerCase();
+
+
+                const name =
+                    String(
+                        division.name ||
+                        ""
+                    )
+                    .toLowerCase();
+
+
+                const description =
+                    String(
+                        division.description ||
+                        ""
+                    )
+                    .toLowerCase();
+
+
+                const matchesSearch =
+
+                    !search ||
+
+                    code.includes(
+                        search
+                    ) ||
+
+                    name.includes(
+                        search
+                    ) ||
+
+                    description.includes(
+                        search
+                    );
+
+
+                let matchesStatus =
+                    true;
+
+
+                if(
+                    status ===
+                    "ACTIF"
+                ){
+
+                    matchesStatus =
+                        division.is_active ===
+                        true;
+
+                }
+
+
+                if(
+                    status ===
+                    "INACTIF"
+                ){
+
+                    matchesStatus =
+                        division.is_active ===
+                        false;
+
+                }
+
+
+                return (
+
+                    matchesSearch &&
+
+                    matchesStatus
+
+                );
+
+            }
+        );
+
+
+    document.getElementById(
+        "statDisplayed"
+    ).textContent =
+        filtered.length.toLocaleString(
+            "fr-FR"
+        );
+
+
+    document.getElementById(
+        "tableCount"
+    ).textContent =
+
+        `${filtered.length.toLocaleString("fr-FR")} division(s)`;
+
+
+    const tbody =
+        document.getElementById(
+            "tableBody"
+        );
+
+
+    if(
+        filtered.length ===
+        0
+    ){
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td colspan="7">
+
+                    <div class="empty">
+
+                        <i
+                            class="fa-solid fa-code-branch"
+                        ></i>
+
+                        <div>
+                            Aucune division trouvée
+                        </div>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    tbody.innerHTML =
+
+        filtered
+            .map(
+                division =>
+                    renderRow(
+                        division
+                    )
+            )
+            .join(
+                ""
+            );
+
+}
+
+
+/* =========================================================
+   RENDER ROW
+========================================================= */
+
+function renderRow(
+    division
+){
+
+    const status =
+        division.is_active
+
+            ? `
+
+                <span
+                    class="badge badge-active"
+                >
+
+                    Actif
+
+                </span>
+
+            `
+
+            : `
+
+                <span
+                    class="badge badge-inactive"
+                >
+
+                    Inactif
+
+                </span>
+
+            `;
+
+
+    const createdDate =
+        division.created_at
+            ? formatDate(
+                division.created_at
+            )
+            : "—";
+
+
+    let actions =
+        "";
+
+
+    /* ==============================================
+       EDIT
+    =============================================== */
+
+    if(
+        pagePermission.edit
+    ){
+
+        actions += `
+
+            <button
+                type="button"
+                class="action-btn action-edit"
+                title="Modifier"
+                onclick="
+                    editDivision(
+                        ${Number(
+                            division.id
+                        )}
+                    )
+                "
+            >
+
+                <i
+                    class="fa-solid fa-pen"
+                ></i>
+
+            </button>
+
+        `;
+
+    }
+
+
+    /* ==============================================
+       DELETE
+    =============================================== */
+
+    if(
+        pagePermission.delete
+    ){
+
+        actions += `
+
+            <button
+                type="button"
+                class="action-btn action-delete"
+                title="Supprimer"
+                onclick="
+                    deleteDivision(
+                        ${Number(
+                            division.id
+                        )}
+                    )
+                "
+            >
+
+                <i
+                    class="fa-solid fa-trash
+                    "
+                ></i>
+
+            </button>
+
+        `;
+
+    }
+
+
+    if(
+        !actions
+    ){
+
+        actions = `
+
+            <span
+                style="
+                    color:#9ca3af;
+                    font-size:11px;
+                "
+            >
+                Lecture seule
+            </span>
+
+        `;
+
+    }
+
+
+    return `
+
+        <tr>
+
+
+            <td>
+                ${Number(
+                    division.id
+                )}
+            </td>
+
+
+            <td class="code">
+
+                ${escapeHtml(
+                    division.code
+                )}
+
+            </td>
+
+
+            <td class="name">
+
+                ${escapeHtml(
+                    division.name
+                )}
+
+            </td>
+
+
+            <td class="description">
+
+                ${escapeHtml(
+                    division.description ||
+                    "—"
+                )}
+
+            </td>
+
+
+            <td>
+
+                ${status}
+
+            </td>
+
+
+            <td>
+
+                ${createdDate}
+
+            </td>
+
+
+            <td>
+
+                <div class="actions">
+
+                    ${actions}
+
+                </div>
+
+            </td>
+
+
+        </tr>
+
+    `;
+
+}
+
+
+/* =========================================================
+   OPEN ADD
+========================================================= */
+
+function openAddModal(){
+
+    if(
+        !pagePermission.create
+    ){
+
+        showToast(
+            "Vous n'avez pas la permission CREATE.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    editingId =
+        null;
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Ajouter une division";
+
+
+    document.getElementById(
+        "divisionForm"
+    ).reset();
+
+
+    document.getElementById(
+        "divisionId"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "status"
+    ).value =
+        "ACTIF";
+
+
+    document.getElementById(
+        "divisionModal"
+    )
+    .classList
+    .add(
+        "show"
+    );
+
+
+    setTimeout(
+        () => {
+
+            document.getElementById(
+                "code"
+            ).focus();
+
+        },
+        100
+    );
+
+}
+
+
+/* =========================================================
+   EDIT
+========================================================= */
+
+function editDivision(
+    id
+){
+
+    if(
+        !pagePermission.edit
+    ){
+
+        showToast(
+            "Vous n'avez pas la permission EDIT.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const division =
+        divisions.find(
+            item =>
+                Number(
+                    item.id
+                ) ===
+                Number(
+                    id
+                )
+        );
+
+
+    if(!division){
+
+        showToast(
+            "Division introuvable.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    editingId =
+        division.id;
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Modifier la division";
+
+
+    document.getElementById(
+        "divisionId"
+    ).value =
+        division.id;
+
+
+    document.getElementById(
+        "code"
+    ).value =
+        division.code ||
+        "";
+
+
+    document.getElementById(
+        "name"
+    ).value =
+        division.name ||
+        "";
+
+
+    document.getElementById(
+        "description"
+    ).value =
+        division.description ||
+        "";
+
+
+    document.getElementById(
+        "status"
+    ).value =
+        division.is_active
+            ? "ACTIF"
+            : "INACTIF";
+
+
+    document.getElementById(
+        "divisionModal"
+    )
+    .classList
+    .add(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeModal(){
+
+    document.getElementById(
+        "divisionModal"
+    )
+    .classList
+    .remove(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   SAVE DIVISION
+========================================================= */
+
+async function saveDivision(){
+
+    if(
+        !editingId &&
+        !pagePermission.create
+    ){
+
+        showToast(
+            "Vous n'avez pas la permission CREATE.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        editingId &&
+        !pagePermission.edit
+    ){
+
+        showToast(
+            "Vous n'avez pas la permission EDIT.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const code =
+        document.getElementById(
+            "code"
+        )
+        .value
+        .trim()
+        .toUpperCase();
+
+
+    const name =
+        document.getElementById(
+            "name"
+        )
+        .value
+        .trim();
+
+
+    const description =
+        document.getElementById(
+            "description"
+        )
+        .value
+        .trim();
+
+
+    const status =
+        document.getElementById(
+            "status"
+        ).value;
+
+
+    /* ==============================================
+       VALIDATION
+    =============================================== */
+
+    if(!code){
+
+        showToast(
+            "Veuillez saisir le code.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    if(!name){
+
+        showToast(
+            "Veuillez saisir le nom.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const userId =
+        getCurrentUserId();
+
+
+    if(!userId){
+
+        showToast(
+            "Utilisateur connecté introuvable.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "btnSaveDivision"
+        );
+
+
+    const oldText =
+        button.innerHTML;
+
+
+    button.disabled =
+        true;
+
+
+    button.innerHTML = `
+
+        <i
+            class="fa-solid fa-spinner fa-spin"
+        ></i>
+
+        Enregistrement...
+
+    `;
+
+
+    try{
+
+
+        /* ==============================================
+           INSERT
+        =============================================== */
+
+        if(
+            !editingId
+        ){
+
+            const payload = {
+
+                code:
+
+                    code,
+
+                name:
+
+                    name,
+
+                description:
+
+                    description ||
+                    null,
+
+                is_active:
+
+                    status ===
+                    "ACTIF",
+
+                created_by:
+
+                    userId,
+
+                updated_by:
+
+                    userId
+
+            };
+
+
+            const {
+                data,
+                error
+            } =
+                await db
+
+                    .from(
+                        "divisions"
+                    )
+
+                    .insert(
+                        payload
+                    )
+
+                    .select(
+                        "*"
+                    )
+                    .single();
+
+
+            if(error){
+
+                throw error;
+
+            }
+
+
+            await logCrud(
+                "CREATE",
+                data?.id,
+                code,
+                {
+                    name:
+                        name,
+
+                    description:
+                        description ||
+                        null,
+
+                    is_active:
+                        status ===
+                        "ACTIF"
+                }
+            );
+
+
+            closeModal();
+
+
+            showToast(
+                "Division créée avec succès.",
+                "success"
+            );
+
+        }
+
+
+        /* ==============================================
+           UPDATE
+        =============================================== */
+
+        else{
+
+
+            const payload = {
+
+                code:
+
+                    code,
+
+                name:
+
+                    name,
+
+                description:
+
+                    description ||
+                    null,
+
+                is_active:
+
+                    status ===
+                    "ACTIF",
+
+                updated_by:
+
+                    userId
+
+            };
+
+
+            const {
+                data,
+                error
+            } =
+                await db
+
+                    .from(
+                        "divisions"
+                    )
+
+                    .update(
+                        payload
+                    )
+
+                    .eq(
+                        "id",
+                        editingId
+                    )
+
+                    .select(
+                        "*"
+                    )
+                    .single();
+
+
+            if(error){
+
+                throw error;
+
+            }
+
+
+            await logCrud(
+                "UPDATE",
+                editingId,
+                code,
+                {
+                    name:
+                        name,
+
+                    description:
+                        description ||
+                        null,
+
+                    is_active:
+                        status ===
+                        "ACTIF"
+                }
+            );
+
+
+            closeModal();
+
+
+            showToast(
+                "Division modifiée avec succès.",
+                "success"
+            );
+
+        }
+
+
+        await loadDivisions();
+
+
+    }
+    catch(error){
+
+        console.error(
+            "SAVE DIVISION:",
+            error
+        );
+
+
+        handleDatabaseError(
+            error
+        );
+
+    }
+    finally{
+
+        button.disabled =
+            false;
+
+
+        button.innerHTML =
+            oldText;
+
+    }
+
+}
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+async function deleteDivision(
+    id
+){
+
+    if(
+        !pagePermission.delete
+    ){
+
+        showToast(
+            "Vous n'avez pas la permission DELETE.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const division =
+        divisions.find(
+            item =>
+                Number(
+                    item.id
+                ) ===
+                Number(
+                    id
+                )
+        );
+
+
+    if(!division){
+
+        showToast(
+            "Division introuvable.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * SYSTEM protection.
+     */
+
+    if(
+        String(
+            division.code ||
+            ""
+        )
+        .trim()
+        .toUpperCase() ===
+        "SYSTEM"
+    ){
+
+        showToast(
+            "Cette division est protégée.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+
+            `Supprimer la division "${division.code}" ?\n\n` +
+
+            `Si des magasins sont liés à cette division, ` +
+
+            `la suppression peut être refusée par la base de données.\n\n` +
+
+            `Voulez-vous continuer ?`
+
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    try{
+
+
+        const {
+            error
+        } =
+            await db
+
+                .from(
+                    "divisions"
+                )
+
+                .delete()
+
+                .eq(
+                    "id",
+                    id
+                );
+
+
+        if(error){
+
+            throw error;
+
+        }
+
+
+        await logCrud(
+            "DELETE",
+            id,
+            division.code,
+            {
+                name:
+                    division.name,
+
+                description:
+                    division.description ||
+                    null
+            }
+        );
+
+
+        showToast(
+            "Division supprimée avec succès.",
+            "success"
+        );
+
+
+        await loadDivisions();
+
+
+    }
+    catch(error){
+
+        console.error(
+            "DELETE DIVISION:",
+            error
+        );
+
+
+        handleDatabaseError(
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CRUD LOG
+========================================================= */
+
+async function logCrud(
+    action,
+    entityId,
+    code,
+    metadata
+){
+
+    try{
+
+
+        /*
+         * Prefer the central SMTG logger.
+         */
+
+        if(
+            window.SMTG &&
+            typeof
+            window.SMTG.logCrudAction ===
+            "function"
+        ){
+
+            await window.SMTG
+                .logCrudAction(
+
+                    action,
+
+                    "ADMINISTRATION",
+
+                    "DIVISIONS",
+
+                    entityId,
+
+                    `${action} division ${code}`,
+
+                    metadata || {}
+
+                );
+
+
+            return;
+
+        }
+
+
+        /*
+         * Fallback activity logger.
+         */
+
+        if(
+            window.SMTG &&
+            typeof
+            window.SMTG.logActivity ===
+            "function"
+        ){
+
+            await window.SMTG
+                .logActivity(
+
+                    action,
+
+                    "ADMINISTRATION",
+
+                    "divisions.html",
+
+                    `${action} division ${code}`,
+
+                    metadata || {}
+
+                );
+
+        }
+
+    }
+    catch(error){
+
+        console.warn(
+            "CRUD LOG:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   EXPORT CSV
+========================================================= */
+
+function exportCSV(){
+
+    if(
+        !pagePermission.export
+    ){
+
+        showToast(
+            "Vous n'avez pas la permission EXPORT.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const search =
+        document.getElementById(
+            "search"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const status =
+        document.getElementById(
+            "filterStatus"
+        ).value;
+
+
+    const filtered =
+        divisions.filter(
+            division => {
+
+
+                const text = [
+
+                    division.code,
+
+                    division.name,
+
+                    division.description
+
+                ]
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " "
+                )
+                .toLowerCase();
+
+
+                const searchOk =
+                    !search ||
+                    text.includes(
+                        search
+                    );
+
+
+                let statusOk =
+                    true;
+
+
+                if(
+                    status ===
+                    "ACTIF"
+                ){
+
+                    statusOk =
+                        division.is_active ===
+                        true;
+
+                }
+
+
+                if(
+                    status ===
+                    "INACTIF"
+                ){
+
+                    statusOk =
+                        division.is_active ===
+                        false;
+
+                }
+
+
+                return (
+                    searchOk &&
+                    statusOk
+                );
+
+            }
+        );
+
+
+    if(
+        filtered.length ===
+        0
+    ){
+
+        showToast(
+            "Aucune donnée à exporter.",
+            "warning"
+        );
+
+        return;
+
+    }
+
+
+    const header = [
+
+        "ID",
+
+        "Code",
+
+        "Nom",
+
+        "Description",
+
+        "Statut",
+
+        "Créée le",
+
+        "Dernière modification"
+
+    ];
+
+
+    const rows =
+        filtered.map(
+            division => [
+
+                division.id,
+
+                division.code,
+
+                division.name,
+
+                division.description ||
+                    "",
+
+                division.is_active
+                    ? "Actif"
+                    : "Inactif",
+
+                division.created_at
+                    ? formatDate(
+                        division.created_at
+                    )
+                    : "",
+
+                division.updated_at
+                    ? formatDate(
+                        division.updated_at
+                    )
+                    : ""
+
+            ]
+        );
+
+
+    const csvRows = [
+
+        header,
+
+        ...rows
+
+    ]
+    .map(
+        row =>
+            row
+                .map(
+                    value =>
+                        csvEscape(
+                            value
+                        )
+                )
+                .join(
+                    ";"
+                )
+    )
+    .join(
+        "\r\n"
+    );
+
+
+    const blob =
+        new Blob(
+            [
+                "\uFEFF" +
+                csvRows
+            ],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href =
+        url;
+
+
+    link.download =
+        "divisions_" +
+        getFileDate() +
+        ".csv";
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
+
+    logCrud(
+        "EXPORT",
+        null,
+        "DIVISIONS",
+        {
+            count:
+                filtered.length
+        }
+    );
+
+
+    showToast(
+        `${filtered.length} division(s) exportée(s).`,
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   CSV ESCAPE
+========================================================= */
+
+function csvEscape(
+    value
+){
+
+    const text =
+        String(
+            value ??
+            ""
+        );
+
+
+    return '"' +
+        text
+            .replace(
+                /"/g,
+                '""'
+            ) +
+        '"';
+
+}
+
+
+/* =========================================================
+   RESET FILTERS
+========================================================= */
+
+function resetFilters(){
+
+    document.getElementById(
+        "search"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "filterStatus"
+    ).value =
+        "";
+
+
+    render();
+
+}
+
+
+/* =========================================================
+   DATABASE ERROR
+========================================================= */
+
+function handleDatabaseError(
+    error
+){
+
+    const message =
+        String(
+            error?.message ||
+            ""
+        );
+
+
+    const code =
+        error?.code ||
+        "";
+
+
+    console.error(
+        "DATABASE ERROR:",
+        {
+            code:
+                code,
+
+            message:
+                message,
+
+            details:
+                error?.details,
+
+            hint:
+                error?.hint
+        }
+    );
+
+
+    if(
+        code ===
+        "23505"
+    ){
+
+        showToast(
+            "Ce code de division existe déjà.",
+            "error"
+        );
+
+
+        return;
+
+    }
+
+
+    if(
+        code ===
+        "23503"
+    ){
+
+        showToast(
+
+            "Impossible de supprimer cette division car elle est utilisée par d'autres données.",
+
+            "error"
+
+        );
+
+
+        return;
+
+    }
+
+
+    if(
+        code ===
+        "42501"
+    ){
+
+        showToast(
+
+            "Accès refusé par la base de données.",
+
+            "error"
+
+        );
+
+
+        return;
+
+    }
+
+
+    showToast(
+        message ||
+        "Une erreur est survenue.",
+        "error"
+    );
+
+}
+
+
+/* =========================================================
+   ACCESS DENIED
+========================================================= */
+
+function showAccessDenied(
+    message
+){
+
+    document.getElementById(
+        "pageContent"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "accessDenied"
+    ).classList.add(
+        "show"
+    );
+
+
+    const paragraph =
+        document.querySelector(
+            "#accessDenied p"
+        );
+
+
+    paragraph.textContent =
+        message ||
+        "Vous n'avez pas la permission d'accéder à cette page.";
+
+}
+
+
+/* =========================================================
+   PAGE ERROR
+========================================================= */
+
+function showPageError(
+    error
+){
+
+    const tbody =
+        document.getElementById(
+            "tableBody"
+        );
+
+
+    if(!tbody){
+
+        return;
+
+    }
+
+
+    const message =
+        error?.message ||
+        "Erreur inconnue";
+
+
+    tbody.innerHTML = `
+
+        <tr>
+
+            <td colspan="7">
+
+                <div class="empty">
+
+                    <i
+                        class="fa-solid fa-triangle-exclamation"
+                    ></i>
+
+                    <div>
+                        Erreur lors du chargement
+                    </div>
+
+                    <small>
+                        ${escapeHtml(
+                            message
+                        )}
+                    </small>
+
+                    <br>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="loadDivisions()"
+                    >
+
+                        <i
+                            class="fa-solid fa-rotate"
+                        ></i>
+
+                        Réessayer
+
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    `;
+
+
+    showToast(
+        message,
+        "error"
+    );
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(
+    message,
+    type = "success"
+){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.className =
+        "toast show " +
+        type;
+
+
+    setTimeout(
+        () => {
+
+            toast.className =
+                "toast";
+
+        },
+        4000
+    );
+
+}
+
+
+/* =========================================================
+   FORMAT DATE
+========================================================= */
+
+function formatDate(
+    value
+){
+
+    try{
+
+        const date =
+            new Date(
+                value
+            );
+
+
+        if(
+            Number.isNaN(
+                date.getTime()
+            )
+        ){
+
+            return "—";
+
+        }
+
+
+        return date.toLocaleString(
+            "fr-FR",
+            {
+
+                day:
+                    "2-digit",
+
+                month:
+                    "2-digit",
+
+                year:
+                    "numeric",
+
+                hour:
+                    "2-digit",
+
+                minute:
+                    "2-digit"
+
+            }
+        );
+
+    }
+    catch{
+
+        return "—";
+
+    }
+
+}
+
+
+/* =========================================================
+   FILE DATE
+========================================================= */
+
+function getFileDate(){
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            now.getDate()
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    return (
+        year +
+        month +
+        day
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(
+    value
+){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(
+        value
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   GLOBAL FUNCTIONS
+========================================================= */
+
+window.loadDivisions =
+    loadDivisions;
+
+
+window.render =
+    render;
+
+
+window.resetFilters =
+    resetFilters;
+
+
+window.openAddModal =
+    openAddModal;
+
+
+window.editDivision =
+    editDivision;
+
+
+window.closeModal =
+    closeModal;
+
+
+window.saveDivision =
+    saveDivision;
+
+
+window.deleteDivision =
+    deleteDivision;
+
+
+window.exportCSV =
+    exportCSV;
+
+</script>
+
+
+</body>
+
+</html>

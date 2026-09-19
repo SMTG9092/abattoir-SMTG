@@ -1,0 +1,3782 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mouvements de stock - SMTG</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Supabase JS V2 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- SMTG Supabase configuration -->
+    <script src="api/supabase.js"></script>
+
+    <style>
+        :root {
+            --green: #075c2b;
+            --green-dark: #064b24;
+            --green-light: #eaf6ee;
+            --green-soft: #f2faf5;
+            --border: #dfe7e2;
+            --text: #25352c;
+            --muted: #748178;
+            --danger: #c62828;
+            --warning: #ef8b00;
+            --blue: #1769aa;
+            --white: #ffffff;
+            --shadow: 0 3px 14px rgba(0,0,0,.06);
+            --radius: 9px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7f5;
+            color: var(--text);
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
+            width: 100%;
+            min-height: 100vh;
+            padding: 18px 22px 30px;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 14px;
+        }
+
+        .title-area {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .title-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 9px;
+            background: var(--green);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            box-shadow: var(--shadow);
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #173426;
+        }
+
+        .page-subtitle {
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 7px;
+            padding: 9px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: .15s;
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--green-dark);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #35443b;
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #f7faf8;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #a91f1f;
+        }
+
+        .btn-small {
+            padding: 6px 9px;
+            font-size: 11px;
+        }
+
+        /* =========================
+           SCOPE
+        ========================= */
+
+        .scope-bar {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 10px 13px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .scope-label {
+            color: var(--muted);
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .scope-user {
+            font-weight: 700;
+            color: var(--green);
+        }
+
+        .division-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .division-tag {
+            background: var(--green-light);
+            border: 1px solid #cbe8d4;
+            color: var(--green);
+            border-radius: 20px;
+            padding: 3px 8px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           CARD
+        ========================= */
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 13px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 10px 13px;
+            border-bottom: 1px solid #edf1ee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .card-title i {
+            color: var(--green);
+        }
+
+        .card-body {
+            padding: 13px;
+        }
+
+        /* =========================
+           FILTERS
+        ========================= */
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns:
+                minmax(180px, 1.4fr)
+                minmax(160px, 1fr)
+                minmax(150px, 1fr)
+                minmax(150px, 1fr)
+                minmax(140px, 1fr)
+                minmax(140px, 1fr)
+                minmax(140px, 1fr)
+                minmax(140px, 1fr);
+            gap: 9px;
+        }
+
+        .field {
+            min-width: 0;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 5px;
+            color: #5d6b63;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .input,
+        .select {
+            width: 100%;
+            height: 33px;
+            border: 1px solid #d8e2dc;
+            border-radius: 6px;
+            padding: 0 9px;
+            outline: none;
+            background: white;
+            color: #28372f;
+            font-size: 11px;
+        }
+
+        .input:focus,
+        .select:focus {
+            border-color: #68a77c;
+            box-shadow: 0 0 0 2px rgba(20,90,31,.08);
+        }
+
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 7px;
+            margin-top: 10px;
+        }
+
+        /* =========================
+           AUTOCOMPLETE
+        ========================= */
+
+        .autocomplete {
+            position: relative;
+        }
+
+        .autocomplete-list {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            top: calc(100% + 3px);
+            left: 0;
+            right: 0;
+            max-height: 270px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #cfdad3;
+            border-radius: 7px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.12);
+        }
+
+        .autocomplete-list.show {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 8px 10px;
+            border-bottom: 1px solid #edf1ee;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: 0;
+        }
+
+        .autocomplete-item:hover {
+            background: var(--green-soft);
+        }
+
+        .autocomplete-code {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .autocomplete-name {
+            color: #5d6b63;
+            margin-left: 5px;
+        }
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 9px;
+            margin-bottom: 13px;
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-icon {
+            width: 31px;
+            height: 31px;
+            border-radius: 7px;
+            background: var(--green-light);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .stat-label {
+            color: #7a867f;
+            font-size: 9px;
+            margin-bottom: 2px;
+        }
+
+        .stat-value {
+            color: #1f3027;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1250px;
+        }
+
+        thead th {
+            background: #f5f8f6;
+            color: #526158;
+            border-bottom: 1px solid #dfe7e2;
+            padding: 9px 8px;
+            text-align: left;
+            white-space: nowrap;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        tbody td {
+            border-bottom: 1px solid #edf1ee;
+            padding: 8px;
+            font-size: 10px;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #fbfdfb;
+        }
+
+        .movement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border-radius: 15px;
+            padding: 4px 7px;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .badge-entry {
+            background: #e8f6ed;
+            color: #087333;
+        }
+
+        .badge-exit {
+            background: #fff0f0;
+            color: #b32121;
+        }
+
+        .badge-plus {
+            background: #eaf3ff;
+            color: #1769aa;
+        }
+
+        .badge-minus {
+            background: #fff6df;
+            color: #a65c00;
+        }
+
+        .qty-positive {
+            color: #087333;
+            font-weight: 700;
+        }
+
+        .qty-negative {
+            color: #b32121;
+            font-weight: 700;
+        }
+
+        .actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .icon-btn {
+            width: 27px;
+            height: 27px;
+            border: 1px solid #dbe4de;
+            border-radius: 5px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #54635a;
+            font-size: 10px;
+        }
+
+        .icon-btn:hover {
+            background: #f4f8f5;
+        }
+
+        .icon-btn.edit:hover {
+            color: var(--green);
+        }
+
+        .icon-btn.delete:hover {
+            color: var(--danger);
+        }
+
+        /* =========================
+           EMPTY / LOADING
+        ========================= */
+
+        .loading,
+        .empty {
+            padding: 35px 15px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .loading i {
+            margin-right: 7px;
+        }
+
+        /* =========================
+           PAGINATION
+        ========================= */
+
+        .table-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 12px;
+            border-top: 1px solid #edf1ee;
+            gap: 10px;
+        }
+
+        .results-info {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .page-btn {
+            min-width: 28px;
+            height: 28px;
+            border: 1px solid #dbe4de;
+            border-radius: 5px;
+            background: white;
+            color: #526158;
+            font-size: 10px;
+        }
+
+        .page-btn:hover {
+            background: #f5f8f6;
+        }
+
+        .page-btn.active {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+
+        .page-btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 5000;
+            inset: 0;
+            background: rgba(16, 31, 23, .45);
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 760px;
+            max-height: 92vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 11px;
+            box-shadow: 0 15px 50px rgba(0,0,0,.22);
+        }
+
+        .modal.small {
+            max-width: 430px;
+        }
+
+        .modal-header {
+            padding: 13px 16px;
+            border-bottom: 1px solid #e7ede9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 2;
+        }
+
+        .modal-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .close-btn {
+            width: 29px;
+            height: 29px;
+            border: 0;
+            border-radius: 5px;
+            background: #f3f6f4;
+            color: #68756e;
+        }
+
+        .close-btn:hover {
+            background: #e9eeeb;
+        }
+
+        .modal-body {
+            padding: 16px;
+        }
+
+        .modal-footer {
+            padding: 11px 16px;
+            border-top: 1px solid #e7ede9;
+            display: flex;
+            justify-content: flex-end;
+            gap: 7px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 11px;
+        }
+
+        .form-grid .full {
+            grid-column: 1 / -1;
+        }
+
+        .readonly {
+            background: #f4f7f5;
+            color: #69766e;
+        }
+
+        .stock-info {
+            margin-top: 7px;
+            border: 1px solid #dce8df;
+            background: #f5faf6;
+            border-radius: 7px;
+            padding: 8px 10px;
+            color: #356043;
+            font-size: 10px;
+            display: none;
+        }
+
+        .stock-info.show {
+            display: block;
+        }
+
+        .stock-info strong {
+            color: var(--green);
+        }
+
+        .help-text {
+            font-size: 9px;
+            color: #849088;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast-container {
+            position: fixed;
+            z-index: 9000;
+            top: 18px;
+            right: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .toast {
+            min-width: 270px;
+            max-width: 420px;
+            background: white;
+            border: 1px solid #dce5df;
+            border-left: 4px solid var(--green);
+            border-radius: 7px;
+            box-shadow: 0 7px 25px rgba(0,0,0,.12);
+            padding: 10px 12px;
+            font-size: 11px;
+            color: #34433a;
+            animation: toastIn .18s ease;
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        .toast.success {
+            border-left-color: var(--green);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1250px) {
+            .filters-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 850px) {
+            .page {
+                padding: 12px;
+            }
+
+            .filters-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid .full {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-overlay {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+    <div class="page-container">
+
+        <!-- HEADER -->
+        <div class="page-header">
+
+            <div class="title-area">
+                <div class="title-icon">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                </div>
+
+                <div>
+                    <h1 class="page-title">Mouvements de stock</h1>
+                    <div class="page-subtitle">
+                        Consultation des entrées, sorties et ajustements de stock
+                    </div>
+                </div>
+            </div>
+</div>
+
+        <!-- USER SCOPE -->
+        <div class="scope-bar">
+
+            <div class="scope-label">
+                <i class="fa-solid fa-user"></i>
+                Utilisateur :
+                <span class="scope-user" id="currentUsername">---</span>
+            </div>
+
+            <div class="scope-label">
+                <i class="fa-solid fa-code-branch"></i>
+                Divisions :
+            </div>
+
+            <div class="division-tags" id="divisionTags">
+                <span class="division-tag">Chargement...</span>
+            </div>
+
+        </div>
+
+        <!-- SEARCH -->
+        <div class="card">
+
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-filter"></i>
+                    Recherche
+                </h2>
+            </div>
+
+            <div class="card-body">
+
+                <div class="filters-grid">
+
+                    <!-- ARTICLE -->
+                    <div class="field">
+                        <label>Article</label>
+
+                        <div class="autocomplete">
+
+                            <input
+                                type="text"
+                                class="input"
+                                id="filterArticle"
+                                placeholder="Code ou désignation"
+                                autocomplete="off"
+                            >
+
+                            <div
+                                class="autocomplete-list"
+                                id="filterArticleList">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- DIVISION -->
+                    <div class="field">
+                        <label>Division</label>
+
+                        <select
+                            class="select"
+                            id="filterDivision">
+                            <option value="">Toutes mes divisions</option>
+                        </select>
+                    </div>
+
+                    <!-- MAGASIN -->
+                    <div class="field">
+                        <label>Magasin</label>
+
+                        <select
+                            class="select"
+                            id="filterMagasin">
+                            <option value="">Tous les magasins</option>
+                        </select>
+                    </div>
+
+                    <!-- EMPLACEMENT -->
+                    <div class="field">
+                        <label>Emplacement</label>
+
+                        <select
+                            class="select"
+                            id="filterEmplacement">
+                            <option value="">Tous les emplacements</option>
+                        </select>
+                    </div>
+
+                    <!-- LOT -->
+                    <div class="field">
+                        <label>Lot</label>
+
+                        <input
+                            type="text"
+                            class="input"
+                            id="filterLot"
+                            placeholder="Numéro de lot"
+                        >
+                    </div>
+
+                    <!-- TYPE -->
+                    <div class="field">
+                        <label>Type de mouvement</label>
+
+                        <select
+                            class="select"
+                            id="filterType">
+
+                            <option value="">Tous</option>
+                            <option value="ENTREE">Entrée</option>
+                            <option value="SORTIE">Sortie</option>
+                            <option value="AJUSTEMENT_PLUS">
+                                Ajustement +
+                            </option>
+                            <option value="AJUSTEMENT_MOINS">
+                                Ajustement -
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <!-- DATE DEBUT -->
+                    <div class="field">
+                        <label>Date début</label>
+
+                        <input
+                            type="date"
+                            class="input"
+                            id="filterDateStart"
+                        >
+                    </div>
+
+                    <!-- DATE FIN -->
+                    <div class="field">
+                        <label>Date fin</label>
+
+                        <input
+                            type="date"
+                            class="input"
+                            id="filterDateEnd"
+                        >
+                    </div>
+
+                </div>
+
+                <div class="filter-actions">
+
+                    <button
+                        class="btn btn-secondary btn-small"
+                        id="btnReset">
+
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Réinitialiser
+
+                    </button>
+
+                    <button
+                        class="btn btn-primary btn-small"
+                        id="btnSearch">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Rechercher
+
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+
+            <div class="stat">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-list"></i>
+                </div>
+
+                <div>
+                    <div class="stat-label">Mouvements</div>
+                    <div class="stat-value" id="statMovements">0</div>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
+
+                <div>
+                    <div class="stat-label">Entrées KG</div>
+                    <div class="stat-value" id="statEntries">0</div>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-arrow-up"></i>
+                </div>
+
+                <div>
+                    <div class="stat-label">Sorties KG</div>
+                    <div class="stat-value" id="statExits">0</div>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+
+                <div>
+                    <div class="stat-label">Ajustements KG</div>
+                    <div class="stat-value" id="statAdjustments">0</div>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+
+                <div>
+                    <div class="stat-label">Solde net KG</div>
+                    <div class="stat-value" id="statNet">0</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="card">
+
+            <div class="card-header">
+
+                <h2 class="card-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Consultation des mouvements
+                </h2>
+
+                <span
+                    id="movementCountHeader"
+                    style="font-size:10px;color:#7b8780;">
+                    0 mouvement
+                </span>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                    <tr>
+                        <th>Date / Heure</th>
+                        <th>Division</th>
+                        <th>Magasin</th>
+                        <th>Emplacement</th>
+                        <th>Article</th>
+                        <th>Désignation</th>
+                        <th>Lot</th>
+                        <th>Mouvement</th>
+                        <th>Quantité KG</th>
+                        <th>Motif</th>
+                        <th>Référence</th>
+                        <th>Utilisateur</th>
+</tr>
+                    </thead>
+
+                    <tbody id="movementsBody">
+
+                    <tr>
+                        <td colspan="12">
+                            <div class="loading">
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                Chargement...
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="table-footer">
+
+                <div
+                    class="results-info"
+                    id="resultsInfo">
+                    0 résultat
+                </div>
+
+                <div
+                    class="pagination"
+                    id="pagination">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+
+            <button
+                class="btn btn-secondary"
+                id="btnCancelDelete">
+                Annuler
+            </button>
+
+            <button
+                class="btn btn-danger"
+                id="btnConfirmDelete">
+
+                <i class="fa-solid fa-trash"></i>
+                Supprimer
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+/* ============================================================
+   SMTG - MOUVEMENTS STOCK
+   ============================================================ */
+
+(function () {
+
+    "use strict";
+
+    function formatNumber(value, decimals = 3) {
+
+        const number = Number(value || 0);
+
+        return number.toLocaleString("fr-FR", {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        });
+    }
+
+
+    function formatDateTime(value) {
+
+        if (!value) {
+            return "-";
+        }
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return value;
+        }
+
+        return date.toLocaleString("fr-FR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+
+    function toDateTimeLocal(value) {
+
+        if (!value) {
+            return "";
+        }
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return "";
+        }
+
+        const pad = n => String(n).padStart(2, "0");
+
+        return (
+            date.getFullYear() +
+            "-" +
+            pad(date.getMonth() + 1) +
+            "-" +
+            pad(date.getDate()) +
+            "T" +
+            pad(date.getHours()) +
+            ":" +
+            pad(date.getMinutes())
+        );
+    }
+
+
+    function nowDateTimeLocal() {
+
+        const date = new Date();
+
+        const pad = n => String(n).padStart(2, "0");
+
+        return (
+            date.getFullYear() +
+            "-" +
+            pad(date.getMonth() + 1) +
+            "-" +
+            pad(date.getDate()) +
+            "T" +
+            pad(date.getHours()) +
+            ":" +
+            pad(date.getMinutes())
+        );
+    }
+
+
+    function showError(error, fallback = "Une erreur est survenue.") {
+
+        console.error(error);
+
+        let message = fallback;
+
+        if (error?.message) {
+            message = error.message;
+        }
+
+        showToast(message, "error");
+    }
+
+
+    ) {
+
+        try {
+
+            if (
+                window.SMTG &&
+                typeof window.SMTG.logCrudAction === "function"
+            ) {
+
+                await window.SMTG.logCrudAction(
+                    action,
+                    "STOCK",
+                    table,
+                    recordId,
+                    description,
+                    details
+                );
+
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Audit log impossible:",
+                error
+            );
+
+        }
+    }
+
+
+    /* ========================================================
+       INITIALISATION SUPABASE
+    ======================================================== */
+
+    async function initSupabase() {
+
+        /*
+         * api/supabase.js doit créer:
+         * window.smtgSupabase
+         */
+
+        if (!window.smtgSupabase) {
+
+            console.error(
+                "Client Supabase non disponible."
+            );
+
+            showToast(
+                "Client Supabase non disponible. Vérifiez api/supabase.js.",
+                "error"
+            );
+
+            return false;
+        }
+
+        db = window.smtgSupabase;
+
+        return true;
+    }
+
+
+    /* ========================================================
+       LOAD USER
+    ======================================================== */
+
+    async function loadUser() {
+
+        currentUser = await getCurrentUserSafe();
+
+        if (!currentUser) {
+
+            $("currentUsername").textContent = "Utilisateur";
+
+            return;
+        }
+
+        $("currentUsername").textContent =
+            currentUser.username ||
+            currentUser.full_name ||
+            currentUser.name ||
+            "Utilisateur";
+    }
+
+
+    function getUserId() {
+
+        if (!currentUser) {
+            return null;
+        }
+
+        return (
+            currentUser.id ||
+            currentUser.user_id ||
+            null
+        );
+    }
+
+
+    /* ========================================================
+       LOAD DIVISIONS
+    ======================================================== */
+
+    async function loadDivisions() {
+
+        if (!db) {
+            return;
+        }
+
+        const { data: allDivisions, error: divisionError } =
+            await db
+                .from("divisions")
+                .select("*")
+                .eq("is_active", true)
+                .order("code");
+
+        if (divisionError) {
+            throw divisionError;
+        }
+
+
+        /*
+         * SYSTEM / SUPER ADMIN:
+         * si besoin, toutes les divisions.
+         *
+         * Pour un utilisateur normal:
+         * user_divisions
+         */
+
+        let userDivisions = [];
+
+        const userId = getUserId();
+
+        if (userId) {
+
+            const {
+                data,
+                error
+            } = await db
+                .from("user_divisions")
+                .select("division_id")
+                .eq("user_id", userId);
+
+            if (!error) {
+                userDivisions = data || [];
+            }
+        }
+
+
+        const assignedIds =
+            new Set(
+                userDivisions.map(x => Number(x.division_id))
+            );
+
+
+        /*
+         * SYSTEM / super admin peut voir toutes les divisions.
+         */
+
+        const isSystem =
+            currentUser?.is_system === true ||
+            String(currentUser?.username || "").toUpperCase() === "SYSTEM";
+
+
+        const roleCode =
+            String(
+                currentUser?.role_code ||
+                currentUser?.role?.code ||
+                ""
+            ).toUpperCase();
+
+
+        const isSuperAdmin =
+            roleCode === "SUPER_ADMIN" ||
+            roleCode === "SUPERADMIN" ||
+            roleCode === "SUPER_ADMINISTRATEUR";
+
+
+        if (isSystem || isSuperAdmin) {
+
+            divisions = allDivisions || [];
+
+        } else {
+
+            divisions =
+                (allDivisions || []).filter(
+                    d => assignedIds.has(Number(d.id))
+                );
+        }
+
+
+        renderDivisionTags();
+
+        fillDivisionSelects();
+    }
+
+
+    function renderDivisionTags() {
+
+        const container = $("divisionTags");
+
+        if (!divisions.length) {
+
+            container.innerHTML =
+                '<span class="division-tag">Aucune division affectée</span>';
+
+            return;
+        }
+
+        container.innerHTML =
+            divisions.map(d => `
+                <span class="division-tag">
+                    ${escapeHtml(d.code)}
+                </span>
+            `).join("");
+    }
+
+
+    function fillDivisionSelects() {
+
+        const filter =
+            $("filterDivision");
+
+        const movement =
+            $("movementDivision");
+
+
+        filter.innerHTML =
+            '<option value="">Toutes mes divisions</option>';
+
+
+        movement.innerHTML =
+            '<option value="">Sélectionner...</option>';
+
+
+        divisions.forEach(d => {
+
+            const option1 =
+                document.createElement("option");
+
+            option1.value = d.id;
+
+            option1.textContent =
+                `${d.code} - ${d.name || ""}`;
+
+            filter.appendChild(option1);
+
+
+            const option2 =
+                document.createElement("option");
+
+            option2.value = d.id;
+
+            option2.textContent =
+                `${d.code} - ${d.name || ""}`;
+
+            movement.appendChild(option2);
+
+        });
+    }
+
+
+    /* ========================================================
+       LOAD MAGASINS
+    ======================================================== */
+
+    async function loadMagasins() {
+
+        const { data, error } =
+            await db
+                .from("magasins")
+                .select("*")
+                .eq("is_active", true)
+                .order("code");
+
+        if (error) {
+            throw error;
+        }
+
+        magasins = data || [];
+
+        refreshFilterMagasins();
+
+        refreshMovementMagasins();
+    }
+
+
+    function refreshFilterMagasins() {
+
+        const select =
+            $("filterMagasin");
+
+        const divisionId =
+            $("filterDivision").value;
+
+
+        select.innerHTML =
+            '<option value="">Tous les magasins</option>';
+
+
+        let rows =
+            magasins.filter(m => {
+
+                if (!divisionId) {
+                    return true;
+                }
+
+                return Number(m.division_id) ===
+                       Number(divisionId);
+
+            });
+
+
+        rows.forEach(m => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = m.id;
+
+            option.textContent =
+                `${m.code} - ${m.name}`;
+
+            select.appendChild(option);
+
+        });
+
+
+        refreshFilterEmplacements();
+    }
+
+
+    function refreshMovementMagasins() {
+
+        const select =
+            $("movementMagasin");
+
+        const divisionId =
+            $("movementDivision").value;
+
+
+        select.innerHTML =
+            '<option value="">Sélectionner...</option>';
+
+
+        if (!divisionId) {
+            return;
+        }
+
+
+        magasins
+            .filter(
+                m =>
+                    Number(m.division_id) ===
+                    Number(divisionId)
+            )
+            .forEach(m => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = m.id;
+
+                option.textContent =
+                    `${m.code} - ${m.name}`;
+
+                select.appendChild(option);
+
+            });
+    }
+
+
+    /* ========================================================
+       LOAD EMPLACEMENTS
+    ======================================================== */
+
+    async function loadEmplacements() {
+
+        const { data, error } =
+            await db
+                .from("emplacements")
+                .select("*")
+                .eq("is_active", true)
+                .order("code");
+
+        if (error) {
+            throw error;
+        }
+
+        emplacements = data || [];
+
+        refreshFilterEmplacements();
+
+        refreshMovementEmplacements();
+    }
+
+
+    function refreshFilterEmplacements() {
+
+        const select =
+            $("filterEmplacement");
+
+        const magasinId =
+            $("filterMagasin").value;
+
+
+        select.innerHTML =
+            '<option value="">Tous les emplacements</option>';
+
+
+        if (!magasinId) {
+            return;
+        }
+
+
+        emplacements
+            .filter(
+                e =>
+                    Number(e.magasin_id) ===
+                    Number(magasinId)
+            )
+            .forEach(e => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = e.id;
+
+                option.textContent =
+                    `${e.code}${e.name ? " - " + e.name : ""}`;
+
+                select.appendChild(option);
+
+            });
+    }
+
+
+    function refreshMovementEmplacements() {
+
+        const select =
+            $("movementEmplacement");
+
+        const magasinId =
+            $("movementMagasin").value;
+
+
+        select.innerHTML =
+            '<option value="">Sélectionner...</option>';
+
+
+        if (!magasinId) {
+            return;
+        }
+
+
+        emplacements
+            .filter(
+                e =>
+                    Number(e.magasin_id) ===
+                    Number(magasinId)
+            )
+            .forEach(e => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = e.id;
+
+                option.textContent =
+                    `${e.code}${e.name ? " - " + e.name : ""}`;
+
+                select.appendChild(option);
+
+            });
+    }
+
+
+    /* ========================================================
+       LOAD PRODUCTS
+    ======================================================== */
+
+    async function loadProduits() {
+
+        const { data, error } =
+            await db
+                .from("produits")
+                .select("*")
+                .order("article");
+
+        if (error) {
+            throw error;
+        }
+
+        produits = data || [];
+    }
+
+
+    function getProductCode(product) {
+
+        return String(
+            product.article ??
+            product.code ??
+            product.reference ??
+            ""
+        );
+    }
+
+
+    function getProductDesignation(product) {
+
+        return String(
+            product.designation ??
+            product.name ??
+            product.nom ??
+            ""
+        );
+    }
+
+
+    function getProductGroupe(product) {
+
+        return String(
+            product.groupe ??
+            product.group ??
+            product.groupe_marchandises ??
+            ""
+        );
+    }
+
+
+    function getProductType(product) {
+
+        return String(
+            product.type ??
+            product.type_article ??
+            ""
+        );
+    }
+
+
+    function findProductByCode(code) {
+
+        const value =
+            String(code || "")
+                .trim()
+                .toLowerCase();
+
+        if (!value) {
+            return null;
+        }
+
+        return produits.find(
+            p =>
+                getProductCode(p)
+                    .toLowerCase() === value
+        ) || null;
+    }
+
+
+    /* ========================================================
+       AUTOCOMPLETE
+    ======================================================== */
+
+    function searchProducts(term, divisionCode = null) {
+
+        const q =
+            String(term || "")
+                .trim()
+                .toLowerCase();
+
+
+        let result =
+            produits.filter(p => {
+
+                const code =
+                    getProductCode(p)
+                        .toLowerCase();
+
+                const designation =
+                    getProductDesignation(p)
+                        .toLowerCase();
+
+
+                /*
+                 * Si texte vide:
+                 * afficher quelques produits.
+                 */
+
+                if (!q) {
+                    return true;
+                }
+
+
+                return (
+                    code.includes(q) ||
+                    designation.includes(q)
+                );
+
+            });
+
+
+        /*
+         * Prefix first,
+         * puis designation prefix,
+         * puis reste.
+         */
+
+        result.sort((a, b) => {
+
+            const ac =
+                getProductCode(a).toLowerCase();
+
+            const bc =
+                getProductCode(b).toLowerCase();
+
+            const ad =
+                getProductDesignation(a).toLowerCase();
+
+            const bd =
+                getProductDesignation(b).toLowerCase();
+
+
+            function score(code, designation) {
+
+                if (!q) {
+                    return 0;
+                }
+
+                if (code.startsWith(q)) {
+                    return 0;
+                }
+
+                if (designation.startsWith(q)) {
+                    return 1;
+                }
+
+                return 2;
+            }
+
+
+            return (
+                score(ac, ad) -
+                score(bc, bd)
+            );
+        });
+
+
+        return result.slice(0, 50);
+    }
+
+
+    function setupArticleAutocomplete(
+        input,
+        list,
+        onSelect
+    ) {
+
+        function render() {
+
+            const results =
+                searchProducts(input.value);
+
+
+            list.innerHTML = "";
+
+
+            if (!results.length) {
+
+                list.classList.remove("show");
+
+                return;
+            }
+
+
+            results.forEach(product => {
+
+                const code =
+                    getProductCode(product);
+
+                const designation =
+                    getProductDesignation(product);
+
+
+                const item =
+                    document.createElement("div");
+
+                item.className =
+                    "autocomplete-item";
+
+
+                item.innerHTML = `
+                    <span class="autocomplete-code">
+                        ${escapeHtml(code)}
+                    </span>
+                    <span class="autocomplete-name">
+                        ${escapeHtml(designation)}
+                    </span>
+                `;
+
+
+                item.addEventListener(
+                    "mousedown",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        input.value = code;
+
+                        onSelect(product);
+
+                        list.classList.remove("show");
+                    }
+                );
+
+
+                list.appendChild(item);
+
+            });
+
+
+            list.classList.add("show");
+        }
+
+
+        input.addEventListener(
+            "input",
+            render
+        );
+
+
+        input.addEventListener(
+            "focus",
+            function () {
+
+                render();
+
+            }
+        );
+
+
+        input.addEventListener(
+            "blur",
+            function () {
+
+                setTimeout(() => {
+
+                    list.classList.remove("show");
+
+                }, 180);
+
+            }
+        );
+    }
+
+
+    /* ========================================================
+       ARTICLE FILTER AUTOCOMPLETE
+    ======================================================== */
+
+    function setupFilterArticle() {
+
+        setupArticleAutocomplete(
+            $("filterArticle"),
+            $("filterArticleList"),
+            function (product) {
+
+                $("filterArticle").value =
+                    getProductCode(product);
+
+            }
+        );
+    }
+
+
+    /* ========================================================
+       MOVEMENT ARTICLE AUTOCOMPLETE
+    ======================================================== */
+
+    function setupMovementArticle() {
+
+        setupArticleAutocomplete(
+            $("movementArticle"),
+            $("movementArticleList"),
+            function (product) {
+
+                fillProductInfo(product);
+
+                updateCurrentStock();
+
+            }
+        );
+    }
+
+
+    function fillProductInfo(product) {
+
+        if (!product) {
+
+            $("movementDesignation").value = "";
+            $("movementGroupe").value = "";
+            $("movementArticleType").value = "";
+
+            return;
+        }
+
+
+        $("movementDesignation").value =
+            getProductDesignation(product);
+
+        $("movementGroupe").value =
+            getProductGroupe(product);
+
+        $("movementArticleType").value =
+            getProductType(product);
+    }
+
+
+    /* ========================================================
+       MOVEMENT QUERY
+    ======================================================== */
+
+    async function loadMovements() {
+
+        $("movementsBody").innerHTML = `
+            <tr>
+                <td colspan="12">
+                    <div class="loading">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        Chargement des mouvements...
+                    </div>
+                </td>
+            </tr>
+        `;
+
+
+        if (!divisions.length) {
+
+            movements = [];
+
+            filteredMovements = [];
+
+            renderMovements();
+
+            return;
+        }
+
+
+        const divisionIds =
+            divisions.map(d => d.id);
+
+
+        let query =
+            db
+                .from("mouvements_stock")
+                .select("*")
+                .in("division_id", divisionIds)
+                .order("date_mouvement", {
+                    ascending: false
+                });
+
+
+        const filterDivision =
+            $("filterDivision").value;
+
+        const filterMagasin =
+            $("filterMagasin").value;
+
+        const filterEmplacement =
+            $("filterEmplacement").value;
+
+        const filterLot =
+            $("filterLot").value.trim();
+
+        const filterType =
+            $("filterType").value;
+
+        const filterArticle =
+            $("filterArticle").value.trim();
+
+        const dateStart =
+            $("filterDateStart").value;
+
+        const dateEnd =
+            $("filterDateEnd").value;
+
+
+        if (filterDivision) {
+
+            query =
+                query.eq(
+                    "division_id",
+                    filterDivision
+                );
+
+        }
+
+
+        if (filterMagasin) {
+
+            query =
+                query.eq(
+                    "magasin_id",
+                    filterMagasin
+                );
+
+        }
+
+
+        if (filterEmplacement) {
+
+            query =
+                query.eq(
+                    "emplacement_id",
+                    filterEmplacement
+                );
+
+        }
+
+
+        if (filterLot) {
+
+            query =
+                query.ilike(
+                    "lot",
+                    `%${filterLot}%`
+                );
+
+        }
+
+
+        if (filterType) {
+
+            query =
+                query.eq(
+                    "type_mouvement",
+                    filterType
+                );
+
+        }
+
+
+        if (filterArticle) {
+
+            /*
+             * recherche exacte ou partielle
+             * sur code article.
+             */
+
+            query =
+                query.ilike(
+                    "article",
+                    `%${filterArticle}%`
+                );
+
+        }
+
+
+        if (dateStart) {
+
+            query =
+                query.gte(
+                    "date_mouvement",
+                    `${dateStart}T00:00:00`
+                );
+
+        }
+
+
+        if (dateEnd) {
+
+            query =
+                query.lt(
+                    "date_mouvement",
+                    `${dateEnd}T23:59:59.999`
+                );
+
+        }
+
+
+        const {
+            data,
+            error
+        } = await query;
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        movements = data || [];
+
+        filteredMovements = movements;
+
+        currentPage = 1;
+
+        renderMovements();
+    }
+
+
+    /* ========================================================
+       RENDER TABLE
+    ======================================================== */
+
+    function getDivision(id) {
+
+        return divisions.find(
+            d => Number(d.id) === Number(id)
+        ) || null;
+    }
+
+
+    function getMagasin(id) {
+
+        return magasins.find(
+            m => Number(m.id) === Number(id)
+        ) || null;
+    }
+
+
+    function getEmplacement(id) {
+
+        return emplacements.find(
+            e => Number(e.id) === Number(id)
+        ) || null;
+    }
+
+
+    function getMovementBadge(type) {
+
+        switch (type) {
+
+            case "ENTREE":
+
+                return `
+                    <span class="movement-badge badge-entry">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        Entrée
+                    </span>
+                `;
+
+            case "SORTIE":
+
+                return `
+                    <span class="movement-badge badge-exit">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        Sortie
+                    </span>
+                `;
+
+            case "AJUSTEMENT_PLUS":
+
+                return `
+                    <span class="movement-badge badge-plus">
+                        <i class="fa-solid fa-plus"></i>
+                        Ajustement +
+                    </span>
+                `;
+
+            case "AJUSTEMENT_MOINS":
+
+                return `
+                    <span class="movement-badge badge-minus">
+                        <i class="fa-solid fa-minus"></i>
+                        Ajustement -
+                    </span>
+                `;
+
+            default:
+                return escapeHtml(type || "-");
+        }
+    }
+
+
+    function getSignedQuantity(movement) {
+
+        const qty =
+            Number(movement.quantite_kg || 0);
+
+
+        if (
+            movement.type_mouvement === "SORTIE" ||
+            movement.type_mouvement === "AJUSTEMENT_MOINS"
+        ) {
+
+            return -qty;
+        }
+
+
+        return qty;
+    }
+
+
+    function renderMovements() {
+
+        const body = $("movementsBody");
+        const total = filteredMovements.length;
+
+        $("movementCountHeader").textContent =
+            `${total} mouvement${total > 1 ? "s" : ""}`;
+
+        updateStats();
+
+        if (!total) {
+
+            body.innerHTML = `
+                <tr>
+                    <td colspan="12">
+                        <div class="empty">
+                            <i class="fa-solid fa-box-open"></i>
+                            Aucun mouvement trouvé.
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+            $("resultsInfo").textContent = "0 résultat";
+            $("pagination").innerHTML = "";
+            return;
+        }
+
+        const totalPages = Math.ceil(total / PAGE_SIZE);
+
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const end = start + PAGE_SIZE;
+
+        const pageRows = filteredMovements.slice(start, end);
+
+        body.innerHTML = pageRows.map(m => {
+
+            const division = getDivision(m.division_id);
+            const magasin = getMagasin(m.magasin_id);
+            const emplacement = getEmplacement(m.emplacement_id);
+            const product = findProductByCode(m.article);
+
+            const designation = product
+                ? getProductDesignation(product)
+                : "-";
+
+            const signed = getSignedQuantity(m);
+
+            const qtyClass = signed < 0
+                ? "qty-negative"
+                : "qty-positive";
+
+            const qtyPrefix = signed > 0 ? "+" : "";
+
+            return `
+                <tr>
+
+                    <td>
+                        ${escapeHtml(formatDateTime(m.date_mouvement))}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(division?.code || "-")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(magasin?.code || "-")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(emplacement?.code || "-")}
+                    </td>
+
+                    <td>
+                        <strong>${escapeHtml(m.article || "-")}</strong>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(designation)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(m.lot || "-")}
+                    </td>
+
+                    <td>
+                        ${getMovementBadge(m.type_mouvement)}
+                    </td>
+
+                    <td class="${qtyClass}">
+                        ${qtyPrefix}${formatNumber(Math.abs(signed))} KG
+                    </td>
+
+                    <td>
+                        ${escapeHtml(m.motif || "-")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(m.reference || "-")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(getCreatedByDisplay(m))}
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+        $("resultsInfo").textContent =
+            `${start + 1}-${Math.min(end, total)} sur ${total}`;
+
+        renderPagination(totalPages);
+    }
+
+    /* ========================================================
+       STATS
+    ======================================================== */
+
+    function updateStats() {
+
+        let entries = 0;
+        let exits = 0;
+        let adjustments = 0;
+        let net = 0;
+
+
+        filteredMovements.forEach(m => {
+
+            const qty =
+                Number(m.quantite_kg || 0);
+
+
+            switch (m.type_mouvement) {
+
+                case "ENTREE":
+
+                    entries += qty;
+                    net += qty;
+
+                    break;
+
+                case "SORTIE":
+
+                    exits += qty;
+                    net -= qty;
+
+                    break;
+
+                case "AJUSTEMENT_PLUS":
+
+                    adjustments += qty;
+                    net += qty;
+
+                    break;
+
+                case "AJUSTEMENT_MOINS":
+
+                    adjustments += qty;
+                    net -= qty;
+
+                    break;
+            }
+
+        });
+
+
+        $("statMovements").textContent =
+            filteredMovements.length
+                .toLocaleString("fr-FR");
+
+
+        $("statEntries").textContent =
+            formatNumber(entries);
+
+
+        $("statExits").textContent =
+            formatNumber(exits);
+
+
+        $("statAdjustments").textContent =
+            formatNumber(adjustments);
+
+
+        $("statNet").textContent =
+            formatNumber(net);
+    }
+
+
+    /* ========================================================
+       PAGINATION
+    ======================================================== */
+
+    function renderPagination(totalPages) {
+
+        const container =
+            $("pagination");
+
+        container.innerHTML = "";
+
+
+        if (totalPages <= 1) {
+            return;
+        }
+
+
+        const previous =
+            document.createElement("button");
+
+        previous.className =
+            "page-btn";
+
+        previous.innerHTML =
+            '<i class="fa-solid fa-chevron-left"></i>';
+
+        previous.disabled =
+            currentPage === 1;
+
+
+        previous.addEventListener(
+            "click",
+            function () {
+
+                if (currentPage > 1) {
+
+                    currentPage--;
+
+                    renderMovements();
+
+                }
+
+            }
+        );
+
+
+        container.appendChild(previous);
+
+
+        let start =
+            Math.max(
+                1,
+                currentPage - 2
+            );
+
+
+        let end =
+            Math.min(
+                totalPages,
+                start + 4
+            );
+
+
+        if (end - start < 4) {
+
+            start =
+                Math.max(
+                    1,
+                    end - 4
+                );
+
+        }
+
+
+        for (
+            let page = start;
+            page <= end;
+            page++
+        ) {
+
+            const button =
+                document.createElement("button");
+
+            button.className =
+                "page-btn" +
+                (
+                    page === currentPage
+                        ? " active"
+                        : ""
+                );
+
+            button.textContent =
+                page;
+
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    currentPage = page;
+
+                    renderMovements();
+
+                }
+            );
+
+
+            container.appendChild(button);
+
+        }
+
+
+        const next =
+            document.createElement("button");
+
+        next.className =
+            "page-btn";
+
+        next.innerHTML =
+            '<i class="fa-solid fa-chevron-right"></i>';
+
+        next.disabled =
+            currentPage === totalPages;
+
+
+        next.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    currentPage <
+                    totalPages
+                ) {
+
+                    currentPage++;
+
+                    renderMovements();
+
+                }
+
+            }
+        );
+
+
+        container.appendChild(next);
+    }
+
+
+
+    function openCreateModal() {
+
+        editingMovementId = null;
+
+        $("modalTitle").textContent =
+            "Nouveau mouvement";
+
+
+        $("movementId").value = "";
+
+        $("movementDate").value =
+            nowDateTimeLocal();
+
+        $("movementType").value =
+            "ENTREE";
+
+
+        $("movementDivision").value =
+            divisions.length === 1
+                ? divisions[0].id
+                : "";
+
+
+        refreshMovementMagasins();
+
+
+        $("movementMagasin").value = "";
+
+        $("movementEmplacement").innerHTML =
+            '<option value="">Sélectionner...</option>';
+
+
+        $("movementArticle").value = "";
+
+        $("movementDesignation").value = "";
+
+        $("movementGroupe").value = "";
+
+        $("movementArticleType").value = "";
+
+        $("movementLot").value = "";
+
+        $("movementQuantity").value = "";
+
+        $("movementUnit").value =
+            "KG";
+
+        $("movementReference").value = "";
+
+        $("movementMotif").value = "";
+
+        hideStockInfo();
+
+
+        $("movementModal").classList.add("show");
+    }
+
+
+
+    async function openEditModal(id) {
+
+        const movement =
+            movements.find(
+                m => String(m.id) === String(id)
+            );
+
+
+        if (!movement) {
+
+            showToast(
+                "Mouvement introuvable.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        editingMovementId =
+            movement.id;
+
+
+        $("modalTitle").textContent =
+            "Modifier le mouvement";
+
+
+        $("movementId").value =
+            movement.id;
+
+
+        $("movementDate").value =
+            toDateTimeLocal(
+                movement.date_mouvement
+            );
+
+
+        $("movementType").value =
+            movement.type_mouvement;
+
+
+        $("movementDivision").value =
+            movement.division_id || "";
+
+
+        refreshMovementMagasins();
+
+
+        $("movementMagasin").value =
+            movement.magasin_id || "";
+
+
+        refreshMovementEmplacements();
+
+
+        $("movementEmplacement").value =
+            movement.emplacement_id || "";
+
+
+        $("movementArticle").value =
+            movement.article || "";
+
+
+        const product =
+            findProductByCode(
+                movement.article
+            );
+
+
+        fillProductInfo(product);
+
+
+        $("movementLot").value =
+            movement.lot || "";
+
+
+        $("movementQuantity").value =
+            movement.quantite_kg || "";
+
+
+        $("movementUnit").value =
+            movement.unite || "KG";
+
+
+        $("movementReference").value =
+            movement.reference || "";
+
+
+        $("movementMotif").value =
+            movement.motif || "";
+
+
+        $("movementModal").classList.add("show");
+
+
+        await updateCurrentStock();
+    }
+
+
+    /* ========================================================
+       CLOSE MODAL
+    ======================================================== */
+
+    function closeMovementModal() {
+
+        $("movementModal")
+            .classList.remove("show");
+
+        editingMovementId = null;
+    }
+
+
+    /* ========================================================
+       DELETE MODAL
+    ======================================================== */
+
+    function openDeleteModal(id) {
+
+        deletingMovementId = id;
+
+        $("deleteModal")
+            .classList.add("show");
+    }
+
+
+    function closeDeleteModal() {
+
+        $("deleteModal")
+            .classList.remove("show");
+
+        deletingMovementId = null;
+    }
+
+
+    /* ========================================================
+       CURRENT STOCK
+    ======================================================== */
+
+    async function calculateStock(
+        divisionId,
+        magasinId,
+        emplacementId,
+        article,
+        lot,
+        excludeId = null
+    ) {
+
+        if (
+            !divisionId ||
+            !magasinId ||
+            !emplacementId ||
+            !article ||
+            !lot
+        ) {
+
+            return 0;
+        }
+
+
+        let query =
+            db
+                .from("mouvements_stock")
+                .select(
+                    "id,type_mouvement,quantite_kg"
+                )
+                .eq(
+                    "division_id",
+                    divisionId
+                )
+                .eq(
+                    "magasin_id",
+                    magasinId
+                )
+                .eq(
+                    "emplacement_id",
+                    emplacementId
+                )
+                .eq(
+                    "article",
+                    article
+                )
+                .eq(
+                    "lot",
+                    lot
+                );
+
+
+        const {
+            data,
+            error
+        } = await query;
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        let stock = 0;
+
+
+        (data || []).forEach(row => {
+
+            if (
+                excludeId &&
+                String(row.id) ===
+                String(excludeId)
+            ) {
+                return;
+            }
+
+
+            const qty =
+                Number(row.quantite_kg || 0);
+
+
+            if (
+                row.type_mouvement === "ENTREE" ||
+                row.type_mouvement === "AJUSTEMENT_PLUS"
+            ) {
+
+                stock += qty;
+
+            } else if (
+                row.type_mouvement === "SORTIE" ||
+                row.type_mouvement === "AJUSTEMENT_MOINS"
+            ) {
+
+                stock -= qty;
+            }
+
+        });
+
+
+        return stock;
+    }
+
+
+    async function updateCurrentStock() {
+
+        const division =
+            $("movementDivision").value;
+
+        const magasin =
+            $("movementMagasin").value;
+
+        const emplacement =
+            $("movementEmplacement").value;
+
+        const article =
+            $("movementArticle").value.trim();
+
+        const lot =
+            $("movementLot").value.trim();
+
+
+        if (
+            !division ||
+            !magasin ||
+            !emplacement ||
+            !article ||
+            !lot
+        ) {
+
+            hideStockInfo();
+
+            return 0;
+        }
+
+
+        try {
+
+            const stock =
+                await calculateStock(
+                    division,
+                    magasin,
+                    emplacement,
+                    article,
+                    lot,
+                    editingMovementId
+                );
+
+
+            $("currentStockValue").textContent =
+                `${formatNumber(stock)} KG`;
+
+
+            $("stockInfo").classList.add("show");
+
+
+            return stock;
+
+        } catch (error) {
+
+            console.error(error);
+
+            hideStockInfo();
+
+            return 0;
+        }
+    }
+
+
+    /* ========================================================
+       VALIDATION
+    ======================================================== */
+
+    async function validateMovement() {
+
+        const date =
+            $("movementDate").value;
+
+        const type =
+            $("movementType").value;
+
+        const divisionId =
+            $("movementDivision").value;
+
+        const magasinId =
+            $("movementMagasin").value;
+
+        const emplacementId =
+            $("movementEmplacement").value;
+
+        const article =
+            $("movementArticle").value.trim();
+
+        const lot =
+            $("movementLot").value.trim();
+
+        const quantity =
+            Number(
+                $("movementQuantity").value
+            );
+
+
+        if (!date) {
+
+            showToast(
+                "Veuillez sélectionner la date.",
+                "warning"
+            );
+
+            return false;
+        }
+
+
+        if (!type) {
+
+            showToast(
+                "Veuillez sélectionner le type de mouvement.",
+                "warning"
+            );
+
+            return false;
+        }
+
+
+        if (!divisionId) {
+
+            showToast(
+                "Veuillez sélectionner une division.",
+                "warning"
+            );
+
+            return false;
+        }
+
+
+        if (!magasinId) {
+
+            showToast(
+                "Veuillez sélectionner un magasin.",
+                "warning"
+            );
+
+            return false;
+        }
+
+
+        if (!emplacementId) {
+
+            showToast(
+                "Veuillez sélectionner un emplacement.",
+                "warning"
+            );
+
+            return false;
+        }
+
+
+        if (!article) {
+
+            showToast(
+                "Veuillez sélectionner un article.",
+                "warning"
+            );
+
+            return false;
+        }
+
+
+        /*
+         * L'article doit exister dans produits.
+         */
+
+        const product =
+            findProductByCode(article);
+
+
+        if (!product) {
+
+            showToast(
+                "L'article doit être sélectionné parmi les produits.",
+                "warning"
+            );
+
+            return false;
+        }
+
+
+        if (!lot) {
+
+            showToast(
+                "Veuillez saisir le lot.",
+                "warning"
+            );
+
+            return false;
+        }
+
+
+        if (
+            !quantity ||
+            quantity <= 0
+        ) {
+
+            showToast(
+                "La quantité doit être supérieure à 0.",
+                "warning"
+            );
+
+            return false;
+        }
+
+
+        /*
+         * Contrôle du stock pour SORTIE
+         * et AJUSTEMENT_MOINS.
+         */
+
+        if (
+            type === "SORTIE" ||
+            type === "AJUSTEMENT_MOINS"
+        ) {
+
+            const stock =
+                await calculateStock(
+                    divisionId,
+                    magasinId,
+                    emplacementId,
+                    article,
+                    lot,
+                    editingMovementId
+                );
+
+
+            if (quantity > stock) {
+
+                showToast(
+                    `Stock insuffisant. Stock disponible : ${formatNumber(stock)} KG.`,
+                    "error"
+                );
+
+                return false;
+            }
+        }
+
+
+        return true;
+    }
+
+
+    /* ========================================================
+       SAVE
+    ======================================================== */
+
+    async function saveMovement() {
+
+        if (!db) {
+
+            showToast(
+                "Client Supabase non disponible.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const valid =
+            await validateMovement();
+
+
+        if (!valid) {
+            return;
+        }
+
+
+        const userId =
+            getUserId();
+
+
+        const payload = {
+
+            date_mouvement:
+                new Date(
+                    $("movementDate").value
+                ).toISOString(),
+
+            division_id:
+                Number(
+                    $("movementDivision").value
+                ),
+
+            magasin_id:
+                Number(
+                    $("movementMagasin").value
+                ),
+
+            emplacement_id:
+                Number(
+                    $("movementEmplacement").value
+                ),
+
+            article:
+                $("movementArticle")
+                    .value
+                    .trim(),
+
+            lot:
+                $("movementLot")
+                    .value
+                    .trim(),
+
+            type_mouvement:
+                $("movementType")
+                    .value,
+
+            quantite_kg:
+                Number(
+                    $("movementQuantity")
+                        .value
+                ),
+
+            unite:
+                $("movementUnit")
+                    .value || "KG",
+
+            motif:
+                $("movementMotif")
+                    .value
+                    .trim() || null,
+
+            reference:
+                $("movementReference")
+                    .value
+                    .trim() || null,
+
+            updated_by:
+                userId || null
+        };
+
+
+        try {
+
+            $("btnSaveMovement").disabled =
+                true;
+
+
+            $("btnSaveMovement").innerHTML =
+                `
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Enregistrement...
+                `;
+
+
+            if (editingMovementId) {
+
+                /*
+                 * UPDATE
+                 */
+
+                const {
+                    data,
+                    error
+                } = await db
+                    .from("mouvements_stock")
+                    .update(payload)
+                    .eq(
+                        "id",
+                        editingMovementId
+                    )
+                    .select()
+                    .single();
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                await logCrud(
+                    "UPDATE",
+                    "MOUVEMENTS_STOCK",
+                    editingMovementId,
+                    "Modification d'un mouvement de stock",
+                    {
+                        id: editingMovementId,
+                        article: payload.article,
+                        lot: payload.lot,
+                        type_mouvement:
+                            payload.type_mouvement,
+                        quantite_kg:
+                            payload.quantite_kg
+                    }
+                );
+
+
+                showToast(
+                    "Mouvement modifié avec succès."
+                );
+
+            } else {
+
+                /*
+                 * INSERT
+                 */
+
+                payload.created_by =
+                    userId || null;
+
+
+                const {
+                    data,
+                    error
+                } = await db
+                    .from("mouvements_stock")
+                    .insert(payload)
+                    .select()
+                    .single();
+
+
+                if (error) {
+                    throw error;
+                }
+
+
+                await logCrud(
+                    "CREATE",
+                    "MOUVEMENTS_STOCK",
+                    data?.id || null,
+                    "Création d'un mouvement de stock",
+                    {
+                        article: payload.article,
+                        lot: payload.lot,
+                        type_mouvement:
+                            payload.type_mouvement,
+                        quantite_kg:
+                            payload.quantite_kg
+                    }
+                );
+
+
+                showToast(
+                    "Mouvement enregistré avec succès."
+                );
+            }
+
+
+            closeMovementModal();
+
+            await loadMovements();
+
+        } catch (error) {
+
+            showError(
+                error,
+                "Impossible d'enregistrer le mouvement."
+            );
+
+        } finally {
+
+            $("btnSaveMovement").disabled =
+                false;
+
+            $("btnSaveMovement").innerHTML =
+                `
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Enregistrer
+                `;
+        }
+    }
+
+
+    /* ========================================================
+       DELETE
+    ======================================================== */
+
+    async function confirmDelete() {
+
+        if (!deletingMovementId) {
+            return;
+        }
+
+
+        try {
+
+            $("btnConfirmDelete").disabled =
+                true;
+
+
+            $("btnConfirmDelete").innerHTML =
+                `
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Suppression...
+                `;
+
+
+            const movement =
+                movements.find(
+                    m =>
+                        String(m.id) ===
+                        String(deletingMovementId)
+                );
+
+
+            const {
+                error
+            } = await db
+                .from("mouvements_stock")
+                .delete()
+                .eq(
+                    "id",
+                    deletingMovementId
+                );
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            await logCrud(
+                "DELETE",
+                "MOUVEMENTS_STOCK",
+                deletingMovementId,
+                "Suppression d'un mouvement de stock",
+                {
+                    id: deletingMovementId,
+                    article:
+                        movement?.article || null,
+                    lot:
+                        movement?.lot || null,
+                    type_mouvement:
+                        movement?.type_mouvement || null,
+                    quantite_kg:
+                        movement?.quantite_kg || null
+                }
+            );
+
+
+            closeDeleteModal();
+
+            showToast(
+                "Mouvement supprimé avec succès."
+            );
+
+
+            await loadMovements();
+
+        } catch (error) {
+
+            showError(
+                error,
+                "Impossible de supprimer le mouvement."
+            );
+
+        } finally {
+
+            $("btnConfirmDelete").disabled =
+                false;
+
+            $("btnConfirmDelete").innerHTML =
+                `
+                    <i class="fa-solid fa-trash"></i>
+                    Supprimer
+                `;
+        }
+    }
+
+
+    /* ========================================================
+       RESET FILTERS
+    ======================================================== */
+
+    function resetFilters() {
+
+        $("filterArticle").value = "";
+
+        $("filterDivision").value = "";
+
+        refreshFilterMagasins();
+
+        $("filterMagasin").value = "";
+
+        refreshFilterEmplacements();
+
+        $("filterEmplacement").value = "";
+
+        $("filterLot").value = "";
+
+        $("filterType").value = "";
+
+        $("filterDateStart").value = "";
+
+        $("filterDateEnd").value = "";
+
+        loadMovements()
+            .catch(error => {
+                showError(
+                    error,
+                    "Impossible de charger les mouvements."
+                );
+            });
+    }
+
+
+    /* ========================================================
+       EVENTS
+    ======================================================== */
+
+    function setupEvents() {
+
+        $("btnSearch").addEventListener("click", function () {
+            loadMovements().catch(error => {
+                showError(error, "Erreur lors de la recherche.");
+            });
+        });
+
+        $("btnReset").addEventListener("click", resetFilters);
+
+        $("filterDivision").addEventListener("change", function () {
+            refreshFilterMagasins();
+
+            loadMovements().catch(error => {
+                showError(error, "Erreur lors du chargement.");
+            });
+        });
+
+        $("filterMagasin").addEventListener("change", function () {
+            refreshFilterEmplacements();
+
+            loadMovements().catch(error => {
+                showError(error, "Erreur lors du chargement.");
+            });
+        });
+
+        $("filterEmplacement").addEventListener("change", function () {
+            loadMovements().catch(error => {
+                showError(error, "Erreur lors du chargement.");
+            });
+        });
+
+        $("filterType").addEventListener("change", function () {
+            loadMovements().catch(error => {
+                showError(error, "Erreur lors du chargement.");
+            });
+        });
+
+        [
+            "filterArticle",
+            "filterLot",
+            "filterDateStart",
+            "filterDateEnd"
+        ].forEach(id => {
+
+            $(id).addEventListener("keydown", function (event) {
+
+                if (event.key === "Enter") {
+                    event.preventDefault();
+
+                    loadMovements().catch(error => {
+                        showError(error, "Erreur lors de la recherche.");
+                    });
+                }
+
+            });
+
+        });
+    }
+
+    /* ========================================================
+       INIT
+    ======================================================== */
+
+    async function init() {
+
+        try {
+
+            /*
+             * 1. Supabase
+             */
+
+            const ok =
+                await initSupabase();
+
+            if (!ok) {
+                return;
+            }
+
+
+            /*
+             * 2. User
+             */
+
+            await loadUser();
+
+
+            /*
+             * 3. Data
+             */
+
+            await loadDivisions();
+
+            await loadMagasins();
+
+            await loadEmplacements();
+
+            await loadProduits();
+
+
+            /*
+             * 4. Autocomplete
+             */
+
+            setupFilterArticle();
+
+            setupMovementArticle();
+
+
+            /*
+             * 5. Events
+             */
+
+            setupEvents();
+
+
+            /*
+             * 6. Movements
+             */
+
+            await loadMovements();
+
+
+            console.log(
+                "Mouvements stock : page chargée."
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erreur initialisation mouvements-stock:",
+                error
+            );
+
+
+            $("movementsBody").innerHTML = `
+                <tr>
+                    <td colspan="12">
+                        <div class="empty"
+                             style="color:#b32121;">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Impossible de charger les données.
+                            <br>
+                            <small>
+                                ${escapeHtml(
+                                    error?.message ||
+                                    "Erreur inconnue"
+                                )}
+                            </small>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+
+            showToast(
+                error?.message ||
+                "Erreur lors du chargement de la page.",
+                "error"
+            );
+        }
+    }
+
+
+    /* ========================================================
+       START
+    ======================================================== */
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            init
+        );
+
+    } else {
+
+        init();
+
+    }
+
+})();
+</script>
+
+</body>
+</html>

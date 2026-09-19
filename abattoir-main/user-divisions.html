@@ -1,0 +1,3127 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Utilisateurs — Divisions | SMTG</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 1500px;
+            margin: auto;
+            padding: 22px;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .page-header {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+            margin-bottom: 18px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #145a1f;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 23px;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            margin: 4px 0 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           STATS
+        ===================================================== */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.05);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border-radius: 11px;
+            background: #eef7f0;
+            color: #145a1f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+        }
+
+        .stat-info span {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        .stat-info strong {
+            font-size: 22px;
+        }
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 420px minmax(0, 1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.05);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 16px 18px;
+            border-bottom: 1px solid #edf0f2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .card-header h2 i {
+            color: #145a1f;
+            margin-right: 5px;
+        }
+
+        .card-header small {
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
+
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 42px;
+            padding: 0 13px 0 39px;
+            border: 1px solid #d8dee4;
+            border-radius: 9px;
+            outline: none;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        .search-box input:focus {
+            border-color: #145a1f;
+            box-shadow: 0 0 0 3px rgba(20,90,31,.08);
+        }
+
+        /* =====================================================
+           USERS
+        ===================================================== */
+
+        .users-list {
+            max-height: 610px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .user-item {
+            padding: 13px;
+            border: 1px solid #edf0f2;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: .15s ease;
+        }
+
+        .user-item:hover {
+            border-color: #b8d5bd;
+            background: #fafdfb;
+        }
+
+        .user-item.active {
+            border-color: #145a1f;
+            background: #f0f8f2;
+        }
+
+        .user-item.system {
+            cursor: pointer;
+        }
+
+        .user-main {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            background: #145a1f;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .avatar.system {
+            background: #856404;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-username {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .user-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border-radius: 20px;
+            padding: 4px 8px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background: #e8f6ec;
+            color: #16752a;
+        }
+
+        .badge-inactive {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .badge-system {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-role {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .division-count {
+            margin-left: auto;
+            color: #145a1f;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* =====================================================
+           SELECTED USER
+        ===================================================== */
+
+        .selected-user {
+            background: #f7faf8;
+            border: 1px solid #e2ebe4;
+            border-radius: 11px;
+            padding: 14px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .selected-user .avatar {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+        }
+
+        .selected-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .selected-info strong {
+            display: block;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .selected-info span {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        /* =====================================================
+           TOOLBAR
+        ===================================================== */
+
+        .division-toolbar {
+            display: flex;
+            gap: 9px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .division-toolbar button {
+            border: 1px solid #d8dee4;
+            background: #fff;
+            color: #374151;
+            height: 36px;
+            padding: 0 11px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: .15s;
+        }
+
+        .division-toolbar button:hover {
+            border-color: #145a1f;
+            color: #145a1f;
+            background: #f7fbf8;
+        }
+
+        .division-toolbar button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        /* =====================================================
+           DIVISIONS
+        ===================================================== */
+
+        .divisions-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .division-item {
+            border: 1px solid #e3e7ea;
+            border-radius: 11px;
+            padding: 13px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            cursor: pointer;
+            transition: .15s;
+            user-select: none;
+        }
+
+        .division-item:hover {
+            border-color: #b8d5bd;
+            background: #fbfdfb;
+        }
+
+        .division-item.selected {
+            border-color: #145a1f;
+            background: #f1f8f2;
+        }
+
+        .division-check {
+            width: 19px;
+            height: 19px;
+            accent-color: #145a1f;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .division-icon {
+            width: 39px;
+            height: 39px;
+            min-width: 39px;
+            border-radius: 9px;
+            background: #eef7f0;
+            color: #145a1f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .division-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .division-code {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .division-name {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+            border-top: 1px solid #edf0f2;
+            margin-top: 17px;
+            padding-top: 16px;
+        }
+
+        .btn {
+            height: 40px;
+            padding: 0 16px;
+            border-radius: 9px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: .15s;
+        }
+
+        .btn-primary {
+            background: #145a1f;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #0f4618;
+        }
+
+        .btn-secondary {
+            background: #eef0f2;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e1e5e8;
+        }
+
+        .btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        /* =====================================================
+           EMPTY
+        ===================================================== */
+
+        .empty {
+            text-align: center;
+            padding: 45px 20px;
+            color: #9ca3af;
+            grid-column: 1 / -1;
+        }
+
+        .empty i {
+            display: block;
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .empty p {
+            margin: 0;
+            font-size: 13px;
+        }
+
+        .empty small {
+            display: block;
+            margin-top: 6px;
+            font-size: 11px;
+        }
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        .loading {
+            text-align: center;
+            padding: 35px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+            margin-right: 7px;
+        }
+
+        @keyframes spin {
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+
+        /* =====================================================
+           TOAST
+        ===================================================== */
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast {
+            min-width: 280px;
+            max-width: 420px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 8px 30px rgba(0,0,0,.15);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            animation: toastIn .2s ease;
+        }
+
+        .toast.success {
+            border-left: 4px solid #16802d;
+        }
+
+        .toast.error {
+            border-left: 4px solid #dc2626;
+        }
+
+        .toast.warning {
+            border-left: 4px solid #d97706;
+        }
+
+        @keyframes toastIn {
+
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .users-list {
+                max-height: 400px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .page {
+                padding: 12px;
+            }
+
+            .page-header {
+                padding: 15px;
+            }
+
+            .header-title h1 {
+                font-size: 19px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .stat-card {
+                padding: 13px;
+            }
+
+            .stat-info strong {
+                font-size: 18px;
+            }
+
+            .divisions-list {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .actions .btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    <div class="page-header">
+
+        <div class="header-left">
+
+            <div class="header-icon">
+                <i class="fa-solid fa-user-gear"></i>
+            </div>
+
+            <div class="header-title">
+
+                <h1>
+                    Utilisateurs — Divisions
+                </h1>
+
+                <p>
+                    Gestion des divisions affectées aux utilisateurs
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STATS
+    ===================================================== -->
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Utilisateurs
+                </span>
+
+                <strong id="statUsers">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-code-branch"></i>
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Divisions actives
+                </span>
+
+                <strong id="statDivisions">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-link"></i>
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Affectations
+                </span>
+
+                <strong id="statAssignments">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+
+            <div class="stat-info">
+
+                <span>
+                    Utilisateur sélectionné
+                </span>
+
+                <strong id="statSelected">
+                    —
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         CONTENT
+    ===================================================== -->
+
+    <div class="content-grid">
+
+
+        <!-- =================================================
+             USERS
+        ================================================== -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h2>
+                    <i class="fa-solid fa-users"></i>
+                    Utilisateurs
+                </h2>
+
+                <small id="userCountLabel">
+                    0
+                </small>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-search"></i>
+
+                    <input
+                        type="text"
+                        id="userSearch"
+                        placeholder="Rechercher un utilisateur..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <div
+                    id="usersList"
+                    class="users-list"
+                >
+
+                    <div class="loading">
+
+                        <i class="fa-solid fa-spinner spinner"></i>
+
+                        Chargement...
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             DIVISIONS
+        ================================================== -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        <i class="fa-solid fa-code-branch"></i>
+                        Divisions
+                    </h2>
+
+                    <small id="selectedLabel">
+                        Aucun utilisateur sélectionné
+                    </small>
+
+                </div>
+
+
+                <span
+                    id="selectedCount"
+                    class="badge badge-active"
+                >
+                    0 sélectionnée
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+
+                <!-- USER SELECTED -->
+
+                <div
+                    id="selectedUserBox"
+                    class="selected-user"
+                    style="display:none;"
+                >
+
+                    <div
+                        id="selectedAvatar"
+                        class="avatar"
+                    >
+                        —
+                    </div>
+
+
+                    <div class="selected-info">
+
+                        <strong id="selectedFullName">
+                            —
+                        </strong>
+
+                        <span id="selectedUsername">
+                            —
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TOOLBAR -->
+
+                <div class="division-toolbar">
+
+                    <button
+                        type="button"
+                        id="btnSelectAll"
+                    >
+
+                        <i class="fa-solid fa-check-double"></i>
+
+                        Tout sélectionner
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="btnClearAll"
+                    >
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                        Tout désélectionner
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="btnReload"
+                    >
+
+                        <i class="fa-solid fa-rotate"></i>
+
+                        Actualiser
+
+                    </button>
+
+                </div>
+
+
+                <!-- DIVISIONS -->
+
+                <div
+                    id="divisionsList"
+                    class="divisions-list"
+                >
+
+                    <div class="empty">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        <p>
+                            Sélectionnez un utilisateur
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="btnCancel"
+                        disabled
+                    >
+
+                        <i class="fa-solid fa-rotate-left"></i>
+
+                        Annuler
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="btnSave"
+                        disabled
+                    >
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Enregistrer
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+    id="toastContainer"
+    class="toast-container"
+></div>
+
+
+<!-- =====================================================
+     SUPABASE JS
+===================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<!-- =====================================================
+     SMTG CONFIG
+===================================================== -->
+
+<script src="./api/supabase.js"></script>
+
+
+<script>
+
+    /* =====================================================
+       SUPABASE CLIENT
+
+       IMPORTANT:
+       On utilise db pour éviter tout conflit
+       avec window.supabase
+    ===================================================== */
+
+    const db =
+        window.smtgSupabase;
+
+
+    if (!db) {
+
+        console.error(
+            "Supabase client non initialisé."
+        );
+
+        document.getElementById(
+            "usersList"
+        ).innerHTML = `
+
+            <div class="empty">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <p>
+                    Supabase n'est pas initialisé.
+                </p>
+
+                <small>
+                    Vérifiez api/supabase.js
+                </small>
+
+            </div>
+
+        `;
+
+        throw new Error(
+            "Supabase client non initialisé."
+        );
+    }
+
+
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+
+    let users = [];
+
+    let roles = [];
+
+    let divisions = [];
+
+    let assignments = [];
+
+    let selectedUser = null;
+
+    let originalDivisionIds =
+        new Set();
+
+    let selectedDivisionIds =
+        new Set();
+
+
+    /* =====================================================
+       DOM
+    ===================================================== */
+
+    const usersList =
+        document.getElementById(
+            "usersList"
+        );
+
+    const divisionsList =
+        document.getElementById(
+            "divisionsList"
+        );
+
+    const userSearch =
+        document.getElementById(
+            "userSearch"
+        );
+
+    const selectedUserBox =
+        document.getElementById(
+            "selectedUserBox"
+        );
+
+    const selectedAvatar =
+        document.getElementById(
+            "selectedAvatar"
+        );
+
+    const selectedFullName =
+        document.getElementById(
+            "selectedFullName"
+        );
+
+    const selectedUsername =
+        document.getElementById(
+            "selectedUsername"
+        );
+
+    const selectedLabel =
+        document.getElementById(
+            "selectedLabel"
+        );
+
+    const selectedCount =
+        document.getElementById(
+            "selectedCount"
+        );
+
+    const btnSave =
+        document.getElementById(
+            "btnSave"
+        );
+
+    const btnCancel =
+        document.getElementById(
+            "btnCancel"
+        );
+
+    const btnSelectAll =
+        document.getElementById(
+            "btnSelectAll"
+        );
+
+    const btnClearAll =
+        document.getElementById(
+            "btnClearAll"
+        );
+
+    const btnReload =
+        document.getElementById(
+            "btnReload"
+        );
+
+
+    /* =====================================================
+       CURRENT USER
+    ===================================================== */
+
+    function getCurrentUser() {
+
+        try {
+
+            const value =
+                sessionStorage.getItem(
+                    "smtg_current_user"
+                );
+
+            if (value) {
+
+                return JSON.parse(
+                    value
+                );
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Session user error:",
+                error
+            );
+        }
+
+
+        try {
+
+            const value =
+                localStorage.getItem(
+                    "smtg_current_user"
+                );
+
+            if (value) {
+
+                return JSON.parse(
+                    value
+                );
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Local user error:",
+                error
+            );
+        }
+
+
+        try {
+
+            const value =
+                sessionStorage.getItem(
+                    "smtgUser"
+                );
+
+            if (value) {
+
+                return JSON.parse(
+                    value
+                );
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Old session error:",
+                error
+            );
+        }
+
+
+        return null;
+    }
+
+
+    const currentUser =
+        getCurrentUser();
+
+
+    /* =====================================================
+       ESCAPE HTML
+    ===================================================== */
+
+    function escapeHtml(
+        value
+    ) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            return "";
+        }
+
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+    }
+
+
+    /* =====================================================
+       INITIALS
+    ===================================================== */
+
+    function getInitials(
+        name
+    ) {
+
+        if (!name) {
+
+            return "?";
+        }
+
+
+        const parts =
+            String(name)
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean);
+
+
+        if (
+            parts.length === 1
+        ) {
+
+            return parts[0]
+                .substring(
+                    0,
+                    2
+                )
+                .toUpperCase();
+        }
+
+
+        return (
+            parts[0][0] +
+            parts[parts.length - 1][0]
+        ).toUpperCase();
+    }
+
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    function showToast(
+        message,
+        type = "success"
+    ) {
+
+        const container =
+            document.getElementById(
+                "toastContainer"
+            );
+
+
+        const toast =
+            document.createElement(
+                "div"
+            );
+
+
+        toast.className =
+            `toast ${type}`;
+
+
+        let icon =
+            "fa-circle-check";
+
+
+        if (
+            type === "error"
+        ) {
+
+            icon =
+                "fa-circle-exclamation";
+        }
+
+
+        if (
+            type === "warning"
+        ) {
+
+            icon =
+                "fa-triangle-exclamation";
+        }
+
+
+        toast.innerHTML = `
+
+            <i class="fa-solid ${icon}"></i>
+
+            <span>
+                ${escapeHtml(message)}
+            </span>
+
+        `;
+
+
+        container.appendChild(
+            toast
+        );
+
+
+        setTimeout(
+            () => {
+
+                toast.remove();
+
+            },
+            3500
+        );
+    }
+
+
+    /* =====================================================
+       LOAD ROLES
+    ===================================================== */
+
+    async function loadRoles() {
+
+        try {
+
+            const {
+                data,
+                error
+            } = await db
+
+                .from("roles")
+
+                .select(
+                    "id,name,code"
+                )
+
+                .order(
+                    "name",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+            if (error) {
+
+                throw error;
+            }
+
+
+            roles =
+                data || [];
+
+
+        } catch (error) {
+
+            console.warn(
+                "Impossible de charger les rôles:",
+                error
+            );
+
+            roles = [];
+        }
+    }
+
+
+    /* =====================================================
+       ROLE NAME
+    ===================================================== */
+
+    function getRoleName(
+        roleId
+    ) {
+
+        if (!roleId) {
+
+            return "Sans rôle";
+        }
+
+
+        const role =
+            roles.find(
+                x =>
+                    Number(x.id) ===
+                    Number(roleId)
+            );
+
+
+        if (!role) {
+
+            return "Sans rôle";
+        }
+
+
+        return (
+            role.name ||
+            role.code ||
+            "Sans rôle"
+        );
+    }
+
+
+    /* =====================================================
+       LOAD USERS
+    ===================================================== */
+
+    async function loadUsers() {
+
+        usersList.innerHTML = `
+
+            <div class="loading">
+
+                <i class="fa-solid fa-spinner spinner"></i>
+
+                Chargement des utilisateurs...
+
+            </div>
+
+        `;
+
+
+        try {
+
+            const {
+                data,
+                error
+            } = await db
+
+                .from("users")
+
+                .select(`
+                    id,
+                    username,
+                    full_name,
+                    role_id,
+                    is_active,
+                    is_system
+                `)
+
+                .order(
+                    "full_name",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+            if (error) {
+
+                throw error;
+            }
+
+
+            users =
+                data || [];
+
+
+            document.getElementById(
+                "statUsers"
+            ).textContent =
+                users.length;
+
+
+            document.getElementById(
+                "userCountLabel"
+            ).textContent =
+                users.length;
+
+
+            renderUsers();
+
+
+        } catch (error) {
+
+            console.error(
+                "Erreur users:",
+                error
+            );
+
+
+            usersList.innerHTML = `
+
+                <div class="empty">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <p>
+                        Impossible de charger les utilisateurs.
+                    </p>
+
+                    <small>
+                        ${escapeHtml(
+                            error.message ||
+                            "Erreur inconnue"
+                        )}
+                    </small>
+
+                </div>
+
+            `;
+
+
+            showToast(
+                "Impossible de charger les utilisateurs.",
+                "error"
+            );
+        }
+    }
+
+
+    /* =====================================================
+       LOAD DIVISIONS
+    ===================================================== */
+
+    async function loadDivisions() {
+
+        try {
+
+            const {
+                data,
+                error
+            } = await db
+
+                .from("divisions")
+
+                .select(`
+                    id,
+                    code,
+                    name,
+                    description,
+                    is_active
+                `)
+
+                .eq(
+                    "is_active",
+                    true
+                )
+
+                .order(
+                    "code",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+            if (error) {
+
+                throw error;
+            }
+
+
+            divisions =
+                data || [];
+
+
+            document.getElementById(
+                "statDivisions"
+            ).textContent =
+                divisions.length;
+
+
+            if (selectedUser) {
+
+                renderDivisions();
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Erreur divisions:",
+                error
+            );
+
+
+            showToast(
+                "Impossible de charger les divisions.",
+                "error"
+            );
+        }
+    }
+
+
+    /* =====================================================
+       LOAD ASSIGNMENTS
+    ===================================================== */
+
+    async function loadAssignments() {
+
+        try {
+
+            const {
+                data,
+                error
+            } = await db
+
+                .from("user_divisions")
+
+                .select(`
+                    id,
+                    user_id,
+                    division_id,
+                    created_by,
+                    created_at,
+                    updated_by,
+                    updated_at
+                `);
+
+
+            if (error) {
+
+                throw error;
+            }
+
+
+            assignments =
+                data || [];
+
+
+            document.getElementById(
+                "statAssignments"
+            ).textContent =
+                assignments.length;
+
+
+            if (selectedUser) {
+
+                selectedDivisionIds =
+                    new Set(
+
+                        assignments
+
+                            .filter(
+                                item =>
+                                    Number(
+                                        item.user_id
+                                    ) ===
+                                    Number(
+                                        selectedUser.id
+                                    )
+                            )
+
+                            .map(
+                                item =>
+                                    Number(
+                                        item.division_id
+                                    )
+                            )
+                    );
+
+
+                originalDivisionIds =
+                    new Set(
+                        selectedDivisionIds
+                    );
+
+
+                renderDivisions();
+
+                updateButtons();
+            }
+
+
+            renderUsers();
+
+
+        } catch (error) {
+
+            console.error(
+                "Erreur user_divisions:",
+                error
+            );
+
+
+            showToast(
+                "Impossible de charger les affectations.",
+                "error"
+            );
+        }
+    }
+
+
+    /* =====================================================
+       RENDER USERS
+    ===================================================== */
+
+    function renderUsers() {
+
+        const search =
+            userSearch.value
+                .trim()
+                .toLowerCase();
+
+
+        const filtered =
+            users.filter(
+                user => {
+
+                    const text = `
+
+                        ${user.full_name || ""}
+
+                        ${user.username || ""}
+
+                        ${getRoleName(
+                            user.role_id
+                        )}
+
+                    `.toLowerCase();
+
+
+                    return text.includes(
+                        search
+                    );
+                }
+            );
+
+
+        if (
+            !filtered.length
+        ) {
+
+            usersList.innerHTML = `
+
+                <div class="empty">
+
+                    <i class="fa-solid fa-user-slash"></i>
+
+                    <p>
+                        Aucun utilisateur trouvé.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        usersList.innerHTML =
+
+            filtered
+                .map(
+                    user => {
+
+                        const count =
+                            assignments.filter(
+                                item =>
+                                    Number(
+                                        item.user_id
+                                    ) ===
+                                    Number(
+                                        user.id
+                                    )
+                            ).length;
+
+
+                        const active =
+                            selectedUser &&
+                            Number(
+                                selectedUser.id
+                            ) ===
+                            Number(
+                                user.id
+                            );
+
+
+                        const roleName =
+                            getRoleName(
+                                user.role_id
+                            );
+
+
+                        return `
+
+                            <div
+                                class="
+                                    user-item
+                                    ${active ? "active" : ""}
+                                    ${user.is_system ? "system" : ""}
+                                "
+                                data-user-id="${user.id}"
+                            >
+
+                                <div class="user-main">
+
+
+                                    <div
+                                        class="
+                                            avatar
+                                            ${user.is_system ? "system" : ""}
+                                        "
+                                    >
+
+                                        ${
+                                            user.is_system
+
+                                            ?
+
+                                            '<i class="fa-solid fa-shield-halved"></i>'
+
+                                            :
+
+                                            escapeHtml(
+                                                getInitials(
+                                                    user.full_name
+                                                )
+                                            )
+                                        }
+
+                                    </div>
+
+
+                                    <div
+                                        style="
+                                            flex:1;
+                                            min-width:0;
+                                        "
+                                    >
+
+                                        <div class="user-name">
+
+                                            ${escapeHtml(
+                                                user.full_name
+                                            )}
+
+                                        </div>
+
+
+                                        <div class="user-username">
+
+                                            @${escapeHtml(
+                                                user.username
+                                            )}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="user-meta">
+
+
+                                    ${
+                                        user.is_system
+
+                                        ?
+
+                                        `
+                                            <span class="badge badge-system">
+
+                                                <i class="fa-solid fa-shield-halved"></i>
+
+                                                SYSTEM
+
+                                            </span>
+                                        `
+
+                                        :
+
+                                        `
+                                            <span
+                                                class="
+                                                    badge
+                                                    ${
+                                                        user.is_active
+                                                        ? "badge-active"
+                                                        : "badge-inactive"
+                                                    }
+                                                "
+                                            >
+
+                                                ${
+                                                    user.is_active
+                                                    ? "Actif"
+                                                    : "Inactif"
+                                                }
+
+                                            </span>
+                                        `
+                                    }
+
+
+                                    ${
+                                        !user.is_system
+
+                                        ?
+
+                                        `
+                                            <span class="badge badge-role">
+
+                                                ${escapeHtml(
+                                                    roleName
+                                                )}
+
+                                            </span>
+                                        `
+
+                                        :
+
+                                        ""
+                                    }
+
+
+                                    <span class="division-count">
+
+                                        <i class="fa-solid fa-code-branch"></i>
+
+                                        ${count}
+
+                                    </span>
+
+
+                                </div>
+
+                            </div>
+
+                        `;
+                    }
+                )
+                .join("");
+
+
+        document
+            .querySelectorAll(
+                ".user-item"
+            )
+            .forEach(
+                item => {
+
+                    item.addEventListener(
+                        "click",
+                        () => {
+
+                            const id =
+                                Number(
+                                    item.dataset.userId
+                                );
+
+
+                            selectUser(
+                                id
+                            );
+                        }
+                    );
+                }
+            );
+    }
+
+
+    /* =====================================================
+       SELECT USER
+    ===================================================== */
+
+    function selectUser(
+        userId
+    ) {
+
+        const user =
+            users.find(
+                item =>
+                    Number(
+                        item.id
+                    ) ===
+                    Number(
+                        userId
+                    )
+            );
+
+
+        if (!user) {
+
+            return;
+        }
+
+
+        selectedUser =
+            user;
+
+
+        selectedDivisionIds =
+            new Set(
+
+                assignments
+
+                    .filter(
+                        item =>
+                            Number(
+                                item.user_id
+                            ) ===
+                            Number(
+                                user.id
+                            )
+                    )
+
+                    .map(
+                        item =>
+                            Number(
+                                item.division_id
+                            )
+                    )
+            );
+
+
+        originalDivisionIds =
+            new Set(
+                selectedDivisionIds
+            );
+
+
+        selectedUserBox.style.display =
+            "flex";
+
+
+        selectedAvatar.className =
+            "avatar" +
+            (
+                user.is_system
+                ? " system"
+                : ""
+            );
+
+
+        selectedAvatar.innerHTML =
+            user.is_system
+
+            ?
+
+            '<i class="fa-solid fa-shield-halved"></i>'
+
+            :
+
+            escapeHtml(
+                getInitials(
+                    user.full_name
+                )
+            );
+
+
+        selectedFullName.textContent =
+            user.full_name ||
+            "—";
+
+
+        selectedUsername.textContent =
+            `@${user.username || "—"}`;
+
+
+        document.getElementById(
+            "statSelected"
+        ).textContent =
+            user.username ||
+            "—";
+
+
+        updateSelectedCount();
+
+        renderUsers();
+
+        renderDivisions();
+
+        updateButtons();
+    }
+
+
+    /* =====================================================
+       RENDER DIVISIONS
+    ===================================================== */
+
+    function renderDivisions() {
+
+        if (!selectedUser) {
+
+            divisionsList.innerHTML = `
+
+                <div class="empty">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    <p>
+                        Sélectionnez un utilisateur
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        /* SYSTEM */
+
+        if (
+            selectedUser.is_system
+        ) {
+
+            divisionsList.innerHTML = `
+
+                <div class="empty">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <p>
+                        Le compte SYSTEM est un compte technique.
+                    </p>
+
+                    <small>
+                        Aucune division ne peut lui être affectée.
+                    </small>
+
+                </div>
+
+            `;
+
+
+            btnSave.disabled =
+                true;
+
+
+            btnCancel.disabled =
+                true;
+
+
+            btnSelectAll.disabled =
+                true;
+
+
+            btnClearAll.disabled =
+                true;
+
+
+            updateSelectedCount();
+
+            return;
+        }
+
+
+        btnSelectAll.disabled =
+            false;
+
+
+        btnClearAll.disabled =
+            false;
+
+
+        if (!divisions.length) {
+
+            divisionsList.innerHTML = `
+
+                <div class="empty">
+
+                    <i class="fa-solid fa-code-branch"></i>
+
+                    <p>
+                        Aucune division active.
+                    </p>
+
+                    <small>
+                        Créez d'abord les divisions.
+                    </small>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        divisionsList.innerHTML =
+
+            divisions
+                .map(
+                    division => {
+
+                        const id =
+                            Number(
+                                division.id
+                            );
+
+
+                        const checked =
+                            selectedDivisionIds.has(
+                                id
+                            );
+
+
+                        return `
+
+                            <label
+                                class="
+                                    division-item
+                                    ${checked ? "selected" : ""}
+                                "
+                            >
+
+                                <input
+                                    type="checkbox"
+                                    class="division-check"
+                                    data-division-id="${id}"
+                                    ${checked ? "checked" : ""}
+                                >
+
+
+                                <div class="division-icon">
+
+                                    <i class="fa-solid fa-code-branch"></i>
+
+                                </div>
+
+
+                                <div class="division-info">
+
+                                    <div class="division-code">
+
+                                        ${escapeHtml(
+                                            division.code
+                                        )}
+
+                                    </div>
+
+
+                                    <div class="division-name">
+
+                                        ${escapeHtml(
+                                            division.name
+                                        )}
+
+                                    </div>
+
+                                </div>
+
+                            </label>
+
+                        `;
+                    }
+                )
+                .join("");
+
+
+        document
+            .querySelectorAll(
+                ".division-check"
+            )
+            .forEach(
+                checkbox => {
+
+                    checkbox.addEventListener(
+                        "change",
+                        () => {
+
+                            const id =
+                                Number(
+                                    checkbox.dataset.divisionId
+                                );
+
+
+                            if (
+                                checkbox.checked
+                            ) {
+
+                                selectedDivisionIds.add(
+                                    id
+                                );
+
+                            } else {
+
+                                selectedDivisionIds.delete(
+                                    id
+                                );
+                            }
+
+
+                            const item =
+                                checkbox.closest(
+                                    ".division-item"
+                                );
+
+
+                            if (item) {
+
+                                item.classList.toggle(
+                                    "selected",
+                                    checkbox.checked
+                                );
+                            }
+
+
+                            updateSelectedCount();
+
+                            updateButtons();
+
+                        }
+                    );
+                }
+            );
+
+
+        updateSelectedCount();
+    }
+
+
+    /* =====================================================
+       UPDATE COUNT
+    ===================================================== */
+
+    function updateSelectedCount() {
+
+        const count =
+            selectedDivisionIds.size;
+
+
+        selectedCount.textContent =
+            `${count} sélectionnée${
+                count > 1
+                ? "s"
+                : ""
+            }`;
+
+
+        if (selectedUser) {
+
+            selectedLabel.textContent =
+                selectedUser.is_system
+
+                ?
+
+                "Compte technique SYSTEM"
+
+                :
+
+                `${count} division(s) affectée(s)`;
+        }
+    }
+
+
+    /* =====================================================
+       SET COMPARISON
+    ===================================================== */
+
+    function setsEqual(
+        first,
+        second
+    ) {
+
+        if (
+            first.size !==
+            second.size
+        ) {
+
+            return false;
+        }
+
+
+        for (
+            const value of first
+        ) {
+
+            if (
+                !second.has(value)
+            ) {
+
+                return false;
+            }
+        }
+
+
+        return true;
+    }
+
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    function updateButtons() {
+
+        if (!selectedUser) {
+
+            btnSave.disabled =
+                true;
+
+            btnCancel.disabled =
+                true;
+
+            return;
+        }
+
+
+        if (
+            selectedUser.is_system
+        ) {
+
+            btnSave.disabled =
+                true;
+
+            btnCancel.disabled =
+                true;
+
+            return;
+        }
+
+
+        const changed =
+            !setsEqual(
+                selectedDivisionIds,
+                originalDivisionIds
+            );
+
+
+        btnSave.disabled =
+            !changed;
+
+
+        btnCancel.disabled =
+            !changed;
+    }
+
+
+    /* =====================================================
+       SELECT ALL
+    ===================================================== */
+
+    btnSelectAll.addEventListener(
+        "click",
+        () => {
+
+            if (
+                !selectedUser ||
+                selectedUser.is_system
+            ) {
+
+                return;
+            }
+
+
+            divisions.forEach(
+                division => {
+
+                    selectedDivisionIds.add(
+                        Number(
+                            division.id
+                        )
+                    );
+                }
+            );
+
+
+            renderDivisions();
+
+            updateButtons();
+        }
+    );
+
+
+    /* =====================================================
+       CLEAR ALL
+    ===================================================== */
+
+    btnClearAll.addEventListener(
+        "click",
+        () => {
+
+            if (
+                !selectedUser ||
+                selectedUser.is_system
+            ) {
+
+                return;
+            }
+
+
+            selectedDivisionIds.clear();
+
+
+            renderDivisions();
+
+            updateButtons();
+        }
+    );
+
+
+    /* =====================================================
+       CANCEL
+    ===================================================== */
+
+    btnCancel.addEventListener(
+        "click",
+        () => {
+
+            if (!selectedUser) {
+
+                return;
+            }
+
+
+            selectedDivisionIds =
+                new Set(
+                    originalDivisionIds
+                );
+
+
+            renderDivisions();
+
+            updateButtons();
+
+
+            showToast(
+                "Modifications annulées.",
+                "warning"
+            );
+        }
+    );
+
+
+    /* =====================================================
+       SAVE
+    ===================================================== */
+
+    btnSave.addEventListener(
+        "click",
+        saveAssignments
+    );
+
+
+    async function saveAssignments() {
+
+        if (!selectedUser) {
+
+            return;
+        }
+
+
+        if (
+            selectedUser.is_system
+        ) {
+
+            showToast(
+                "Le compte SYSTEM ne peut pas être modifié.",
+                "warning"
+            );
+
+            return;
+        }
+
+
+        const changed =
+            !setsEqual(
+                selectedDivisionIds,
+                originalDivisionIds
+            );
+
+
+        if (!changed) {
+
+            return;
+        }
+
+
+        btnSave.disabled =
+            true;
+
+        btnCancel.disabled =
+            true;
+
+
+        try {
+
+            const oldIds =
+                Array.from(
+                    originalDivisionIds
+                );
+
+
+            const newIds =
+                Array.from(
+                    selectedDivisionIds
+                );
+
+
+            /* =============================================
+               IDS À SUPPRIMER
+            ============================================= */
+
+            const toDelete =
+                oldIds.filter(
+                    id =>
+                        !selectedDivisionIds.has(
+                            id
+                        )
+                );
+
+
+            if (
+                toDelete.length
+            ) {
+
+                const {
+                    error
+                } = await db
+
+                    .from(
+                        "user_divisions"
+                    )
+
+                    .delete()
+
+                    .eq(
+                        "user_id",
+                        selectedUser.id
+                    )
+
+                    .in(
+                        "division_id",
+                        toDelete
+                    );
+
+
+                if (error) {
+
+                    throw error;
+                }
+            }
+
+
+            /* =============================================
+               IDS À AJOUTER
+            ============================================= */
+
+            const toInsert =
+                newIds
+
+                    .filter(
+                        id =>
+                            !originalDivisionIds.has(
+                                id
+                            )
+                    )
+
+                    .map(
+                        divisionId => ({
+
+                            user_id:
+                                Number(
+                                    selectedUser.id
+                                ),
+
+                            division_id:
+                                Number(
+                                    divisionId
+                                ),
+
+                            created_by:
+                                currentUser?.id
+                                ? Number(
+                                    currentUser.id
+                                )
+                                : 1,
+
+                            updated_by:
+                                currentUser?.id
+                                ? Number(
+                                    currentUser.id
+                                )
+                                : 1
+
+                        })
+                    );
+
+
+            if (
+                toInsert.length
+            ) {
+
+                const {
+                    error
+                } = await db
+
+                    .from(
+                        "user_divisions"
+                    )
+
+                    .insert(
+                        toInsert
+                    );
+
+
+                if (error) {
+
+                    throw error;
+                }
+            }
+
+
+            /* =============================================
+               RELOAD
+            ============================================= */
+
+            await loadAssignments();
+
+
+            originalDivisionIds =
+                new Set(
+                    selectedDivisionIds
+                );
+
+
+            updateButtons();
+
+
+            /* =============================================
+               ACTIVITY LOG
+               
+               Signature réelle de api/supabase.js:
+               logCrudAction(
+                   action,
+                   module,
+                   entityType,
+                   entityId,
+                   description,
+                   metadata
+               )
+            ============================================= */
+
+            try {
+
+                if (
+                    window.SMTG &&
+                    typeof
+                    window.SMTG.logCrudAction ===
+                    "function"
+                ) {
+
+                    await
+                    window.SMTG.logCrudAction(
+
+                        "UPDATE",
+
+                        "ADMINISTRATION",
+
+                        "USER_DIVISIONS",
+
+                        selectedUser.id,
+
+                        "Mise à jour des divisions affectées à l'utilisateur",
+
+                        {
+
+                            user_id:
+                                selectedUser.id,
+
+                            username:
+                                selectedUser.username,
+
+                            division_ids:
+                                newIds
+
+                        }
+
+                    );
+                }
+
+            } catch (
+                logError
+            ) {
+
+                console.warn(
+                    "Activity log:",
+                    logError
+                );
+            }
+
+
+            /* =============================================
+               SYSTEM LOG
+            ============================================= */
+
+            try {
+
+                if (
+                    window.SMTG &&
+                    typeof
+                    window.SMTG.logSystem ===
+                    "function"
+                ) {
+
+                    await
+                    window.SMTG.logSystem({
+
+                        level:
+                            "INFO",
+
+                        source:
+                            "WEB",
+
+                        module:
+                            "ADMINISTRATION",
+
+                        page:
+                            "user-divisions.html",
+
+                        event:
+                            "USER_DIVISIONS_UPDATED",
+
+                        message:
+                            "Affectations divisions utilisateur mises à jour.",
+
+                        metadata: {
+
+                            user_id:
+                                selectedUser.id,
+
+                            username:
+                                selectedUser.username,
+
+                            division_ids:
+                                newIds
+
+                        }
+
+                    });
+                }
+
+            } catch (
+                logError
+            ) {
+
+                console.warn(
+                    "System log:",
+                    logError
+                );
+            }
+
+
+            showToast(
+                "Les divisions ont été enregistrées avec succès.",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erreur sauvegarde:",
+                error
+            );
+
+
+            showToast(
+                error.message ||
+                "Erreur lors de l'enregistrement.",
+                "error"
+            );
+
+
+            selectedDivisionIds =
+                new Set(
+                    originalDivisionIds
+                );
+
+
+            renderDivisions();
+
+            updateButtons();
+
+        }
+
+    }
+
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    userSearch.addEventListener(
+        "input",
+        () => {
+
+            renderUsers();
+
+        }
+    );
+
+
+    /* =====================================================
+       RELOAD
+    ===================================================== */
+
+    btnReload.addEventListener(
+        "click",
+        async () => {
+
+            btnReload.disabled =
+                true;
+
+
+            try {
+
+                await Promise.all([
+
+                    loadRoles(),
+
+                    loadUsers(),
+
+                    loadDivisions(),
+
+                    loadAssignments()
+
+                ]);
+
+
+                showToast(
+                    "Données actualisées.",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+            } finally {
+
+                btnReload.disabled =
+                    false;
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       INIT
+    ===================================================== */
+
+    async function init() {
+
+        try {
+
+            await Promise.all([
+
+                loadRoles(),
+
+                loadUsers(),
+
+                loadDivisions(),
+
+                loadAssignments()
+
+            ]);
+
+        } catch (error) {
+
+            console.error(
+                "Erreur initialisation:",
+                error
+            );
+
+
+            showToast(
+                "Erreur lors du chargement de la page.",
+                "error"
+            );
+        }
+    }
+
+
+    /* =====================================================
+       START
+    ===================================================== */
+
+    init();
+
+</script>
+
+
+</body>
+
+</html>

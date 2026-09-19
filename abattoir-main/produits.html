@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Produits - SMTG</title>
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7f5;
+    color:#1f2937;
+}
+
+/* ================================
+   HEADER
+================================ */
+
+.header{
+    background:#145a1f;
+    color:white;
+    padding:18px 25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.header-icon{
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    background:rgba(255,255,255,.15);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:23px;
+}
+
+.header h1{
+    margin:0;
+    font-size:23px;
+}
+
+.header p{
+    margin:4px 0 0;
+    opacity:.8;
+    font-size:13px;
+}
+
+.btn{
+    border:none;
+    border-radius:9px;
+    padding:11px 17px;
+    cursor:pointer;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-primary{
+    background:#145a1f;
+    color:white;
+}
+
+.btn-secondary{
+    background:#eef2f0;
+    color:#374151;
+}
+
+.btn-danger{
+    background:#dc2626;
+    color:white;
+}
+
+.btn-warning{
+    background:#f59e0b;
+    color:white;
+}
+
+/* ================================
+   CONTAINER
+================================ */
+
+.container{
+    padding:22px;
+    max-width:1600px;
+    margin:auto;
+}
+
+/* ================================
+   STATS
+================================ */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.stat{
+    background:white;
+    border-radius:14px;
+    padding:18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.stat-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.stat-icon{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    background:#e8f3ea;
+    color:#145a1f;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.stat-value{
+    font-size:27px;
+    font-weight:700;
+    margin-top:12px;
+}
+
+.stat-label{
+    color:#6b7280;
+    font-size:13px;
+    margin-top:3px;
+}
+
+/* ================================
+   FILTERS
+================================ */
+
+.card{
+    background:white;
+    border-radius:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,.07);
+    margin-bottom:20px;
+}
+
+.filters{
+    padding:18px;
+}
+
+.filters-grid{
+    display:grid;
+    grid-template-columns:2fr repeat(5,1fr);
+    gap:12px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.field label{
+    font-size:12px;
+    font-weight:700;
+    color:#4b5563;
+}
+
+input,
+select{
+    width:100%;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    padding:10px 11px;
+    font-size:14px;
+    outline:none;
+    background:white;
+}
+
+input:focus,
+select:focus{
+    border-color:#145a1f;
+    box-shadow:0 0 0 2px rgba(20,90,31,.08);
+}
+
+/* ================================
+   TABLE HEADER
+================================ */
+
+.table-header{
+    padding:16px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.table-title{
+    font-weight:700;
+    font-size:16px;
+}
+
+.table-count{
+    color:#6b7280;
+    font-size:13px;
+}
+
+/* ================================
+   TABLE
+================================ */
+
+.table-wrap{
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1050px;
+}
+
+thead th{
+    background:#f8faf9;
+    padding:12px;
+    text-align:left;
+    font-size:12px;
+    color:#4b5563;
+    white-space:nowrap;
+    border-bottom:1px solid #e5e7eb;
+}
+
+tbody td{
+    padding:12px;
+    border-bottom:1px solid #eef0ef;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+tbody tr:hover{
+    background:#fafcfb;
+}
+
+.article{
+    font-weight:700;
+    color:#145a1f;
+}
+
+.badge{
+    display:inline-flex;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.badge-active{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.badge-inactive{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.actions{
+    display:flex;
+    gap:6px;
+}
+
+.action-btn{
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:7px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.edit{
+    background:#e0f2fe;
+    color:#0369a1;
+}
+
+.delete{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+/* ================================
+   MODAL
+================================ */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.48);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:100%;
+    max-width:720px;
+    max-height:92vh;
+    overflow:auto;
+    background:white;
+    border-radius:16px;
+    box-shadow:0 15px 50px rgba(0,0,0,.25);
+}
+
+.modal-header{
+    padding:18px 20px;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-header h2{
+    margin:0;
+    font-size:19px;
+}
+
+.close{
+    border:none;
+    background:#f3f4f6;
+    width:35px;
+    height:35px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.modal-body{
+    padding:20px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+.form-group label{
+    font-size:13px;
+    font-weight:700;
+}
+
+.required{
+    color:#dc2626;
+}
+
+.help{
+    color:#6b7280;
+    font-size:11px;
+}
+
+.modal-footer{
+    padding:15px 20px;
+    border-top:1px solid #e5e7eb;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+/* ================================
+   EMPTY
+================================ */
+
+.empty{
+    padding:45px 20px;
+    text-align:center;
+    color:#6b7280;
+}
+
+.empty i{
+    font-size:40px;
+    margin-bottom:12px;
+    opacity:.4;
+}
+
+/* ================================
+   LOADING
+================================ */
+
+.loading{
+    padding:40px;
+    text-align:center;
+    color:#6b7280;
+}
+
+.loading i{
+    font-size:25px;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    from{transform:rotate(0)}
+    to{transform:rotate(360deg)}
+}
+
+/* ================================
+   TOAST
+================================ */
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    min-width:280px;
+    max-width:400px;
+    background:#111827;
+    color:white;
+    padding:14px 17px;
+    border-radius:10px;
+    display:none;
+    z-index:20000;
+    box-shadow:0 8px 30px rgba(0,0,0,.25);
+}
+
+.toast.show{
+    display:block;
+}
+
+.toast.success{
+    background:#166534;
+}
+
+.toast.error{
+    background:#b91c1c;
+}
+
+.toast.warning{
+    background:#b45309;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media(max-width:1100px){
+
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .filters-grid{
+        grid-template-columns:1fr 1fr 1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    .header{
+        padding:15px;
+    }
+
+    .header h1{
+        font-size:18px;
+    }
+
+    .container{
+        padding:12px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .filters-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <div class="header-left">
+
+        <div class="header-icon">
+            <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+
+        <div>
+            <h1>Produits</h1>
+            <p>Gestion des articles et produits</p>
+        </div>
+
+    </div>
+
+    <button class="btn btn-primary" onclick="openAddModal()">
+        <i class="fa-solid fa-plus"></i>
+        Ajouter
+    </button>
+
+</header>
+
+
+<div class="container">
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-top">
+                <div>
+                    <div class="stat-label">Total produits</div>
+                    <div class="stat-value" id="statTotal">0</div>
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="stat">
+            <div class="stat-top">
+                <div>
+                    <div class="stat-label">Actifs</div>
+                    <div class="stat-value" id="statActive">0</div>
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="stat">
+            <div class="stat-top">
+                <div>
+                    <div class="stat-label">Inactifs</div>
+                    <div class="stat-value" id="statInactive">0</div>
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="stat">
+            <div class="stat-top">
+                <div>
+                    <div class="stat-label">Types</div>
+                    <div class="stat-value" id="statTypes">0</div>
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="stat">
+            <div class="stat-top">
+                <div>
+                    <div class="stat-label">Divisions</div>
+                    <div class="stat-value" id="statDivisions">0</div>
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="card filters">
+
+        <div class="filters-grid">
+
+            <div class="field">
+                <label>Recherche</label>
+
+                <input
+                    type="text"
+                    id="search"
+                    placeholder="Article ou désignation..."
+                    oninput="render()"
+                >
+            </div>
+
+
+            <div class="field">
+                <label>Type</label>
+
+                <select id="filterType" onchange="render()">
+                    <option value="">Tous</option>
+                </select>
+            </div>
+
+
+            <div class="field">
+                <label>Groupe</label>
+
+                <select id="filterGroupe" onchange="render()">
+                    <option value="">Tous</option>
+                </select>
+            </div>
+
+
+            <div class="field">
+                <label>Unité</label>
+
+                <select id="filterUnite" onchange="render()">
+                    <option value="">Toutes</option>
+                </select>
+            </div>
+
+
+            <div class="field">
+                <label>Division</label>
+
+                <select id="filterDivision" onchange="render()">
+                    <option value="">Toutes</option>
+                </select>
+            </div>
+
+
+            <div class="field">
+                <label>Statut</label>
+
+                <select id="filterStatut" onchange="render()">
+                    <option value="">Tous</option>
+                    <option value="ACTIF">Actif</option>
+                    <option value="INACTIF">Inactif</option>
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="card">
+
+        <div class="table-header">
+
+            <div class="table-title">
+                Liste des produits
+            </div>
+
+            <div class="table-count" id="tableCount">
+                0 produit
+            </div>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Article</th>
+
+                        <th>Désignation</th>
+
+                        <th>Type</th>
+
+                        <th>Groupe</th>
+
+                        <th>Unité</th>
+
+                        <th>Division</th>
+
+                        <th>Statut</th>
+
+                        <th>Délai limite vente</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal" id="productModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">
+                Ajouter un produit
+            </h2>
+
+            <button class="close" onclick="closeModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <form id="productForm">
+
+                <input type="hidden" id="productId">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            Article <span class="required">*</span>
+                        </label>
+
+                        <input
+                            id="article"
+                            type="text"
+                            required
+                            maxlength="100"
+                            placeholder="Ex: 220000284"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Désignation <span class="required">*</span>
+                        </label>
+
+                        <input
+                            id="designation"
+                            type="text"
+                            required
+                            maxlength="255"
+                            placeholder="Désignation du produit"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Type</label>
+
+                        <input
+                            id="type"
+                            type="text"
+                            maxlength="100"
+                            placeholder="Ex: Produit fini"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Groupe</label>
+
+                        <input
+                            id="groupe"
+                            type="text"
+                            maxlength="100"
+                            placeholder="Ex: Viande"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Unité</label>
+
+                        <input
+                            id="unite"
+                            type="text"
+                            maxlength="50"
+                            placeholder="Ex: KG"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Division</label>
+
+                        <input
+                            id="division"
+                            type="text"
+                            maxlength="100"
+                            placeholder="Ex: Congelé"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Statut</label>
+
+                        <select id="statut">
+
+                            <option value="ACTIF">
+                                Actif
+                            </option>
+
+                            <option value="INACTIF">
+                                Inactif
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Délai limite vente
+                        </label>
+
+                        <input
+                            id="dateLimiteVente"
+                            type="number"
+                            min="0"
+                            step="1"
+                            placeholder="Ex: 30"
+                        >
+
+                        <div class="help">
+                            Nombre de jours
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn btn-secondary"
+                onclick="closeModal()"
+            >
+                Annuler
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="saveProduct()"
+            >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Enregistrer
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div class="toast" id="toast"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="api/supabase.js"></script>
+
+
+<script>
+
+/* ============================================
+   VARIABLES
+============================================ */
+
+const client = getSupabase();
+
+let products = [];
+let editingId = null;
+
+
+/* ============================================
+   CURRENT USER
+============================================ */
+
+function getCurrentUser(){
+
+    try{
+
+        const a =
+            sessionStorage.getItem("smtg_current_user");
+
+        if(a){
+            return JSON.parse(a);
+        }
+
+        const b =
+            sessionStorage.getItem("smtgUser");
+
+        if(b){
+            return JSON.parse(b);
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
+    return null;
+}
+
+
+/* ============================================
+   AUDIT USER
+============================================ */
+
+function auditUserId(){
+
+    const user = getCurrentUser();
+
+    if(!user || !user.id){
+        return null;
+    }
+
+    return Number(user.id);
+}
+
+
+/* ============================================
+   TOAST
+============================================ */
+
+function showToast(message,type="success"){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.className =
+        "toast show " + type;
+
+    setTimeout(()=>{
+
+        toast.className="toast";
+
+    },3500);
+
+}
+
+
+/* ============================================
+   LOAD PRODUCTS
+============================================ */
+
+async function loadProducts(){
+
+    const tbody =
+        document.getElementById("tableBody");
+
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="9">
+                <div class="loading">
+                    <i class="fa-solid fa-spinner"></i>
+                    <div>Chargement...</div>
+                </div>
+            </td>
+        </tr>
+    `;
+
+    try{
+
+        const all = [];
+
+        const pageSize = 1000;
+
+        let from = 0;
+
+        while(true){
+
+            const to =
+                from + pageSize - 1;
+
+            const {data,error} =
+                await client
+                    .from("produits")
+                    .select("*")
+                    .order("article",{ascending:true})
+                    .range(from,to);
+
+            if(error){
+                throw error;
+            }
+
+            if(!data || data.length === 0){
+                break;
+            }
+
+            all.push(...data);
+
+            if(data.length < pageSize){
+                break;
+            }
+
+            from += pageSize;
+        }
+
+        products = all;
+
+        fillFilters();
+
+        updateStats();
+
+        render();
+
+    }catch(error){
+
+        console.error(error);
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9">
+                    <div class="empty">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div>Erreur lors du chargement</div>
+                        <small>${escapeHtml(error.message)}</small>
+                    </div>
+                </td>
+            </tr>
+        `;
+
+        showToast(
+            "Erreur lors du chargement des produits",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ============================================
+   FILTER OPTIONS
+============================================ */
+
+function uniqueValues(field){
+
+    return [
+        ...new Set(
+            products
+                .map(p => p[field])
+                .filter(v =>
+                    v !== null &&
+                    v !== undefined &&
+                    String(v).trim() !== ""
+                )
+                .map(v => String(v))
+        )
+    ].sort((a,b)=>
+        a.localeCompare(b,"fr")
+    );
+
+}
+
+
+function fillSelect(id,values){
+
+    const select =
+        document.getElementById(id);
+
+    const current =
+        select.value;
+
+    select.innerHTML =
+        '<option value="">Tous</option>';
+
+    values.forEach(value=>{
+
+        const option =
+            document.createElement("option");
+
+        option.value=value;
+
+        option.textContent=value;
+
+        select.appendChild(option);
+
+    });
+
+    if(values.includes(current)){
+        select.value=current;
+    }
+
+}
+
+
+function fillFilters(){
+
+    fillSelect(
+        "filterType",
+        uniqueValues("type")
+    );
+
+    fillSelect(
+        "filterGroupe",
+        uniqueValues("groupe")
+    );
+
+    fillSelect(
+        "filterUnite",
+        uniqueValues("unite")
+    );
+
+    fillSelect(
+        "filterDivision",
+        uniqueValues("division")
+    );
+
+}
+
+
+/* ============================================
+   STATS
+============================================ */
+
+function updateStats(){
+
+    document.getElementById("statTotal")
+        .textContent =
+        products.length.toLocaleString("fr-FR");
+
+    document.getElementById("statActive")
+        .textContent =
+        products.filter(
+            p => p.statut === "ACTIF"
+        ).length.toLocaleString("fr-FR");
+
+    document.getElementById("statInactive")
+        .textContent =
+        products.filter(
+            p => p.statut === "INACTIF"
+        ).length.toLocaleString("fr-FR");
+
+    document.getElementById("statTypes")
+        .textContent =
+        uniqueValues("type").length;
+
+    document.getElementById("statDivisions")
+        .textContent =
+        uniqueValues("division").length;
+
+}
+
+
+/* ============================================
+   RENDER
+============================================ */
+
+function render(){
+
+    const search =
+        document.getElementById("search")
+            .value
+            .trim()
+            .toLowerCase();
+
+    const type =
+        document.getElementById("filterType").value;
+
+    const groupe =
+        document.getElementById("filterGroupe").value;
+
+    const unite =
+        document.getElementById("filterUnite").value;
+
+    const division =
+        document.getElementById("filterDivision").value;
+
+    const statut =
+        document.getElementById("filterStatut").value;
+
+
+    const filtered =
+        products.filter(p=>{
+
+            const matchesSearch =
+                !search ||
+                String(p.article || "")
+                    .toLowerCase()
+                    .includes(search) ||
+                String(p.designation || "")
+                    .toLowerCase()
+                    .includes(search);
+
+            const matchesType =
+                !type ||
+                String(p.type || "") === type;
+
+            const matchesGroupe =
+                !groupe ||
+                String(p.groupe || "") === groupe;
+
+            const matchesUnite =
+                !unite ||
+                String(p.unite || "") === unite;
+
+            const matchesDivision =
+                !division ||
+                String(p.division || "") === division;
+
+            const matchesStatut =
+                !statut ||
+                String(p.statut || "") === statut;
+
+            return (
+                matchesSearch &&
+                matchesType &&
+                matchesGroupe &&
+                matchesUnite &&
+                matchesDivision &&
+                matchesStatut
+            );
+
+        });
+
+
+    document.getElementById("tableCount")
+        .textContent =
+        `${filtered.length.toLocaleString("fr-FR")} produit(s)`;
+
+
+    const tbody =
+        document.getElementById("tableBody");
+
+
+    if(filtered.length === 0){
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9">
+                    <div class="empty">
+                        <i class="fa-solid fa-box-open"></i>
+                        <div>Aucun produit trouvé</div>
+                    </div>
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    tbody.innerHTML =
+        filtered.map(p=>{
+
+            const statusClass =
+                p.statut === "ACTIF"
+                    ? "badge-active"
+                    : "badge-inactive";
+
+            const statusText =
+                p.statut === "ACTIF"
+                    ? "Actif"
+                    : "Inactif";
+
+
+            const dlv =
+                p.date_limite_vente !== null &&
+                p.date_limite_vente !== undefined
+                    ? `${Number(p.date_limite_vente)} jours`
+                    : "—";
+
+
+            return `
+
+                <tr>
+
+                    <td class="article">
+                        ${escapeHtml(p.article)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(p.designation)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(p.type || "—")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(p.groupe || "—")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(p.unite || "—")}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(p.division || "—")}
+                    </td>
+
+                    <td>
+                        <span class="badge ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${dlv}
+                    </td>
+
+                    <td>
+
+                        <div class="actions">
+
+                            <button
+                                class="action-btn edit"
+                                title="Modifier"
+                                onclick="editProduct(${p.id})"
+                            >
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+
+                            <button
+                                class="action-btn delete"
+                                title="Supprimer"
+                                onclick="deleteProduct(${p.id})"
+                            >
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* ============================================
+   ADD MODAL
+============================================ */
+
+function openAddModal(){
+
+    editingId = null;
+
+    document.getElementById("modalTitle")
+        .textContent =
+        "Ajouter un produit";
+
+    document.getElementById("productForm")
+        .reset();
+
+    document.getElementById("productId")
+        .value="";
+
+    document.getElementById("statut")
+        .value="ACTIF";
+
+    document.getElementById("productModal")
+        .classList.add("show");
+
+}
+
+
+/* ============================================
+   EDIT
+============================================ */
+
+function editProduct(id){
+
+    const product =
+        products.find(
+            p => Number(p.id) === Number(id)
+        );
+
+    if(!product){
+        return;
+    }
+
+    editingId =
+        product.id;
+
+    document.getElementById("modalTitle")
+        .textContent =
+        "Modifier le produit";
+
+    document.getElementById("productId")
+        .value =
+        product.id;
+
+    document.getElementById("article")
+        .value =
+        product.article || "";
+
+    document.getElementById("designation")
+        .value =
+        product.designation || "";
+
+    document.getElementById("type")
+        .value =
+        product.type || "";
+
+    document.getElementById("groupe")
+        .value =
+        product.groupe || "";
+
+    document.getElementById("unite")
+        .value =
+        product.unite || "";
+
+    document.getElementById("division")
+        .value =
+        product.division || "";
+
+    document.getElementById("statut")
+        .value =
+        product.statut || "ACTIF";
+
+    document.getElementById("dateLimiteVente")
+        .value =
+        product.date_limite_vente ?? "";
+
+    document.getElementById("productModal")
+        .classList.add("show");
+
+}
+
+
+/* ============================================
+   CLOSE
+============================================ */
+
+function closeModal(){
+
+    document.getElementById("productModal")
+        .classList.remove("show");
+
+}
+
+
+/* ============================================
+   SAVE
+============================================ */
+
+async function saveProduct(){
+
+    const article =
+        document.getElementById("article")
+            .value
+            .trim();
+
+    const designation =
+        document.getElementById("designation")
+            .value
+            .trim();
+
+    const type =
+        document.getElementById("type")
+            .value
+            .trim();
+
+    const groupe =
+        document.getElementById("groupe")
+            .value
+            .trim();
+
+    const unite =
+        document.getElementById("unite")
+            .value
+            .trim();
+
+    const division =
+        document.getElementById("division")
+            .value
+            .trim();
+
+    const statut =
+        document.getElementById("statut")
+            .value;
+
+    const dlvRaw =
+        document.getElementById("dateLimiteVente")
+            .value
+            .trim();
+
+
+    if(!article){
+
+        showToast(
+            "Veuillez saisir l'article.",
+            "warning"
+        );
+
+        return;
+    }
+
+
+    if(!designation){
+
+        showToast(
+            "Veuillez saisir la désignation.",
+            "warning"
+        );
+
+        return;
+    }
+
+
+    let dateLimiteVente = null;
+
+    if(dlvRaw !== ""){
+
+        dateLimiteVente =
+            Number(dlvRaw);
+
+        if(
+            !Number.isInteger(dateLimiteVente) ||
+            dateLimiteVente < 0
+        ){
+
+            showToast(
+                "Le délai limite vente doit être un nombre entier positif.",
+                "warning"
+            );
+
+            return;
+        }
+
+    }
+
+
+    const userId =
+        auditUserId();
+
+
+    const payload = {
+
+        article,
+        designation,
+
+        type:
+            type || null,
+
+        groupe:
+            groupe || null,
+
+        unite:
+            unite || null,
+
+        division:
+            division || null,
+
+        statut,
+
+        date_limite_vente:
+            dateLimiteVente
+
+    };
+
+
+    try{
+
+        let result;
+
+
+        /* ==========================
+           INSERT
+        ========================== */
+
+        if(!editingId){
+
+            payload.created_by =
+                userId;
+
+            payload.updated_by =
+                userId;
+
+
+            result =
+                await client
+                    .from("produits")
+                    .insert(payload)
+                    .select()
+                    .single();
+
+
+        }
+
+        /* ==========================
+           UPDATE
+        ========================== */
+
+        else{
+
+            payload.updated_by =
+                userId;
+
+
+            result =
+                await client
+                    .from("produits")
+                    .update(payload)
+                    .eq("id",editingId)
+                    .select()
+                    .single();
+
+        }
+
+
+        if(result.error){
+
+            throw result.error;
+
+        }
+
+
+        /* ==========================
+           ACTIVITY LOG
+        ========================== */
+
+        try{
+
+            if(window.SMTG &&
+               typeof window.SMTG.logActivity === "function"){
+
+                await window.SMTG.logActivity(
+                    editingId
+                        ? "UPDATE"
+                        : "CREATE",
+                    "STOCK",
+                    "produits.html",
+                    editingId
+                        ? "Modification du produit"
+                        : "Création du produit",
+                    {
+                        entity_type:"PRODUIT",
+                        entity_id:result.data?.id || editingId,
+                        metadata:{
+                            article
+                        }
+                    }
+                );
+
+            }
+
+        }catch(logError){
+
+            console.warn(
+                "Activity log:",
+                logError
+            );
+
+        }
+
+
+        closeModal();
+
+        showToast(
+            editingId
+                ? "Produit modifié avec succès."
+                : "Produit créé avec succès.",
+            "success"
+        );
+
+
+        await loadProducts();
+
+
+    }catch(error){
+
+        console.error(error);
+
+
+        if(
+            error.code === "23505" ||
+            String(error.message || "")
+                .toLowerCase()
+                .includes("duplicate")
+        ){
+
+            showToast(
+                "Cet article existe déjà.",
+                "error"
+            );
+
+        }else{
+
+            showToast(
+                error.message ||
+                "Erreur lors de l'enregistrement.",
+                "error"
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ============================================
+   DELETE
+============================================ */
+
+async function deleteProduct(id){
+
+    const product =
+        products.find(
+            p => Number(p.id) === Number(id)
+        );
+
+    if(!product){
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            `Supprimer le produit "${product.article}" ?\n\nCette action est définitive.`
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    try{
+
+        const {error} =
+            await client
+                .from("produits")
+                .delete()
+                .eq("id",id);
+
+
+        if(error){
+            throw error;
+        }
+
+
+        try{
+
+            if(window.SMTG &&
+               typeof window.SMTG.logActivity === "function"){
+
+                await window.SMTG.logActivity(
+                    "DELETE",
+                    "STOCK",
+                    "produits.html",
+                    "Suppression du produit",
+                    {
+                        entity_type:"PRODUIT",
+                        entity_id:id,
+                        metadata:{
+                            article:product.article
+                        }
+                    }
+                );
+
+            }
+
+        }catch(logError){
+
+            console.warn(
+                "Activity log:",
+                logError
+            );
+
+        }
+
+
+        showToast(
+            "Produit supprimé.",
+            "success"
+        );
+
+
+        await loadProducts();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            error.message ||
+            "Impossible de supprimer le produit.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ============================================
+   ESCAPE HTML
+============================================ */
+
+function escapeHtml(value){
+
+    if(value === null ||
+       value === undefined){
+
+        return "";
+
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* ============================================
+   CLOSE MODAL CLICK OUTSIDE
+============================================ */
+
+document.getElementById("productModal")
+    .addEventListener("click",function(e){
+
+        if(e.target === this){
+
+            closeModal();
+
+        }
+
+    });
+
+
+/* ============================================
+   ESC
+============================================ */
+
+document.addEventListener("keydown",function(e){
+
+    if(e.key === "Escape"){
+
+        closeModal();
+
+    }
+
+});
+
+
+/* ============================================
+   INIT
+============================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadProducts
+);
+
+</script>
+
+</body>
+</html>

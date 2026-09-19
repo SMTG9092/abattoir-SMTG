@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications - SMTG</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="api/supabase.js"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#f4f7fb;color:#172033}
+.page{padding:22px;max-width:1500px;margin:auto}
+.header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
+.title{display:flex;align-items:center;gap:12px}
+.title .icon{width:48px;height:48px;border-radius:13px;background:#eaf1ff;color:#2457c5;display:flex;align-items:center;justify-content:center;font-size:21px}
+h1{margin:0;font-size:25px}.subtitle{margin:4px 0 0;color:#758096;font-size:13px}
+.btn{border:0;border-radius:10px;padding:11px 16px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+.btn-primary{background:#2457c5;color:#fff}.btn-primary:hover{background:#19449f}
+.btn-secondary{background:#fff;color:#344054;border:1px solid #d9e0ea}.btn-secondary:hover{background:#f8fafc}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid #e5eaf1;border-radius:14px;padding:17px;display:flex;align-items:center;gap:13px}
+.stat-icon{width:43px;height:43px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:#f0f4fa;color:#2457c5}
+.stat strong{display:block;font-size:21px}.stat span{font-size:12px;color:#7b8494}
+.toolbar{background:#fff;border:1px solid #e5eaf1;border-radius:14px;padding:14px;display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.search{flex:1;min-width:230px;position:relative}.search i{position:absolute;left:13px;top:13px;color:#98a2b3}
+.search input{width:100%;padding:11px 12px 11px 38px;border:1px solid #d9e0ea;border-radius:9px;outline:none}
+select{min-width:155px;padding:10px 12px;border:1px solid #d9e0ea;border-radius:9px;background:#fff;color:#344054}
+.card{background:#fff;border:1px solid #e5eaf1;border-radius:14px;overflow:hidden}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{padding:13px 15px;text-align:left;border-bottom:1px solid #edf0f5;font-size:13px}
+th{background:#f8fafc;color:#667085;font-size:12px;text-transform:uppercase}
+tr:hover td{background:#fbfcfe}.unread td{background:#f5f8ff}
+.title-cell{font-weight:700;color:#1d2939}.message-cell{max-width:400px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#667085}
+.sender{font-size:12px;color:#667085}
+.badge{display:inline-flex;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-info{background:#eaf1ff;color:#2457c5}.badge-success{background:#e9f8ef;color:#16834a}
+.badge-warning{background:#fff5dc;color:#9a6700}.badge-error,.badge-danger{background:#ffebee;color:#c62828}
+.badge-alert,.badge-urgent,.badge-critical{background:#ffe8e8;color:#b42318}
+.badge-security{background:#f1eaff;color:#6941c6}.badge-system,.badge-default{background:#eef2f6;color:#475467}
+.read{color:#16834a;font-size:12px;font-weight:600}.not-read{color:#2457c5;font-size:12px;font-weight:700}
+.actions{display:flex;gap:6px}.icon-btn{width:34px;height:34px;border:1px solid #d9e0ea;background:#fff;border-radius:8px;cursor:pointer;color:#475467}
+.icon-btn:hover{background:#f4f7fb}
+.empty{padding:50px 20px;text-align:center;color:#98a2b3}.empty i{font-size:38px;margin-bottom:10px}
+.pagination{padding:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}.page-info{font-size:12px;color:#667085}
+.modal-bg{position:fixed;inset:0;background:rgba(16,24,40,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:9999}
+.modal-bg.show{display:flex}.modal{width:min(720px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-head{padding:18px 20px;border-bottom:1px solid #edf0f5;display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{margin:0;font-size:19px}.close{border:0;background:transparent;font-size:21px;color:#667085;cursor:pointer}
+.modal-body{padding:20px}.form-group{margin-bottom:15px}
+label{display:block;margin-bottom:7px;font-size:13px;font-weight:600;color:#344054}
+input[type=text],textarea{width:100%;border:1px solid #d9e0ea;border-radius:9px;padding:11px 12px;outline:none;font-family:inherit}
+textarea{min-height:110px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:#7192dc;box-shadow:0 0 0 3px rgba(36,87,197,.08)}
+.recipient-tools{display:flex;gap:8px;margin-bottom:9px}.recipient-list{border:1px solid #d9e0ea;border-radius:10px;max-height:230px;overflow:auto;padding:8px}
+.recipient{display:flex;align-items:center;gap:10px;padding:9px;border-radius:8px}.recipient:hover{background:#f7f9fc}
+.recipient input{width:17px;height:17px}.recipient-info strong{font-size:13px}.recipient-info small{display:block;color:#98a2b3;font-size:11px}
+.form-actions{display:flex;justify-content:flex-end;gap:9px;padding-top:5px}
+.toast{position:fixed;right:20px;bottom:20px;z-index:10000;background:#172033;color:#fff;padding:13px 17px;border-radius:10px;display:none;box-shadow:0 8px 25px rgba(0,0,0,.2);font-size:13px}
+.toast.show{display:block}.toast.error{background:#c62828}.toast.success{background:#16834a}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.page{padding:12px}.header{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:1fr 1fr;gap:9px}.stat{padding:12px}.stat strong{font-size:18px}.toolbar{padding:10px}.pagination{flex-direction:column}}
+</style>
+</head>
+
+<body>
+<div class="page">
+    <div class="header">
+        <div class="title">
+            <div class="icon"><i class="fa-solid fa-bell"></i></div>
+            <div>
+                <h1>Notifications</h1>
+                <div class="subtitle">Gestion et suivi des notifications utilisateurs</div>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateModal()">
+            <i class="fa-solid fa-paper-plane"></i> Nouvelle notification
+        </button>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-icon"><i class="fa-solid fa-bell"></i></div><div><strong id="statTotal">0</strong><span>Total</span></div></div>
+        <div class="stat"><div class="stat-icon"><i class="fa-solid fa-envelope"></i></div><div><strong id="statUnread">0</strong><span>Non lues</span></div></div>
+        <div class="stat"><div class="stat-icon"><i class="fa-solid fa-envelope-open"></i></div><div><strong id="statRead">0</strong><span>Lues</span></div></div>
+        <div class="stat"><div class="stat-icon"><i class="fa-solid fa-paper-plane"></i></div><div><strong id="statSent">0</strong><span>Envoyées</span></div></div>
+    </div>
+
+    <div class="toolbar">
+        <div class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="searchInput" type="text" placeholder="Rechercher une notification..." oninput="applyFilters()">
+        </div>
+
+        <select id="typeFilter" onchange="applyFilters()">
+            <option value="">Tous les types</option>
+            <option value="INFO">Info</option><option value="SUCCESS">Success</option>
+            <option value="WARNING">Warning</option><option value="ERROR">Error</option>
+            <option value="DANGER">Danger</option><option value="ALERT">Alerte</option>
+            <option value="URGENT">Urgent</option><option value="CRITICAL">Critique</option>
+            <option value="SYSTEM">Système</option><option value="SECURITY">Sécurité</option>
+            <option value="MAINTENANCE">Maintenance</option><option value="REMINDER">Rappel</option>
+            <option value="APPROVAL">Approbation</option><option value="REJECTION">Rejet</option>
+            <option value="REQUEST">Demande</option><option value="TASK">Tâche</option>
+            <option value="ASSIGNMENT">Affectation</option><option value="MESSAGE">Message</option>
+            <option value="UPDATE">Mise à jour</option><option value="NEW">Nouveau</option>
+            <option value="CHANGE">Changement</option><option value="DEADLINE">Échéance</option>
+            <option value="EXPIRATION">Expiration</option><option value="STOCK">Stock</option>
+            <option value="QUALITY">Qualité</option><option value="PRODUCTION">Production</option>
+            <option value="EXPEDITION">Expédition</option><option value="DELIVERY">Livraison</option>
+            <option value="PURCHASE">Achats</option><option value="FINANCE">Finance</option>
+            <option value="HR">RH</option><option value="HSE">HSE</option>
+            <option value="MAINTENANCE_REQUEST">Demande maintenance</option>
+        </select>
+
+        <select id="readFilter" onchange="applyFilters()">
+            <option value="">Toutes</option><option value="UNREAD">Non lues</option><option value="READ">Lues</option>
+        </select>
+
+        <button class="btn btn-secondary" onclick="loadNotifications()"><i class="fa-solid fa-rotate"></i> Actualiser</button>
+        <button class="btn btn-secondary" onclick="markAllRead()"><i class="fa-solid fa-check-double"></i> Tout marquer lu</button>
+    </div>
+
+    <div class="card">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Notification</th><th>Type</th><th>Expéditeur</th><th>Date</th><th>État</th><th>Action</th></tr>
+                </thead>
+                <tbody id="notificationBody"></tbody>
+            </table>
+        </div>
+        <div id="emptyState" class="empty" style="display:none">
+            <i class="fa-regular fa-bell-slash"></i><div>Aucune notification trouvée.</div>
+        </div>
+        <div class="pagination">
+            <div class="page-info" id="pageInfo">0 notification</div>
+            <div style="display:flex;gap:7px">
+                <button class="icon-btn" onclick="previousPage()" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="icon-btn" onclick="nextPage()" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-bg" id="createModal">
+    <div class="modal">
+        <div class="modal-head">
+            <h2><i class="fa-solid fa-paper-plane"></i> Nouvelle notification</h2>
+            <button class="close" onclick="closeCreateModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Titre *</label>
+                <input type="text" id="notificationTitle" placeholder="Titre de la notification">
+            </div>
+            <div class="form-group">
+                <label>Message *</label>
+                <textarea id="notificationMessage" placeholder="Écrire le message..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Type *</label>
+                <select id="notificationType" style="width:100%">
+                    <option value="INFO">Info</option><option value="SUCCESS">Success</option>
+                    <option value="WARNING">Warning</option><option value="ERROR">Error</option>
+                    <option value="DANGER">Danger</option><option value="ALERT">Alerte</option>
+                    <option value="URGENT">Urgent</option><option value="CRITICAL">Critique</option>
+                    <option value="SYSTEM">Système</option><option value="SECURITY">Sécurité</option>
+                    <option value="MAINTENANCE">Maintenance</option><option value="REMINDER">Rappel</option>
+                    <option value="APPROVAL">Approbation</option><option value="REJECTION">Rejet</option>
+                    <option value="REQUEST">Demande</option><option value="TASK">Tâche</option>
+                    <option value="ASSIGNMENT">Affectation</option><option value="MESSAGE">Message</option>
+                    <option value="UPDATE">Mise à jour</option><option value="NEW">Nouveau</option>
+                    <option value="CHANGE">Changement</option><option value="DEADLINE">Échéance</option>
+                    <option value="EXPIRATION">Expiration</option><option value="STOCK">Stock</option>
+                    <option value="QUALITY">Qualité</option><option value="PRODUCTION">Production</option>
+                    <option value="EXPEDITION">Expédition</option><option value="DELIVERY">Livraison</option>
+                    <option value="PURCHASE">Achats</option><option value="FINANCE">Finance</option>
+                    <option value="HR">RH</option><option value="HSE">HSE</option>
+                    <option value="MAINTENANCE_REQUEST">Demande maintenance</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Destinataires *</label>
+                <div class="recipient-tools">
+                    <button type="button" class="btn btn-secondary" onclick="selectAllUsers()">Tout sélectionner</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearAllUsers()">Tout désélectionner</button>
+                </div>
+                <div class="search" style="margin-bottom:8px">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="recipientSearch" type="text" placeholder="Rechercher un utilisateur..." oninput="filterRecipients()">
+                </div>
+                <div id="recipientList" class="recipient-list">
+                    <div class="empty">Chargement...</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Lien (optionnel)</label>
+                <input type="text" id="notificationLink" placeholder="ex: stock.html">
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-secondary" onclick="closeCreateModal()">Annuler</button>
+                <button class="btn btn-primary" id="sendBtn" onclick="sendNotification()">
+                    <i class="fa-solid fa-paper-plane"></i> Envoyer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+let client = null;
+let currentUser = null;
+let allNotifications = [];
+let filteredNotifications = [];
+let users = [];
+let currentPage = 1;
+const pageSize = 10;
+
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        client = getSupabase();
+        currentUser = getCurrentUserLocal();
+
+        if (!currentUser || !currentUser.id) {
+            showToast("Session utilisateur introuvable.", "error");
+            setTimeout(() => { window.top.location.href = "login.html"; }, 1200);
+            return;
+        }
+
+        await loadNotifications();
+    } catch (error) {
+        console.error(error);
+        showToast(error.message || "Erreur de chargement.", "error");
+    }
+});
+
+function getCurrentUserLocal() {
+    try {
+        const raw =
+            sessionStorage.getItem("smtg_current_user") ||
+            localStorage.getItem("smtg_current_user") ||
+            sessionStorage.getItem("smtgUser") ||
+            localStorage.getItem("smtgUser");
+        return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+}
+
+async function loadNotifications() {
+    if (!client || !currentUser) return;
+    try {
+        const { data, error } = await client
+            .from("v_user_notifications")
+            .select("*")
+            .eq("user_id", currentUser.id)
+            .order("created_at", { ascending:false });
+
+        if (error) throw error;
+
+        allNotifications = data || [];
+        updateStats();
+        applyFilters();
+    } catch (error) {
+        console.error("loadNotifications:", error);
+        showToast("Impossible de charger les notifications.", "error");
+    }
+}
+
+function updateStats() {
+    const total = allNotifications.length;
+    const unread = allNotifications.filter(n => !n.is_read).length;
+    document.getElementById("statTotal").textContent = total;
+    document.getElementById("statUnread").textContent = unread;
+    document.getElementById("statRead").textContent = total - unread;
+    document.getElementById("statSent").textContent =
+        allNotifications.filter(n => n.sender_id === currentUser.id).length;
+}
+
+function applyFilters() {
+    const search = document.getElementById("searchInput").value.trim().toLowerCase();
+    const type = document.getElementById("typeFilter").value;
+    const read = document.getElementById("readFilter").value;
+
+    filteredNotifications = allNotifications.filter(n => {
+        const text = [n.title,n.message,n.sender_username,n.sender_full_name,n.type].join(" ").toLowerCase();
+        if (search && !text.includes(search)) return false;
+        if (type && n.type !== type) return false;
+        if (read === "UNREAD" && n.is_read) return false;
+        if (read === "READ" && !n.is_read) return false;
+        return true;
+    });
+
+    currentPage = 1;
+    renderNotifications();
+}
+
+function renderNotifications() {
+    const tbody = document.getElementById("notificationBody");
+    const empty = document.getElementById("emptyState");
+    tbody.innerHTML = "";
+
+    const total = filteredNotifications.length;
+    if (!total) {
+        empty.style.display = "block";
+        document.getElementById("pageInfo").textContent = "0 notification";
+        updatePagination(0);
+        return;
+    }
+
+    empty.style.display = "none";
+
+    const start = (currentPage - 1) * pageSize;
+    const rows = filteredNotifications.slice(start, start + pageSize);
+
+    rows.forEach(n => {
+        const tr = document.createElement("tr");
+        if (!n.is_read) tr.classList.add("unread");
+
+        const sender = n.sender_full_name || n.sender_username || "Système";
+        tr.innerHTML = `
+            <td>
+                <div class="title-cell">${escapeHtml(n.title || "")}</div>
+                <div class="message-cell">${escapeHtml(n.message || "")}</div>
+            </td>
+            <td><span class="badge ${getTypeClass(n.type)}">${escapeHtml(getTypeLabel(n.type))}</span></td>
+            <td><div class="sender">${escapeHtml(sender)}</div></td>
+            <td>${escapeHtml(formatDate(n.created_at))}</td>
+            <td>${n.is_read
+                ? `<span class="read"><i class="fa-solid fa-check-double"></i> Lue</span>`
+                : `<span class="not-read"><i class="fa-solid fa-envelope"></i> Non lue</span>`}
+            </td>
+            <td>
+                <div class="actions">
+                    ${!n.is_read ? `<button class="icon-btn" title="Marquer comme lue" onclick="markRead(${n.recipient_id})"><i class="fa-solid fa-check"></i></button>` : ""}
+                    ${n.link ? `<button class="icon-btn" title="Ouvrir" onclick="openNotificationLink(${n.recipient_id})"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>` : ""}
+                    <button class="icon-btn" title="Détails" onclick="showDetails(${n.recipient_id})"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </td>`;
+        tbody.appendChild(tr);
+    });
+
+    document.getElementById("pageInfo").textContent =
+        `${start + 1} - ${Math.min(start + pageSize,total)} sur ${total}`;
+    updatePagination(total);
+}
+
+function updatePagination(total) {
+    const maxPage = Math.max(1, Math.ceil(total / pageSize));
+    document.getElementById("prevBtn").disabled = currentPage <= 1;
+    document.getElementById("nextBtn").disabled = currentPage >= maxPage;
+}
+function previousPage(){if(currentPage>1){currentPage--;renderNotifications()}}
+function nextPage(){
+    const maxPage=Math.max(1,Math.ceil(filteredNotifications.length/pageSize));
+    if(currentPage<maxPage){currentPage++;renderNotifications()}
+}
+
+async function markRead(recipientId) {
+    try {
+        const { error } = await client.rpc("mark_notification_as_read",{p_recipient_id:recipientId});
+        if(error) throw error;
+
+        const item=allNotifications.find(n=>n.recipient_id===recipientId);
+        if(item){item.is_read=true;item.read_at=new Date().toISOString()}
+
+        updateStats(); applyFilters();
+        showToast("Notification marquée comme lue.","success");
+    } catch(error) {
+        console.error(error);
+        showToast("Erreur lors de la mise à jour.","error");
+    }
+}
+
+async function markAllRead() {
+    if(!currentUser)return;
+    const unread=allNotifications.filter(n=>!n.is_read).length;
+    if(!unread){showToast("Aucune notification non lue.");return}
+
+    try {
+        const {error}=await client.rpc("mark_all_notifications_as_read",{p_user_id:currentUser.id});
+        if(error)throw error;
+        allNotifications.forEach(n=>{n.is_read=true;n.read_at=n.read_at||new Date().toISOString()});
+        updateStats();applyFilters();
+        showToast("Toutes les notifications sont lues.","success");
+    } catch(error) {
+        console.error(error);
+        showToast("Erreur lors de la mise à jour.","error");
+    }
+}
+
+async function openCreateModal() {
+    document.getElementById("createModal").classList.add("show");
+    document.getElementById("notificationTitle").value="";
+    document.getElementById("notificationMessage").value="";
+    document.getElementById("notificationType").value="INFO";
+    document.getElementById("notificationLink").value="";
+    document.getElementById("recipientSearch").value="";
+    await loadUsersForRecipients();
+}
+function closeCreateModal(){document.getElementById("createModal").classList.remove("show")}
+
+async function loadUsersForRecipients() {
+    const list=document.getElementById("recipientList");
+    list.innerHTML=`<div class="empty"><i class="fa-solid fa-spinner fa-spin"></i><div>Chargement...</div></div>`;
+    try {
+        const {data,error}=await client
+            .from("users")
+            .select("id, username, full_name, is_active, is_system")
+            .eq("is_active",true).eq("is_system",false)
+            .order("full_name",{ascending:true});
+        if(error)throw error;
+        users=data||[];
+        renderRecipients();
+    } catch(error) {
+        console.error(error);
+        list.innerHTML=`<div class="empty">Erreur de chargement des utilisateurs.</div>`;
+    }
+}
+
+function getSelectedRecipientIds(){
+    return new Set([...document.querySelectorAll(".recipient input:checked")].map(x=>Number(x.value)));
+}
+
+function renderRecipients() {
+    const list=document.getElementById("recipientList");
+    const search=document.getElementById("recipientSearch").value.trim().toLowerCase();
+    const selectedIds=getSelectedRecipientIds();
+
+    const filtered=users.filter(u=>{
+        const text=`${u.username} ${u.full_name}`.toLowerCase();
+        return !search || text.includes(search);
+    });
+
+    if(!filtered.length){list.innerHTML=`<div class="empty">Aucun utilisateur trouvé.</div>`;return}
+    list.innerHTML="";
+
+    filtered.forEach(u=>{
+        const div=document.createElement("label");
+        div.className="recipient";
+        div.innerHTML=`
+            <input type="checkbox" value="${u.id}" ${selectedIds.has(u.id)?"checked":""}>
+            <span class="recipient-info">
+                <strong>${escapeHtml(u.full_name||u.username)}</strong>
+                <small>${escapeHtml(u.username)}</small>
+            </span>`;
+        list.appendChild(div);
+    });
+}
+
+function filterRecipients(){
+    const selected=getSelectedRecipientIds();
+    renderRecipients();
+    document.querySelectorAll(".recipient input").forEach(cb=>{
+        if(selected.has(Number(cb.value)))cb.checked=true;
+    });
+}
+function selectAllUsers(){document.querySelectorAll(".recipient input").forEach(cb=>cb.checked=true)}
+function clearAllUsers(){document.querySelectorAll(".recipient input").forEach(cb=>cb.checked=false)}
+
+async function sendNotification() {
+    const title=document.getElementById("notificationTitle").value.trim();
+    const message=document.getElementById("notificationMessage").value.trim();
+    const type=document.getElementById("notificationType").value;
+    const link=document.getElementById("notificationLink").value.trim()||null;
+    const recipientIds=[...document.querySelectorAll(".recipient input:checked")].map(cb=>Number(cb.value));
+
+    if(!title){showToast("Le titre est obligatoire.","error");return}
+    if(!message){showToast("Le message est obligatoire.","error");return}
+    if(!recipientIds.length){showToast("Sélectionnez au moins un destinataire.","error");return}
+
+    const btn=document.getElementById("sendBtn");
+    btn.disabled=true;
+    btn.innerHTML=`<i class="fa-solid fa-spinner fa-spin"></i> Envoi...`;
+
+    try {
+        const {data,error}=await client.rpc("send_notification",{
+            p_title:title,
+            p_message:message,
+            p_type:type,
+            p_sender_id:currentUser.id,
+            p_recipient_ids:recipientIds,
+            p_link:link,
+            p_entity_type:null,
+            p_entity_id:null
+        });
+        if(error)throw error;
+
+        try{
+            if(window.SMTG&&typeof window.SMTG.logActivity==="function"){
+                await window.SMTG.logActivity(
+                    "NOTIFICATION_SENT","GENERAL","notifications.html","NOTIFICATIONS",
+                    `Notification envoyée à ${recipientIds.length} utilisateur(s)`,
+                    "notification",data,
+                    {notification_id:data,recipients_count:recipientIds.length,type:type}
+                );
+            }
+        }catch(logError){console.warn("Activity log:",logError)}
+
+        closeCreateModal();
+        await loadNotifications();
+        showToast(`Notification envoyée à ${recipientIds.length} utilisateur(s).`,"success");
+    } catch(error) {
+        console.error("sendNotification:",error);
+        showToast(error.message||"Erreur lors de l'envoi.","error");
+    } finally {
+        btn.disabled=false;
+        btn.innerHTML=`<i class="fa-solid fa-paper-plane"></i> Envoyer`;
+    }
+}
+
+function showDetails(recipientId) {
+    const n=allNotifications.find(x=>x.recipient_id===recipientId);
+    if(!n)return;
+    alert([
+        `Titre : ${n.title||""}`,
+        `Type : ${getTypeLabel(n.type)}`,
+        `Expéditeur : ${n.sender_full_name||n.sender_username||"Système"}`,
+        `Date : ${formatDate(n.created_at)}`,
+        `État : ${n.is_read?"Lue":"Non lue"}`,
+        "",n.message||""
+    ].join("\n"));
+    if(!n.is_read)markRead(n.recipient_id);
+}
+
+async function openNotificationLink(recipientId) {
+    const n=allNotifications.find(x=>x.recipient_id===recipientId);
+    if(!n||!n.link)return;
+    if(!n.is_read)await markRead(n.recipient_id);
+
+    if(window.top&&window.top!==window){
+        const frame=window.top.document.getElementById("pageFrame");
+        if(frame){frame.src=n.link;return}
+    }
+    window.location.href=n.link;
+}
+
+function getTypeClass(type){
+    const t=String(type||"").toLowerCase();
+    if(t==="info")return"badge-info";
+    if(t==="success")return"badge-success";
+    if(t==="warning")return"badge-warning";
+    if(t==="error")return"badge-error";
+    if(["danger","alert","urgent","critical"].includes(t))return"badge-"+t;
+    if(t==="security")return"badge-security";
+    if(t==="system")return"badge-system";
+    return"badge-default";
+}
+
+function getTypeLabel(type){
+    const labels={
+        INFO:"Info",SUCCESS:"Success",WARNING:"Warning",ERROR:"Error",DANGER:"Danger",
+        ALERT:"Alerte",URGENT:"Urgent",CRITICAL:"Critique",SYSTEM:"Système",SECURITY:"Sécurité",
+        MAINTENANCE:"Maintenance",REMINDER:"Rappel",APPROVAL:"Approbation",REJECTION:"Rejet",
+        REQUEST:"Demande",TASK:"Tâche",ASSIGNMENT:"Affectation",MESSAGE:"Message",UPDATE:"Mise à jour",
+        NEW:"Nouveau",CHANGE:"Changement",DEADLINE:"Échéance",EXPIRATION:"Expiration",STOCK:"Stock",
+        QUALITY:"Qualité",PRODUCTION:"Production",EXPEDITION:"Expédition",DELIVERY:"Livraison",
+        PURCHASE:"Achats",FINANCE:"Finance",HR:"RH",HSE:"HSE",MAINTENANCE_REQUEST:"Demande maintenance"
+    };
+    return labels[type]||type||"Info";
+}
+
+function formatDate(value){
+    if(!value)return"-";
+    return new Date(value).toLocaleString("fr-FR",{
+        day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"
+    });
+}
+function escapeHtml(value){
+    return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function showToast(message,type=""){
+    const toast=document.getElementById("toast");
+    toast.textContent=message;toast.className="toast show "+type;
+    clearTimeout(window.toastTimer);
+    window.toastTimer=setTimeout(()=>toast.className="toast",3500);
+}
+window.addEventListener("keydown",e=>{if(e.key==="Escape")closeCreateModal()});
+</script>
+</body>
+</html>
